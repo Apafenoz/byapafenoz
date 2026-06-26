@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARAFENOZ</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:ital@1&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #fff;
+      overflow-x: hidden;
+    }
+
+    /* =====================
+       ЭКРАН 1 — ГЛАВНАЯ
+    ===================== */
+    .screen-main {
+      position: relative;
+      width: 1920px;
+      height: 917px;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+
+    /* Видео фон */
+    .main-video {
+      position: absolute;
+      width: 1920px;
+      height: 917px;
+      left: 0; top: 0;
+      object-fit: cover;
+      
+      opacity: 0.8;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* byApafenoz.png */
+    .main-by {
+      position: absolute;
+      width: 1097.44px;
+      height: 183.46px;
+      left: calc(50% - 1097.44px/2 + 17.14px);
+      top: calc(50% - 183.46px/2 + 0.03px);
+      background: url('assets/images/byApafenoz.png') center/contain no-repeat;
+      mix-blend-mode: darken;
+      z-index: 2;
+    }
+
+    /* 003.jpg — повёрнутый логотип */
+    .main-003 {
+      position: absolute;
+      width: 183.46px;
+      height: 978.98px;
+      left: calc(50% - 183.46px/2 - 321.39px);
+      top: calc(50% - 978.98px/2 + 397.79px);
+      background: url('003.jpg') center/cover no-repeat;
+      mix-blend-mode: darken;
+      transform: rotate(90deg);
+      z-index: 1;
+    }
+
+    /* Vector (синий прямоугольник — иконки) */
+    .main-vector {
+      position: absolute;
+      width: 118.45px;
+      height: 46.96px;
+      left: calc(50% - 118.45px/2 - 472.35px);
+      top: calc(50% - 46.96px/2 + 43.89px);
+      z-index: 3;
+    }
+
+    /* icone 2.png */
+    .main-icone {
+      position: absolute;
+      width: 71.95px;
+      height: 19.98px;
+      left: 311.1px;
+      top: 71.85px;
+      background: url('assets/images/icone 2.png') center/contain no-repeat;
+      z-index: 5;
+    }
+
+    /* п.к.д..png */
+    .main-pkd {
+      position: absolute;
+      width: 72.48px;
+      height: 14.97px;
+      left: calc(50% - 72.48px/2 + 612.66px);
+      top: calc(50% - 14.97px/2 + 405.17px);
+      background: url('assets/images/п.к.д..png') center/contain no-repeat;
+      z-index: 4;
+    }
+
+    /* Тексты */
+    .main-label {
+      position: absolute;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: #323232;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .main-creative {
+      width: 268px;
+      height: 18px;
+      left: 1268.22px;
+      top: 550.26px;
+    }
+    .main-name {
+      width: 113px;
+      height: 18px;
+      left: 1418.84px;
+      top: 316.91px;
+    }
+    .main-type {
+      width: 193px;
+      height: 18px;
+      left: 527.4px;
+      top: 315.7px;
+    }
+    .main-desc {
+      width: 365px;
+      height: 18px;
+      left: 527.4px;
+      top: 733.6px;
+      text-transform: uppercase;
+    }
+
+
+    /* =====================
+       ЭКРАН 2 — ABOUT
+    ===================== */
+    .screen-about {
+      position: relative;
+      width: 1920px;
+      height: 800px;
+      overflow: hidden;
+    }
+
+    /* bg-image.png */
+    .about-bg {
+      position: absolute;
+      width: 1920px;
+      height: 800px;
+      left: 0;
+      top: 0;
+      background: url('assets/images/bg-image.png') center/cover no-repeat;
+      transform: matrix(1, 0, 0, 1, 0, 0);
+      z-index: 0;
+    }
+
+    /* image-about-2.png — фото 1 (нижнее, левее) */
+    .about-photo2 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 495px;
+      top: 253px;
+      background: url('assets/images/image-about-2.png') center/cover no-repeat;
+      border-radius: 0px;
+      z-index: 3;
+    }
+
+    /* image-about-1.png — фото 2 (верхнее, правее) */
+    .about-photo1 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 659px;
+      top: 103px;
+      background: url('assets/images/image-about-1.png') center/cover no-repeat;
+      border-radius: 0px;
+      z-index: 3;
+    }
+
+    /* icones-about.png */
+    .about-icone {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      left: 435px;
+      top: 25px;
+      background: url('assets/images/icones-about.png') center/contain no-repeat;
+      z-index: 4;
+    }
+
+    /* Привет, я Денис */
+    .about-hello {
+      position: absolute;
+      width: 90px;
+      height: 32px;
+      left: 659px;
+      top: 278px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 16px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      z-index: 5;
+    }
+
+    /* Заголовок — каждая строка на всю ширину */
+.about-title {
+  position: absolute;
+  width: 430px;
+  height: 188px;
+  left: 945px;
+  top: 96px;
+
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+  letter-spacing: -0.06em;
+  color: #000000;
+
+  text-align: justify;
+  text-align-last: justify;
+
+  z-index: 5;
+}
+
+    /* Основной текст — каждая строка на всю ширину */
+.about-text {
+  position: absolute;
+  width: 480px;
+  height: 126px;
+  left: 945px;
+  top: 334px;
+
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #000000;
+
+  text-align: justify;
+  text-align-last: justify;
+
+  z-index: 5;
+}
+
+/* Вертикальный текст */
+.about-emo {
+  position: absolute;
+  left: 1451px;
+  top: 96px;
+
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+
+  z-index: 5;
+}
+
+.about-emo span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: #6C6C6C;
+
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+}
+
+.about-label-img {
+  position: absolute;
+  width: 140px;
+  height: 79px;
+  left: 1425px;
+  top: 696px;
+  background: url('assets/images/image-about-lable.png') center/contain no-repeat;
+  z-index: 6;
+}
+
+    /* Масштабирование под экран */
+    .page-wrapper {
+      transform-origin: top left;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ==================
+       ЭКРАН 1 — ГЛАВНАЯ
+  ================== -->
+  <div class="screen-main">
+
+    <!-- Видео фон -->
+    <video class="main-video" autoplay muted loop playsinline>
+      <source src="assets/video/bg-video.mp4" type="video/mp4">
+    </video>
+
+    <!-- Повёрнутый логотип 003.jpg -->
+    <div class="main-003"></div>
+
+    <!-- Центральный byApafenoz.png -->
+    <div class="main-by"></div>
+
+    <!-- Иконки -->
+    <div class="main-icone"></div>
+
+    <!-- Синий прямоугольник-иконка -->
+    <div class="main-vector"></div>
+
+    <!-- п.к.д. -->
+    <div class="main-pkd"></div>
+
+    <!-- Тексты -->
+    <div class="main-label main-creative">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ</div>
+    <div class="main-label main-name">SAFRONOV DENIS</div>
+    <div class="main-label main-type">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</div>
+    <div class="main-label main-desc">Продуктовый дизайнер с бэкграундом в графике.</div>
+
+  </div>
+
+  <!-- ==================
+       ЭКРАН 2 — ABOUT
+  ================== -->
+  <div class="screen-about">
+
+    <!-- Фоновая картинка (перевёрнута по Y) -->
+    <div class="about-bg"></div>
+
+    <!-- Иконки about -->
+    <div class="about-icone"></div>
+
+    <!-- Фото 2 — нижнее левое -->
+    <div class="about-photo2"></div>
+
+    <!-- Фото 1 — верхнее правое -->
+    <div class="about-photo1"></div>
+
+    <!-- Привет, я Денис -->
+    <div class="about-hello">Привет,<br>я Денис</div>
+
+    <!-- Заголовок -->
+   <div class="about-title">
+  <div class="about-title-line1">
+    <span>Я</span>
+    <span>дизайнер</span>
+  </div>
+  Создаю дизайн-контент,<br>
+  и&nbsp;исследую его влияние<br>
+  на&nbsp;эмоции людей.
+</div>
+
+    <!-- Основной текст -->
+    <div class="about-text">
+      В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия.
+      Там научился работать с сетками, типографикой и деталями.
+      Сейчас фокусируюсь на UX/UI. Проектирую пользовательские сценарии
+      и интерфейсы. Делаю продукты, в которых нет лишних элементов.
+    </div>
+
+    <!-- Вертикальный текст -->
+    <div class="about-emo">
+  <span>создаю, исследую.</span>
+  <span>экспериментирую,</span>
+</div>
+
+<div class="about-label-img"></div>
+
+  </div>
+
+<script>
+  // Масштабирует страницу под реальную ширину окна
+  function scalePage() {
+    const wrapper = document.querySelector('.page-wrapper');
+    const scale = window.innerWidth / 1920;
+    wrapper.style.transform = `scale(${scale})`;
+    wrapper.style.width = '1920px';
+    // Высота body подстраивается
+    document.body.style.height = ((917 + 800) * scale) + 'px';
+  }
+  scalePage();
+  window.addEventListener('resize', scalePage);
+</script>
+
+</body>
+</html>
