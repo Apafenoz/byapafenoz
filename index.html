@@ -857,7 +857,15 @@
 /* Мобильная адаптация */
 html, body {
   overflow-x: hidden;
+  overflow-y: auto;
   width: 100%;
+  max-width: 100%;
+}
+
+.page-wrapper {
+  transform-origin: top left;
+  will-change: transform;
+  overflow: hidden; /* ← добавь */
 }
 
 .page-wrapper {
@@ -1047,17 +1055,21 @@ html, body {
 </div><!-- конец page-wrapper -->
 
 <script>
-  function scalePage() {
-    const wrapper = document.querySelector('.page-wrapper');
-    const scale = window.innerWidth / 1920;
-    const totalHeight = 917 + 800 + 415 + 739 + 1300 + 800 + 110;
+ function scalePage() {
+  const wrapper = document.querySelector('.page-wrapper');
+  const scale = window.innerWidth / 1920;
+  const totalHeight = 917 + 800 + 415 + 739 + 1300 + 800 + 110;
 
-    wrapper.style.transformOrigin = 'top left';
-    wrapper.style.transform = `scale(${scale})`;
-    wrapper.style.width = '1920px';
-    wrapper.style.height = totalHeight + 'px';
-    document.body.style.height = (totalHeight * scale) + 'px';
-  }
+  wrapper.style.transformOrigin = 'top left';
+  wrapper.style.transform = `scale(${scale})`;
+  wrapper.style.width = '1920px';
+  wrapper.style.height = totalHeight + 'px';
+  document.body.style.height = (totalHeight * scale) + 'px';
+  document.body.style.width = '100%';       /* ← добавь */
+  document.body.style.overflow = 'hidden';  /* ← добавь */
+  document.documentElement.style.overflow = 'hidden'; /* ← добавь */
+  document.documentElement.style.height = (totalHeight * scale) + 'px'; /* ← добавь */
+}
 
   function checkAnimations() {
     const scale = window.innerWidth / 1920;
