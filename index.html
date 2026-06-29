@@ -1069,10 +1069,10 @@ function scalePage() {
   wrapper.style.width = '1920px';
   wrapper.style.height = totalHeight + 'px';
 
-  // Только это — скролл работает!
+  
   document.body.style.height = (totalHeight * scale) + 'px';
-  document.body.style.overflowX = 'hidden';   // горизонт скрыт
-  document.body.style.overflowY = 'auto';     // вертикаль открыта
+  document.body.style.overflowX = 'hidden';   
+  document.body.style.overflowY = 'auto';    
   document.documentElement.style.overflowX = 'hidden';
   document.documentElement.style.overflowY = 'auto';
 }}
