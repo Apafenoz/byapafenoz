@@ -1059,20 +1059,23 @@ html, body {
     document.body.style.height = (totalHeight * scale) + 'px';
   }
 
-  function checkAnimations() {
-    const scale = window.innerWidth / 1920;
-    const scrollY = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const viewBottom = (scrollY + windowHeight) / scale;
+function scalePage() {
+  const wrapper = document.querySelector('.page-wrapper');
+  const scale = window.innerWidth / 1920;
+  const totalHeight = 917 + 800 + 415 + 739 + 1300 + 800 + 110;
 
-    document.querySelectorAll('.animate:not(.visible)').forEach(el => {
-      const rect = el.getBoundingClientRect();
-      const realTop = (scrollY + rect.top) / scale;
-      if (realTop < viewBottom - 30) {
-        el.classList.add('visible');
-      }
-    });
-  }
+  wrapper.style.transformOrigin = 'top left';
+  wrapper.style.transform = `scale(${scale})`;
+  wrapper.style.width = '1920px';
+  wrapper.style.height = totalHeight + 'px';
+
+  // Только это — скролл работает!
+  document.body.style.height = (totalHeight * scale) + 'px';
+  document.body.style.overflowX = 'hidden';   // горизонт скрыт
+  document.body.style.overflowY = 'auto';     // вертикаль открыта
+  document.documentElement.style.overflowX = 'hidden';
+  document.documentElement.style.overflowY = 'auto';
+}}
 
   scalePage();
 
