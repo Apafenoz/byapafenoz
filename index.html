@@ -1069,13 +1069,17 @@ function scalePage() {
   wrapper.style.width = '1920px';
   wrapper.style.height = totalHeight + 'px';
 
-  
+  // Правильная высота для скролла
   document.body.style.height = (totalHeight * scale) + 'px';
-  document.body.style.overflowX = 'hidden';   
-  document.body.style.overflowY = 'auto';    
+  document.body.style.width = '100%';
+  
+  // Скролл работает!
+  document.body.style.overflowX = 'hidden';  // горизонталь скрыта
+  document.body.style.overflowY = 'auto';    // вертикаль открыта
   document.documentElement.style.overflowX = 'hidden';
   document.documentElement.style.overflowY = 'auto';
-}}
+  document.documentElement.style.height = 'auto';
+}
 
   scalePage();
 
