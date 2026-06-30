@@ -864,15 +864,12 @@ html, body {
     <div class="about-photo2  animate from-left delay-3"></div>
     <div class="about-hello   animate           delay-4">Привет,<br>я Денис</div>
 
-    <h2 class="about-title   animate from-right delay-2">
-      <div class="about-title-line1">
-        <span>Я</span>
-        <span>дизайнер</span>
-      </h2>
-      Создаю дизайн-контент,<br>
-      и&nbsp;исследую его влияние<br>
-      на&nbsp;эмоции людей.
-    </div>
+    <div class="about-title animate from-right delay-2">
+  Я дизайнер.<br>
+  Создаю дизайн-контент,<br>
+  и&nbsp;исследую его влияние<br>
+  на&nbsp;эмоции людей.
+</div>
 
     <div class="about-text    animate from-bottom delay-3">
       В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия.
@@ -1039,19 +1036,36 @@ function initAnimations() {
     return;
   }
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+  function checkVisible() {
+    const scale = window.innerWidth / 1920;
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    // нижняя граница вьюпорта в координатах 1920px пространства
+    const viewBottom = (scrollY + windowHeight) / scale;
+
+    document.querySelectorAll('.animate:not(.visible)').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      // реальная позиция элемента в 1920px пространстве
+      const realTop = (scrollY + rect.top) / scale;
+      if (realTop < viewBottom - 30) {
+        el.classList.add('visible');
       }
     });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -30px 0px'
-  });
 
-  document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+    // отключаем когда все видимы
+    if (document.querySelectorAll('.animate:not(.visible)').length === 0) {
+      window.removeEventListener('scroll', onScroll);
+    }
+  }
+
+  function onScroll() {
+    checkVisible();
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // первичная проверка
+  checkVisible();
 }
 
     document.addEventListener('DOMContentLoaded', () => {
