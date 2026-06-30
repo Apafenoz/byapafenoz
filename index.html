@@ -701,7 +701,7 @@
   z-index: 2;
 }
 
-/* общий стиль для всех ссылок-контактов */
+/* контейнер кнопки */
 .contact-link {
   position: absolute;
   width: 300px;
@@ -722,22 +722,37 @@
 .contact-link.vk        { top: 430px; }
 .contact-link.mail      { top: 480px; }
 
-/* тёмный фон — начинает с 1px справа, растёт влево */
+/* bg — тёмный прямоугольник, z-index: 0 (нижний слой) */
 .contact-link__bg {
   position: absolute;
   top: 0;
-  right: 0;
-  width: 1px;
+  right: 0;           /* прикреплён к правому краю */
+  width: 1px;         /* начинает с 1px */
   height: 100%;
   background: #2A005E;
   transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: 0;
 }
 
-/* текст */
+/* img-bg — фото поверх bg, opacity 0.5 */
+.contact-link__img-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('assets/images/Contact Information/IMG_20250512_130935.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  z-index: 1;         /* поверх bg */
+  pointer-events: none;
+}
+
+/* текст — самый верхний слой */
 .contact-link__text {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   padding-left: 15px;
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 700;
@@ -750,13 +765,13 @@
   pointer-events: none;
 }
 
-/* hover — только мышь */
+/* hover */
 @media (hover: hover) and (pointer: fine) {
   .contact-link:hover .contact-link__bg {
-    width: 100%;
+    width: 100%;              /* bg заливает всю кнопку */
   }
   .contact-link:hover .contact-link__text {
-    color: #FFFFFF;
+    color: #FFFFFF;           /* текст белеет */
   }
 }
 
@@ -1010,30 +1025,34 @@ html, body {
   <div class="contact-photo animate from-left delay-1"></div>
   <h2 class="contact-title animate from-right delay-2">Контакты</h2>
 
-    <a href="https://instagram.com/apafenoz" target="_blank" 
-     class="contact-link instagram animate from-right delay-3">
-    <span class="contact-link__bg"></span>
-    <span class="contact-link__text">Instagram</span>
-  </a>
+   <a href="https://instagram.com/apafenoz" target="_blank" 
+   class="contact-link instagram animate from-right delay-3">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">Instagram</span>
+</a>
 
-  <a href="https://t.me/apafenoz" target="_blank" 
-     class="contact-link telegramm animate from-right delay-4">
-    <span class="contact-link__bg"></span>
-    <span class="contact-link__text">Telegram</span>
-  </a>
+<a href="https://t.me/apafenoz" target="_blank" 
+   class="contact-link telegramm animate from-right delay-4">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">Telegramm</span>
+</a>
 
-  <a href="https://vk.com/apafenoz" target="_blank" 
-     class="contact-link vk animate from-right delay-5">
-    <span class="contact-link__bg"></span>
-    <span class="contact-link__text">VK</span>
-  </a>
+<a href="https://vk.com/apafenoz" target="_blank" 
+   class="contact-link vk animate from-right delay-5">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">VK</span>
+</a>
 
-  <a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" 
-     target="_blank"
-     class="contact-link mail animate from-right delay-6">
-    <span class="contact-link__bg"></span>
-    <span class="contact-link__text">apafenoz@yandex.ru</span>
-  </a>
+<a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" 
+   target="_blank"
+   class="contact-link mail animate from-right delay-6">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">apafenoz@yandex.ru</span>
+</a>
 </div>
  
   <div class="footer">
