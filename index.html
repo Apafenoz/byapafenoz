@@ -54,7 +54,11 @@
 
 .animate.visible {
   opacity: 1;
-  transform: none;
+  transform: none !important;
+}
+
+.contact-link.animate.visible {
+  overflow: hidden;
 }
 
 .animate.rotate-90.visible {
@@ -711,9 +715,10 @@
   align-items: center;
   overflow: hidden;
   background: #FFFFFF;
-  z-index: 2;
+  z-index: 10;
   cursor: pointer;
   text-decoration: none;
+  isolation: isolate;
 }
 
 /* позиции */
@@ -1129,11 +1134,12 @@ function initAnimations() {
     checkVisible();
   }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('scroll', onScroll, { passive: true });
 
   // первичная проверка
-  checkVisible();
-}
+  setTimeout(checkVisible, 100);
+  setTimeout(checkVisible, 500);
 
     document.addEventListener('DOMContentLoaded', () => {
   scalePage();
