@@ -8,14 +8,14 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      background: #fff;
-      overflow-x: hidden;
-    }
-  
-    :root {
+:root {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+body {
+  background: #fff;
+  overflow-x: hidden;
 }
 
     /* =====================
@@ -769,15 +769,6 @@
 
   white-space: nowrap;
 } 
-
-.animate.visible {
-  opacity: 1;
-  transform: none;
-}
-
-.animate.rotate-90.visible {
-  transform: rotate(90deg) translateX(0) !important;
-}
 
 /* logo */
 .footer-logo {
