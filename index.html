@@ -707,39 +707,57 @@
   width: 300px;
   height: 30px;
   left: 1262px;
-  display: block;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: left center;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #FFFFFF;
   z-index: 2;
   cursor: pointer;
-  transition: opacity 0.2s;
+  text-decoration: none;
 }
 
+/* позиции */
+.contact-link.instagram { top: 330px; }
+.contact-link.telegramm { top: 380px; }
+.contact-link.vk        { top: 430px; }
+.contact-link.mail      { top: 480px; }
+
+/* тёмный фон — начинает с 1px справа, растёт влево */
+.contact-link__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: #2A005E;
+  transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 0;
+}
+
+/* текст */
+.contact-link__text {
+  position: relative;
+  z-index: 1;
+  padding-left: 15px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #2A005E;
+  transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* hover — только мышь */
 @media (hover: hover) and (pointer: fine) {
-  .contact-link:hover {
-    opacity: 0.8;
+  .contact-link:hover .contact-link__bg {
+    width: 100%;
   }
-}
-
-.contact-link.instagram {
-  top: 330px;
-  background-image: url('assets/images/Contact Information/Instagram.webp');
-}
-
-.contact-link.telegramm {
-  top: 380px;
-  background-image: url('assets/images/Contact Information/Telegramm.webp');
-}
-
-.contact-link.vk {
-  top: 430px;
-  background-image: url('assets/images/Contact Information/VK.webp');
-}
-
-.contact-link.mail {
-  top: 480px;
-  background-image: url('assets/images/Contact Information/mail.webp');
+  .contact-link:hover .contact-link__text {
+    color: #FFFFFF;
+  }
 }
 
 /* footer */
@@ -826,6 +844,21 @@ html, body {
   .animate {
     transition: opacity 0.2s ease;
     transform: none !important;
+  }
+
+  /* для кнопок — мгновенная смена без анимации роста */
+  .contact-link__bg {
+    transition: none;
+    width: 100%;
+    opacity: 0;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .contact-link:hover .contact-link__bg {
+      opacity: 1;
+    }
+    .contact-link:hover .contact-link__text {
+      color: #FFFFFF;
+    }
   }
 }
     
@@ -977,18 +1010,30 @@ html, body {
   <div class="contact-photo animate from-left delay-1"></div>
   <h2 class="contact-title animate from-right delay-2">Контакты</h2>
 
-  <a href="https://instagram.com/apafenoz" target="_blank" 
-     class="contact-link instagram animate from-right delay-3"></a>
+    <a href="https://instagram.com/apafenoz" target="_blank" 
+     class="contact-link instagram animate from-right delay-3">
+    <span class="contact-link__bg"></span>
+    <span class="contact-link__text">Instagram</span>
+  </a>
 
   <a href="https://t.me/apafenoz" target="_blank" 
-     class="contact-link telegramm animate from-right delay-4"></a>
+     class="contact-link telegramm animate from-right delay-4">
+    <span class="contact-link__bg"></span>
+    <span class="contact-link__text">Telegram</span>
+  </a>
 
   <a href="https://vk.com/apafenoz" target="_blank" 
-     class="contact-link vk animate from-right delay-5"></a>
+     class="contact-link vk animate from-right delay-5">
+    <span class="contact-link__bg"></span>
+    <span class="contact-link__text">VK</span>
+  </a>
 
- <a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" 
-   target="_blank"
-   class="contact-link mail animate from-right delay-6"></a>
+  <a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" 
+     target="_blank"
+     class="contact-link mail animate from-right delay-6">
+    <span class="contact-link__bg"></span>
+    <span class="contact-link__text">apafenoz@yandex.ru</span>
+  </a>
 </div>
  
   <div class="footer">
