@@ -55,7 +55,6 @@
 .animate.visible {
   opacity: 1;
   transform: none;
-  transition-delay: 0s;
 }
 
 .animate.rotate-90.visible {
@@ -865,11 +864,11 @@ html, body {
     <div class="about-photo2  animate from-left delay-3"></div>
     <div class="about-hello   animate           delay-4">Привет,<br>я Денис</div>
 
-    <div class="about-title   animate from-right delay-2">
+    <h2 class="about-title   animate from-right delay-2">
       <div class="about-title-line1">
         <span>Я</span>
         <span>дизайнер</span>
-      </div>
+      </h2>
       Создаю дизайн-контент,<br>
       и&nbsp;исследую его влияние<br>
       на&nbsp;эмоции людей.
@@ -979,7 +978,7 @@ html, body {
 <div class="screen-contact">
   <div class="contact-bg"></div>
   <div class="contact-photo animate from-left delay-1"></div>
-  <div class="contact-title animate from-right delay-2">Контакты</div>
+  <h2 class="contact-title animate from-right delay-2">Контакты</h2>
 
   <a href="https://instagram.com/apafenoz" target="_blank" 
      class="contact-link instagram animate from-right delay-3"></a>
@@ -1034,47 +1033,33 @@ html, body {
     document.documentElement.style.overflowY = 'auto';
   }
 
-  function checkAnimations() {
+function initAnimations() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll('.animate').forEach(el => el.classList.add('visible'));
     return;
   }
-  const scale = window.innerWidth / 1920;
-    const scrollY = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const viewBottom = (scrollY + windowHeight) / scale;
 
-    document.querySelectorAll('.animate:not(.visible)').forEach(el => {
-      const rect = el.getBoundingClientRect();
-      const realTop = (scrollY + rect.top) / scale;
-      if (realTop < viewBottom - 30) {
-        el.classList.add('visible');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       }
     });
-  }
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -30px 0px'
+  });
+
+  document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+}
 
     document.addEventListener('DOMContentLoaded', () => {
-    scalePage();
-    checkAnimations();
-  });
+  scalePage();
+  initAnimations();
+});
 
-  window.addEventListener('resize', () => {
-    scalePage();
-    checkAnimations();
-  });
-
-  window.addEventListener('load', () => {
-    setTimeout(checkAnimations, 100);
-  });
-
- function onScroll() {
-  checkAnimations();
-  const remaining = document.querySelectorAll('.animate:not(.visible)').length;
-  if (remaining === 0) {
-    window.removeEventListener('scroll', onScroll);
-  }
-}
-window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('resize', scalePage, { passive: true });
 </script>
 
 </body>
