@@ -12,26 +12,29 @@
       background: #fff;
       overflow-x: hidden;
     }
+  
+    :root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
 
     /* =====================
        АНИМАЦИИ (только 2-4 экран)
     ===================== */
-    .animate {
+ .animate {
   opacity: 0;
-  transition: opacity 0.7s ease, transform 0.7s ease;
-  --anim-transform: translateY(30px);
-  transform: var(--anim-transform);
+  transform: translateY(12px);
+  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
 }
 
-.animate.from-left   { --anim-transform: translateX(-40px); transform: var(--anim-transform); }
-.animate.from-right  { --anim-transform: translateX(40px);  transform: var(--anim-transform); }
-.animate.from-bottom { --anim-transform: translateY(40px);  transform: var(--anim-transform); }
-.animate.scale-in    { --anim-transform: scale(0.85);       transform: var(--anim-transform); }
+.animate.from-left   { transform: translateX(-20px); }
+.animate.from-right  { transform: translateX(20px); }
+.animate.from-bottom { transform: translateY(12px); }
+.animate.scale-in    { transform: scale(0.95); opacity: 0; }
 
 .animate.visible {
   opacity: 1;
-  --anim-transform: translateY(0);
-  transform: var(--anim-transform);
+  transform: none;
 }
 
 .rotate-90 {
@@ -40,19 +43,19 @@
 }
 
 .animate.rotate-90 {
-  transform: rotate(90deg) translateX(-40px) !important;
+  transform: rotate(90deg) translateX(-20px) !important;
 }
 
 .animate.rotate-90.visible {
   transform: rotate(90deg) translateX(0) !important;
 }
 
-    .delay-1 { transition-delay: 0.1s; }
-    .delay-2 { transition-delay: 0.2s; }
-    .delay-3 { transition-delay: 0.3s; }
-    .delay-4 { transition-delay: 0.4s; }
-    .delay-5 { transition-delay: 0.5s; }
-    .delay-6 { transition-delay: 0.6s; }
+.delay-1 { transition-delay: 0.05s; }
+.delay-2 { transition-delay: 0.10s; }
+.delay-3 { transition-delay: 0.15s; }
+.delay-4 { transition-delay: 0.20s; }
+.delay-5 { transition-delay: 0.25s; }
+.delay-6 { transition-delay: 0.30s; }
 
     /* =====================
        ЭКРАН 1 — ГЛАВНАЯ
@@ -709,8 +712,10 @@
   transition: opacity 0.2s;
 }
 
-.contact-link:hover {
-  opacity: 0.8;
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover {
+    opacity: 0.8;
+  }
 }
 
 .contact-link.instagram {
@@ -770,17 +775,12 @@
   white-space: nowrap;
 } 
 
-.animate.from-left.visible,
-.animate.from-right.visible,
-.animate.from-bottom.visible,
-.animate.scale-in.visible,
 .animate.visible {
-  opacity: 1 !important;
-  transform: none !important;
+  opacity: 1;
+  transform: none;
 }
 
 .animate.rotate-90.visible {
-  opacity: 1 !important;
   transform: rotate(90deg) translateX(0) !important;
 }
 
@@ -864,7 +864,13 @@ html, body {
   transform-origin: top left;
   will-change: transform;
 }
-
+@media (prefers-reduced-motion: reduce) {
+  .animate {
+    transition: opacity 0.2s ease;
+    transform: none !important;
+  }
+}
+    
   </style>
 </head>
 <body>
