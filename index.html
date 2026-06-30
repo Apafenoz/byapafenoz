@@ -8,15 +8,15 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-}
+    :root {
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    }
 
-body {
-  background: #fff;
-  overflow-x: hidden;
-}
+    body {
+      background: #fff;
+      overflow-x: hidden;
+    }
 
     /* =====================
        АНИМАЦИИ (только 2-4 экран)
@@ -51,6 +51,16 @@ body {
 .delay-4 { transition-delay: 0.20s; }
 .delay-5 { transition-delay: 0.25s; }
 .delay-6 { transition-delay: 0.30s; }
+
+.animate.visible {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.animate.rotate-90.visible {
+  transform: rotate(90deg) translateX(0) !important;
+}
 
     /* =====================
        ЭКРАН 1 — ГЛАВНАЯ
@@ -768,7 +778,7 @@ body {
   color: #2A005E;
 
   white-space: nowrap;
-} 
+}  
 
 /* logo */
 .footer-logo {
@@ -812,10 +822,6 @@ body {
 html, body {
   overflow-x: hidden;
   width: 100%;
-}
-
-.page-wrapper {
-  transform-origin: top left;
 }
 @media (prefers-reduced-motion: reduce) {
   .animate {
@@ -1047,7 +1053,10 @@ html, body {
     });
   }
 
-  scalePage();
+    document.addEventListener('DOMContentLoaded', () => {
+    scalePage();
+    checkAnimations();
+  });
 
   window.addEventListener('resize', () => {
     scalePage();
