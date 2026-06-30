@@ -872,26 +872,12 @@ html, body {
     transform: none !important;
   }
 
-    /* для кнопок — мгновенная смена без анимации роста */
   .contact-link__bg,
   .contact-link__img-bg {
     transition: none;
-    width: 100%;
-    opacity: 0;
   }
-  @media (hover: hover) and (pointer: fine) {
-    .contact-link:hover .contact-link__bg {
-      opacity: 1;
-    }
-    .contact-link:hover .contact-link__img-bg {
-      opacity: 0.5;
-    }
-    .contact-link:hover .contact-link__text {
-      color: #FFFFFF;
-    }
-  }
-    
-  </style>
+}
+</style>
 </head>
 <body>
 
@@ -1134,19 +1120,22 @@ function initAnimations() {
     checkVisible();
   }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-  document.addEventListener('scroll', onScroll, { passive: true });
+     window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true });
 
-  // первичная проверка
-  setTimeout(checkVisible, 100);
-  setTimeout(checkVisible, 500);
+    setTimeout(checkVisible, 100);
+    setTimeout(checkVisible, 500);
+  }
 
-    document.addEventListener('DOMContentLoaded', () => {
-  scalePage();
-  initAnimations();
-});
+  document.addEventListener('DOMContentLoaded', () => {
+    scalePage();
+    initAnimations();
+  });
 
-window.addEventListener('resize', scalePage, { passive: true });
+  window.addEventListener('resize', () => {
+    scalePage();
+    setTimeout(() => initAnimations(), 100);
+  }, { passive: true });
 </script>
 
 </body>
