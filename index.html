@@ -279,9 +279,9 @@
     }
 
     .about-emo {
-      position: absolute;
-      left: 1451px;
-      top: 96px;
+  position: absolute;
+  left: 1560px;
+  top: 103px;
       display: flex;
       flex-direction: row;
       gap: 2px;
@@ -302,113 +302,113 @@
     }
 
     .about-label-img {
-      position: absolute;
-      width: 140px;
-      height: 79px;
-      left: 1425px;
-      top: 696px;
-      background: url('assets/images/image-about-lable.webp') center/contain no-repeat;
-      z-index: 6;
-    }
+  position: absolute;
+  width: 140px;
+  height: 79px;
+  left: 1422px;
+  top: 570px;
+  background: url('assets/images/image-about-lable.webp') center/contain no-repeat;
+  z-index: 6;
+}
+
+/* фото внизу — v1021_173 */
+.about-photo-bottom {
+  position: absolute;
+  width: 217px;
+  height: 155px;
+  left: 945px;
+  top: 620px;
+  background: url('assets/images/image-delivery-2.webp') center/cover no-repeat;
+  z-index: 3;
+}
+
+/* подпись к фото — v1021_174 */
+.about-caption-bottom {
+  position: absolute;
+  left: 1160px;
+  top: 620px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  color: #6B6B6B;
+}
 
     .page-wrapper {
       transform-origin: top left;
     }
 
         /* =====================
-       ЭКРАН 3 — ВСТАВКА
-    ===================== */
-    .screen-insert {
-      position: relative;
-      width: 1920px;
-      height: 415px;
-      overflow: hidden;
-    }
+   ЭКРАН 3 — ВСТАВКА
+===================== */
+.screen-insert {
+  position: relative;
+  width: 1920px;
+  height: 332px;
+  overflow: hidden;
+  background: #ffffff;
+}
 
-    .insert-bg {
-      position: absolute;
-      width: 1920px;
-      height: 415px;
-      left: 0; top: 0;
-      background: url('assets/images/bg-about.png') center/cover no-repeat;
-      z-index: 0;
-    }
-
-    .insert-caption1 {
-      position: absolute;
-      left: 761px;
-      top: 85px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-style: italic;
-      font-weight: 300;
-      font-size: 13px;
-      line-height: 17px;
-      letter-spacing: -0.06em;
-      color: #6C6C6C;
-      white-space: nowrap;
-      z-index: 5;
-    }
-
-    .insert-photo1-wrap {
-      position: absolute;
-      width: 440px;
-      height: 282px;
-      left: 760px;
-      top: 103px;
-      background: #FFFFFF;
-      z-index: 2;
-      overflow: hidden;
-    }
-
-    .insert-photo1-img {
-      position: absolute;
-      width: 100%; height: 100%;
-      left: 0; top: 0;
-      background: url('assets/images/image-delivery-1.webp') center/cover no-repeat;
-    }
-
-    .insert-photo1-overlay {
-      position: absolute;
-      width: 100%; height: 100%;
-      left: 0; top: 0;
-      background: #972D2D;
-      mix-blend-mode: hue;
-    }
-
-    .insert-photo2 {
-      position: absolute;
-      width: 217px;
-      height: 155px;
-      left: 1325px;
-      top: 103px;
-      background: url('assets/images/image-delivery-2.webp') center/cover no-repeat;
-      z-index: 2;
-    }
-
- .insert-caption2 {
+.insert-bg {
   position: absolute;
-  width: 107px;
-  height: 17px;
-  left: 1558px;
-  top: 103px;
+  width: 1920px;
+  height: 332px;
+  left: 0;
+  top: 0;
+  background: url('assets/images/bg-about.png') center/cover no-repeat;
+  z-index: 0;
+}
+
+.insert-caption1 {
+  position: absolute;
+  left: 945px;
+  top: 8px;
   font-family: 'IBM Plex Mono', monospace;
   font-style: italic;
   font-weight: 300;
   font-size: 13px;
   line-height: 17px;
   letter-spacing: -0.06em;
-  color: #6C6C6C;
+  color: #6B6B6B;
   white-space: nowrap;
-  transform: rotate(90deg);
-  transform-origin: left top;
   z-index: 5;
+}
+
+.insert-photo1-pos {
+  position: absolute;
+  left: 945px;
+  top: 25px;
+  width: 413px;
+  height: 281px;
+  z-index: 2;
+}
+
+.insert-photo1-wrap {
+  position: absolute;
+  width: 413px;
+  height: 281px;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.insert-photo1-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: url('assets/images/image-delivery-1.webp') center/cover no-repeat;
 }
 
 .insert-text {
   position: absolute;
-  left: 1343px;
-  top: 301px;
-  width: 208px;
+  left: 1378px;
+  top: 21px;
+  width: 184px;
+  height: 11px;
   font-family: 'IBM Plex Mono', monospace;
   font-weight: 400;
   font-size: 16px;
@@ -416,6 +416,7 @@
   letter-spacing: -0.06em;
   color: #000000;
   text-align: justify;
+  text-align-last: justify;
   z-index: 5;
 }
 
@@ -926,35 +927,34 @@ html, body {
       и интерфейсы.
     </div>
 
-    <div class="about-emo     animate from-right delay-5">
-      <span>создаю, исследую.</span>
-      <span>экспериментирую,</span>
-    </div>
+   <div class="about-emo     animate from-right delay-5">
+  <span>эксперементирую,</span>
+  <span>создаю, иследую.</span>
+</div>
 
-    <div class="about-label-img animate scale-in delay-6"></div>
+<div class="about-label-img animate scale-in delay-6"></div>
+<div class="about-photo-bottom animate from-bottom delay-5"></div>
+<div class="about-caption-bottom animate from-bottom delay-6">Сочи, лето 2025</div>
   </div>
 
   <!-- ==================
-       ЭКРАН 3 — ВСТАВКА
-  ================== -->
-  <div class="screen-insert">
-    <div class="insert-bg"></div>
+     ЭКРАН 3 — ВСТАВКА
+================== -->
+<div class="screen-insert">
+  <div class="insert-bg"></div>
 
-    <div class="insert-caption1    animate           delay-1">Санкт-Петербург, весна 2025</div>
+  <div class="insert-caption1 animate delay-2">Санкт-Петербург, весна 2025</div>
 
-    <div class="insert-photo1-wrap animate from-left delay-2">
+  <div class="insert-photo1-pos animate from-left delay-2">
+    <div class="insert-photo1-wrap">
       <div class="insert-photo1-img"></div>
-      <div class="insert-photo1-overlay"></div>
-    </div>
-
-    <div class="insert-photo2      animate from-right delay-3"></div>
-    <div class="insert-caption2 animate rotate-90 delay-2">Сочи, лето 2025</div>
-
-    <div class="insert-text        animate from-bottom delay-4">
-      Увлекаюсь поиском деталей в нашей повседневности,
-      а также их  обработкой.
     </div>
   </div>
+<div class="insert-text animate from-bottom delay-3">
+  Увлекаюсь поиском деталей в нашей повседневности, а также их обработкой.
+</div>
+
+</div>
 
   <!-- ==================
        ЭКРАН 4 — INSET 2
@@ -1075,7 +1075,7 @@ html, body {
     function scalePage() {
     const wrapper = document.querySelector('.page-wrapper');
     const scale = window.innerWidth / 1920;
-    const totalHeight = 917 + 800 + 415 + 739 + 1300 + 800 + 110;
+    const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
     const scaledHeight = totalHeight * scale;
 
     wrapper.style.width = '1920px';
