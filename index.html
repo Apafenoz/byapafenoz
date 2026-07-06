@@ -310,7 +310,39 @@
       background: url('assets/images/image-about-lable.webp') center/contain no-repeat;
       z-index: 6;
     }
+    
+.about-emo-text {
+  position: absolute;
+  width: 127px;
+  left: 1560px;
+  top: 103px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: -0.06em;
+  color: #6B6B6B;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  z-index: 5;
+}
 
+.about-caption2 {
+  position: absolute;
+  width: 107px;
+  left: 1180px;
+  top: 620px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 17px;
+  letter-spacing: -0.06em;
+  color: #6B6B6B;
+  text-align: right;
+  z-index: 5;
+}
     .page-wrapper {
       transform-origin: top left;
     }
@@ -321,14 +353,14 @@
     .screen-insert {
       position: relative;
       width: 1920px;
-      height: 415px;
+      height: 332px;
       overflow: hidden;
     }
 
     .insert-bg {
       position: absolute;
       width: 1920px;
-      height: 415px;
+      height: 332px;
       left: 0; top: 0;
       background: url('assets/images/bg-about.png') center/cover no-repeat;
       z-index: 0;
@@ -336,8 +368,8 @@
 
     .insert-caption1 {
       position: absolute;
-      left: 761px;
-      top: 85px;
+      left: 945px;
+      top: 8px;
       font-family: 'IBM Plex Mono', monospace;
       font-style: italic;
       font-weight: 300;
@@ -350,14 +382,13 @@
     }
 
     .insert-photo1-wrap {
-      position: absolute;
-      width: 440px;
-      height: 282px;
-      left: 760px;
-      top: 103px;
-      background: #FFFFFF;
-      z-index: 2;
-      overflow: hidden;
+  position: absolute;
+  width: 413px;
+  height: 281px;
+  left: 945px;
+  top: 307px;
+  transform: rotate(-90deg);
+  transform-origin: top left;
     }
 
     .insert-photo1-img {
@@ -376,11 +407,11 @@
     }
 
     .insert-photo2 {
-      position: absolute;
-      width: 217px;
-      height: 155px;
-      left: 1325px;
-      top: 103px;
+  position: absolute;
+  width: 217px;
+  height: 155px;
+  left: 945px;
+  top: 620px;
       background: url('assets/images/image-delivery-2.webp') center/cover no-repeat;
       z-index: 2;
     }
@@ -932,7 +963,14 @@ html, body {
     </div>
 
     <div class="about-label-img animate scale-in delay-6"></div>
-  </div>
+
+<div class="about-emo-text animate from-right delay-5">
+  эксперементирую,<br>создаю, исследую.
+</div>
+
+<div class="about-caption2 animate from-bottom delay-4">
+  Сочи, лето 2025
+</div>
 
   <!-- ==================
        ЭКРАН 3 — ВСТАВКА
@@ -1075,7 +1113,7 @@ html, body {
     function scalePage() {
     const wrapper = document.querySelector('.page-wrapper');
     const scale = window.innerWidth / 1920;
-    const totalHeight = 917 + 800 + 415 + 739 + 1300 + 800 + 110;
+    const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
     const scaledHeight = totalHeight * scale;
 
     wrapper.style.width = '1920px';
