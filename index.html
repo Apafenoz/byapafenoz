@@ -6,7 +6,7 @@
   <title>ARAFENOZ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Sans:ital@1&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -20,13 +20,12 @@
       overflow-x: hidden;
     }
 
-    /* =====================
-       АНИМАЦИИ (только 2-4 экран)
-    ===================== */
- .animate {
+    /* === АНИМАЦИИ === */
+.animate {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  will-change: transform, opacity;
 }
 
 .animate.from-left   { transform: translateX(-20px); }
@@ -34,37 +33,77 @@
 .animate.from-bottom { transform: translateY(12px); }
 .animate.scale-in    { transform: scale(0.95); opacity: 0; }
 
-.rotate-90 {
-  transform: rotate(90deg) !important;
-  transform-origin: left top;
-}
-
-.animate.rotate-90 {
-  transform: rotate(90deg) translateX(-20px) !important;
-}
-
-.animate.rotate-90.visible {
-  transform: rotate(90deg) translateX(0) !important;
-}
-
-.delay-1 { transition-delay: 0.15s; }
-.delay-2 { transition-delay: 0.30s; }
-.delay-3 { transition-delay: 0.45s; }
-.delay-4 { transition-delay: 0.60s; }
-.delay-5 { transition-delay: 0.75s; }
-.delay-6 { transition-delay: 0.90s; }
-
 .animate.visible {
   opacity: 1;
   transform: none !important;
 }
 
-.contact-link.animate.visible {
-  overflow: hidden;
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.35s; }
+.delay-4 { transition-delay: 0.5s; }
+.delay-5 { transition-delay: 0.65s; }
+.delay-6 { transition-delay: 0.8s; }
+
+/* === КНОПКИ === */
+.contact-link__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;         
+  height: 100%;
+  background: #2A005E;
+  transform: scaleX(0); 
+  transform-origin: right center; 
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); 
+  will-change: transform; /* ← НОВОЕ */
+  z-index: 0;
 }
 
-.animate.rotate-90.visible {
-  transform: rotate(90deg) translateX(0) !important;
+.contact-link__img-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;           
+  height: 100%;
+  background-image: url('assets/images/Contact Information/img-bg.png');
+  background-size: 300px 100%;
+  background-position: left center;
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform, opacity;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contact-link__text {
+  position: relative;
+  z-index: 2;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #000000;
+  transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover .contact-link__bg {
+    transform: scaleX(1); /* ← было width: 100% */
+  }
+  .contact-link:hover .contact-link__img-bg {
+    transform: scaleX(1); /* ← было width: 100% */
+    opacity: 0.5;
+  }
+  .contact-link:hover .contact-link__text {
+    color: #FFFFFF;
+  }
 }
 
     /* =====================
@@ -110,15 +149,6 @@
       mix-blend-mode: darken;
       transform: rotate(90deg);
       z-index: 1;
-    }
-
-    .main-vector {
-      position: absolute;
-      width: 118.45px;
-      height: 46.96px;
-      left: calc(50% - 118.45px/2 - 472.35px);
-      top: calc(50% - 46.96px/2 + 43.89px);
-      z-index: 3;
     }
 
     .main-icone {
@@ -726,68 +756,9 @@
 
 /* позиции */
 .contact-link.instagram { top: 330px; }
-.contact-link.telegramm { top: 380px; }
+.contact-link.telegram { top: 380px; }
 .contact-link.vk        { top: 430px; }
 .contact-link.mail      { top: 480px; }
-
-/* bg — тёмный прямоугольник, z-index: 0 (нижний слой) */
-.contact-link__bg {
-  position: absolute;
-  top: 0;
-  right: 0;           /* прикреплён к правому краю */
-  width: 1px;         /* начинает с 1px */
-  height: 100%;
-  background: #2A005E;
-  transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  z-index: 0;
-}
-
-/* img-bg — фото поверх bg, opacity 0.5 */
-.contact-link__img-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;           /* ← скрыта пока нет hover */
-  height: 100%;
-  background-image: url('assets/images/Contact Information/img-bg.png');
-  background-size: 300px 100%;   /* ← фиксированный размер чтобы не растягивалась */
-  background-position: left center;
-  opacity: 0;           /* ← невидима в default состоянии */
-  z-index: 1;
-  pointer-events: none;
-  transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-              opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-/* текст — самый верхний слой */
-.contact-link__text {
-  position: relative;
-  z-index: 2;
-  padding-left: 15px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 21px;
-  letter-spacing: -0.06em;
-  color: #2A005E;
-  transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-/* hover */
-@media (hover: hover) and (pointer: fine) {
-  .contact-link:hover .contact-link__bg {
-    width: 100%;
-  }
-  .contact-link:hover .contact-link__img-bg {
-    width: 100%;              /* ← img-bg растёт вместе с bg */
-    opacity: 0.5;             /* ← появляется */
-  }
-  .contact-link:hover .contact-link__text {
-    color: #FFFFFF;
-  }
-}
 
 /* footer */
 .footer {
@@ -881,18 +852,6 @@ html, body {
   }
 }
 
-.ibm-plex-mono-thin {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.ibm-plex-mono-extralight {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 200;
-  font-style: normal;
-}
-
 .ibm-plex-mono-light {
   font-family: "IBM Plex Mono", monospace;
   font-weight: 300;
@@ -923,17 +882,6 @@ html, body {
   font-style: normal;
 }
 
-.ibm-plex-mono-thin-italic {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.ibm-plex-mono-extralight-italic {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 200;
-  font-style: italic;
-}
 
 .ibm-plex-mono-light-italic {
   font-family: "IBM Plex Mono", monospace;
@@ -947,24 +895,6 @@ html, body {
   font-style: italic;
 }
 
-.ibm-plex-mono-medium-italic {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.ibm-plex-mono-semibold-italic {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.ibm-plex-mono-bold-italic {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 700;
-  font-style: italic;
-}
-
 </style>
 </head>
 <body>
@@ -975,13 +905,12 @@ html, body {
        ЭКРАН 1 — ГЛАВНАЯ
   ================== -->
   <div class="screen-main">
-    <video class="main-video" autoplay muted loop playsinline>
-      <source src="assets/video/bg-video.mp4" type="video/mp4">
-    </video>
+ <video class="main-video" autoplay muted loop playsinline preload="metadata">
+  <source src="assets/video/bg-video.mp4" type="video/mp4">
+</video>
     <div class="main-003"></div>
     <div class="main-by"></div>
     <div class="main-icone"></div>
-    <div class="main-vector"></div>
     <div class="main-pkd"></div>
     <div class="main-label main-creative">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ</div>
     <div class="main-label main-name">SAFRONOV DENIS</div>
@@ -1015,8 +944,8 @@ html, body {
     </div>
 
    <div class="about-emo     animate from-right delay-5">
-  <span>эксперементирую,</span>
-  <span>создаю, иследую.</span>
+  <span>экспериментирую,</span>
+  <span>создаю, исследую.</span>
 </div>
 
 <div class="about-label-img animate scale-in delay-6"></div>
@@ -1057,7 +986,7 @@ html, body {
     </p>
 
     <div class="inset2-logo animate scale-in delay-3">
-      <img src="assets/images/logo.webp" width="60" height="60">
+      <img src="assets/images/logo.webp" width="60" height="60" alt="">
     </div>
   </div>
 
@@ -1112,21 +1041,21 @@ html, body {
   <div class="contact-photo animate from-left delay-1"></div>
   <h2 class="contact-title animate from-right delay-2">Контакты</h2>
 
-   <a href="https://instagram.com/apafenoz" target="_blank" 
+   <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" 
    class="contact-link instagram animate from-right delay-3">
   <span class="contact-link__bg"></span>
   <span class="contact-link__img-bg"></span>
   <span class="contact-link__text">Instagram</span>
 </a>
 
-<a href="https://t.me/apafenoz" target="_blank" 
-   class="contact-link telegramm animate from-right delay-4">
+<a href="https://t.me/apafenoz" target="_blank" rel="noopener noreferrer" 
+   class="contact-link telegram animate from-right delay-4">
   <span class="contact-link__bg"></span>
   <span class="contact-link__img-bg"></span>
-  <span class="contact-link__text">Telegramm</span>
+  <span class="contact-link__text">Telegram</span>
 </a>
 
-<a href="https://vk.com/apafenoz" target="_blank" 
+<a href="https://vk.com/apafenoz" target="_blank" rel="noopener noreferrer" 
    class="contact-link vk animate from-right delay-5">
   <span class="contact-link__bg"></span>
   <span class="contact-link__img-bg"></span>
@@ -1134,7 +1063,7 @@ html, body {
 </a>
 
 <a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" 
-   target="_blank"
+   target="_blank" rel="noopener noreferrer"
    class="contact-link mail animate from-right delay-6">
   <span class="contact-link__bg"></span>
   <span class="contact-link__img-bg"></span>
@@ -1159,27 +1088,19 @@ html, body {
 </div><!-- конец page-wrapper -->
 
 <script>
-    function scalePage() {
-    const wrapper = document.querySelector('.page-wrapper');
-    const scale = window.innerWidth / 1920;
-    const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
-    const scaledHeight = totalHeight * scale;
+function scalePage() {
+  const wrapper = document.querySelector('.page-wrapper');
+  const scale = window.innerWidth / 1920;
+  const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
+  const scaledHeight = totalHeight * scale;
 
-    wrapper.style.width = '1920px';
-    wrapper.style.height = totalHeight + 'px';
-    wrapper.style.transform = 'none';
-    wrapper.style.transformOrigin = 'top left';
-    wrapper.style.zoom = scale;
+  wrapper.style.width = '1920px';
+  wrapper.style.height = totalHeight + 'px';
+  wrapper.style.transform = `scale(${scale})`;
+  wrapper.style.transformOrigin = 'top left';
 
-    document.body.style.height = scaledHeight + 'px';
-    document.body.style.width = '100%';
-    document.body.style.overflowX = 'hidden';
-    document.body.style.overflowY = 'auto';
-
-    document.documentElement.style.height = 'auto';
-    document.documentElement.style.overflowX = 'hidden';
-    document.documentElement.style.overflowY = 'auto';
-  }
+  document.body.style.height = scaledHeight + 'px';
+}
 
 function initAnimations() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -1187,42 +1108,36 @@ function initAnimations() {
     return;
   }
 
-  function checkVisible() {
-    const windowHeight = window.innerHeight;
-
-    document.querySelectorAll('.animate:not(.visible)').forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < windowHeight - 30) {
-        el.classList.add('visible');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        entry.target.addEventListener('transitionend', () => {
+          entry.target.style.willChange = 'auto';
+        }, { once: true });
+        io.unobserve(entry.target);
       }
     });
+  }, { rootMargin: '0px 0px -30px 0px' });
 
-    // отключаем когда все видимы
-    if (document.querySelectorAll('.animate:not(.visible)').length === 0) {
-      window.removeEventListener('scroll', onScroll);
-    }
+  document.querySelectorAll('.animate').forEach(el => io.observe(el));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  scalePage();
+  initAnimations();
+});
+
+let resizeTicking = false;
+window.addEventListener('resize', () => {
+  if (!resizeTicking) {
+    requestAnimationFrame(() => {
+      scalePage();
+      resizeTicking = false;
+    });
+    resizeTicking = true;
   }
-
-  function onScroll() {
-    checkVisible();
-  }
-
-     window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('scroll', onScroll, { passive: true });
-
-    setTimeout(checkVisible, 100);
-    setTimeout(checkVisible, 500);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    scalePage();
-    initAnimations();
-  });
-
-  window.addEventListener('resize', () => {
-    scalePage();
-    setTimeout(() => initAnimations(), 100);
-  }, { passive: true });
+}, { passive: true });
 </script>
 
 </body>
