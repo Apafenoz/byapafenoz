@@ -13,12 +13,45 @@
     :root {
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
       --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity;
+  transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#preloader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Логотип-заглушка пока грузится */
+.preloader-logo {
+  width: 120px;
+  height: 120px;
+  background: url('assets/images/logo.webp') center/contain no-repeat;
+  will-change: opacity;
+  animation: preloader-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes preloader-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.4; transform: scale(0.92); }
+}
+
     }
 
-    body {
-      background: #fff;
-      overflow-x: hidden;
-    }
+   body {
+  background: #fff;
+  overflow-x: hidden;
+}
 
     /* === АНИМАЦИИ === */
 .animate {
@@ -899,28 +932,39 @@ html, body {
 </head>
 <body>
 
+<div id="preloader">
+  <div class="preloader-logo"></div>
+</div>                       
+
 <div class="page-wrapper">
 
   <!-- ==================
        ЭКРАН 1 — ГЛАВНАЯ
   ================== -->
   <div class="screen-main">
- <video class="main-video" autoplay muted loop playsinline preload="metadata">
+ <video
+  class="main-video"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto"
+  id="main-video"
+>
   <source src="assets/video/bg-video.mp4" type="video/mp4">
 </video>
-    <div class="main-003"></div>
-    <div class="main-by"></div>
-    <div class="main-icone"></div>
-    <div class="main-pkd"></div>
-    <div class="main-label main-creative">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ</div>
-    <div class="main-label main-name">SAFRONOV DENIS</div>
-    <div class="main-label main-type">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</div>
-    <div class="main-label main-desc">Продуктовый дизайнер с бэкграундом в графике.</div>
-  </div>
 
-  <!-- ==================
-       ЭКРАН 2 — ABOUT
-  ================== -->
+<div class="main-by     animate scale-in  delay-1"></div>
+  <div class="main-003"></div>
+  <div class="main-icone  animate scale-in  delay-2"></div>
+  <div class="main-pkd    animate scale-in  delay-3"></div>
+  <div class="main-label main-creative animate delay-4">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ — в каждом проекте</div>
+  <div class="main-label main-name     animate delay-2">Сафронов Денис</div>
+  <div class="main-label main-type     animate delay-2">Графический и продуктовый дизайн</div>
+  <div class="main-label main-desc     animate delay-4">ДИЗАЙН, КОТОРЫЙ ЧУВСТВУЮТ</div>
+
+</div>
+
   <div class="screen-about">
     <div class="about-bg"></div>
 
@@ -1088,7 +1132,7 @@ html, body {
 </div><!-- конец page-wrapper -->
 
 <script>
-// Высоты секций в px (layout, до scale)
+// ── Высоты секций ──────────────────────────────────────
 const SECTION_TOPS = {
   'screen-main':      0,
   'screen-about':     917,
@@ -1099,6 +1143,7 @@ const SECTION_TOPS = {
   'footer':           917 + 800 + 332 + 739 + 1300 + 800,
 };
 
+// ── Масштаб страницы ───────────────────────────────────
 function scalePage() {
   const wrapper = document.querySelector('.page-wrapper');
   const scale = window.innerWidth / 1920;
@@ -1114,8 +1159,8 @@ function getScale() {
   return window.innerWidth / 1920;
 }
 
+// ── Позиция элемента в layout ──────────────────────────
 function getSectionTop(el) {
-  // Ищем родительскую секцию
   for (const [cls, top] of Object.entries(SECTION_TOPS)) {
     if (el.closest('.' + cls)) return top;
   }
@@ -1124,7 +1169,6 @@ function getSectionTop(el) {
 
 function getAbsLayoutTop(el) {
   const sectionTop = getSectionTop(el);
-  // offsetTop внутри секции
   let top = 0;
   let node = el;
   const section = el.closest(
@@ -1137,6 +1181,7 @@ function getAbsLayoutTop(el) {
   return sectionTop + top;
 }
 
+// ── Анимации появления ─────────────────────────────────
 function initAnimations() {
   const els = Array.from(document.querySelectorAll('.animate'));
 
@@ -1185,8 +1230,49 @@ function initAnimations() {
   check();
 }
 
+// ── Прелоадер ──────────────────────────────────────────
+function hidePreloader() {
+  const preloader = document.getElementById('preloader');
+  preloader.classList.add('hidden');
+  // Удаляем из DOM после окончания transition
+  preloader.addEventListener('transitionend', () => {
+    preloader.remove();
+  }, { once: true });
+}
+
+function initPreloader() {
+  const video = document.getElementById('main-video');
+  
+  // Таймаут — если видео грузится дольше 4 сек, всё равно показываем страницу
+  const fallbackTimer = setTimeout(hidePreloader, 4000);
+
+  function onVideoReady() {
+    clearTimeout(fallbackTimer);
+    // Небольшая пауза чтобы первый кадр точно отрисовался
+    requestAnimationFrame(() => {
+      requestAnimationFrame(hidePreloader);
+    });
+  }
+
+  if (video) {
+    // canplaythrough — браузер считает что может воспроизвести без остановок
+    video.addEventListener('canplaythrough', onVideoReady, { once: true });
+    // На мобильных autoplay может быть заблокирован — fallback через loadeddata
+    video.addEventListener('loadeddata', () => {
+      // Если видео уже готово — сразу скрываем
+      if (video.readyState >= 3) onVideoReady();
+    }, { once: true });
+  } else {
+    // Видео нет — скрываем сразу
+    clearTimeout(fallbackTimer);
+    hidePreloader();
+  }
+}
+
+// ── Инициализация ──────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   scalePage();
+  initPreloader();
   initAnimations();
 });
 
