@@ -1088,39 +1088,101 @@ html, body {
 </div><!-- конец page-wrapper -->
 
 <script>
+// Высоты секций в px (layout, до scale)
+const SECTION_TOPS = {
+  'screen-main':      0,
+  'screen-about':     917,
+  'screen-insert':    917 + 800,
+  'screen-inset2':    917 + 800 + 332,
+  'screen-direction': 917 + 800 + 332 + 739,
+  'screen-contact':   917 + 800 + 332 + 739 + 1300,
+  'footer':           917 + 800 + 332 + 739 + 1300 + 800,
+};
+
 function scalePage() {
   const wrapper = document.querySelector('.page-wrapper');
   const scale = window.innerWidth / 1920;
   const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
-  const scaledHeight = totalHeight * scale;
-
   wrapper.style.width = '1920px';
   wrapper.style.height = totalHeight + 'px';
   wrapper.style.transform = `scale(${scale})`;
   wrapper.style.transformOrigin = 'top left';
+  document.body.style.height = totalHeight * scale + 'px';
+}
 
-  document.body.style.height = scaledHeight + 'px';
+function getScale() {
+  return window.innerWidth / 1920;
+}
+
+function getSectionTop(el) {
+  // Ищем родительскую секцию
+  for (const [cls, top] of Object.entries(SECTION_TOPS)) {
+    if (el.closest('.' + cls)) return top;
+  }
+  return 0;
+}
+
+function getAbsLayoutTop(el) {
+  const sectionTop = getSectionTop(el);
+  // offsetTop внутри секции
+  let top = 0;
+  let node = el;
+  const section = el.closest(
+    '.screen-main,.screen-about,.screen-insert,.screen-inset2,.screen-direction,.screen-contact,.footer'
+  );
+  while (node && node !== section) {
+    top += node.offsetTop;
+    node = node.offsetParent;
+  }
+  return sectionTop + top;
 }
 
 function initAnimations() {
+  const els = Array.from(document.querySelectorAll('.animate'));
+
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll('.animate').forEach(el => el.classList.add('visible'));
+    els.forEach(el => el.classList.add('visible'));
     return;
   }
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        entry.target.addEventListener('transitionend', () => {
-          entry.target.style.willChange = 'auto';
-        }, { once: true });
-        io.unobserve(entry.target);
-      }
-    });
-  }, { rootMargin: '0px 0px -30px 0px' });
+  let pending = els;
 
-  document.querySelectorAll('.animate').forEach(el => io.observe(el));
+  function check() {
+    const vh     = window.innerHeight;
+    const sc     = getScale();
+    const scrollY = window.scrollY;
+
+    pending = pending.filter(el => {
+      const layoutTop    = getAbsLayoutTop(el);
+      const layoutBottom = layoutTop + el.offsetHeight;
+      const screenTop    = layoutTop    * sc - scrollY;
+      const screenBottom = layoutBottom * sc - scrollY;
+
+      if (screenTop < vh - 30 && screenBottom > 0) {
+        el.classList.add('visible');
+        el.addEventListener('transitionend', () => {
+          el.style.willChange = 'auto';
+        }, { once: true });
+        return false;
+      }
+      return true;
+    });
+
+    if (pending.length === 0) {
+      window.removeEventListener('scroll', onScroll);
+    }
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => { check(); ticking = false; });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  check();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1133,6 +1195,7 @@ window.addEventListener('resize', () => {
   if (!resizeTicking) {
     requestAnimationFrame(() => {
       scalePage();
+      window.dispatchEvent(new Event('scroll'));
       resizeTicking = false;
     });
     resizeTicking = true;
