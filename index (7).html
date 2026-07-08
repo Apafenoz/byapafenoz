@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARAFENOZ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Sans:ital@1&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity;
+  transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#preloader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Логотип-заглушка пока грузится */
+.preloader-logo {
+  width: 120px;
+  height: 120px;
+  background: url('assets/images/logo.webp') center/contain no-repeat;
+  will-change: opacity;
+  animation: preloader-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes preloader-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.4; transform: scale(0.92); }
+}
+
+    }
+
+   body {
+  background: #fff;
+  overflow-x: hidden;
+}
+
+    /* === АНИМАЦИИ === */
+.animate {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  will-change: transform, opacity;
+}
+
+.animate.from-left   { transform: translateX(-20px); }
+.animate.from-right  { transform: translateX(20px); }
+.animate.from-bottom { transform: translateY(12px); }
+.animate.scale-in    { transform: scale(0.95); opacity: 0; }
+
+.animate.visible {
+  opacity: 1;
+  transform: none !important;
+}
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.35s; }
+.delay-4 { transition-delay: 0.5s; }
+.delay-5 { transition-delay: 0.65s; }
+.delay-6 { transition-delay: 0.8s; }
+
+/* === КНОПКИ === */
+.contact-link__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;         
+  height: 100%;
+  background: #2A005E;
+  transform: scaleX(0); 
+  transform-origin: right center; 
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); 
+  will-change: transform; /* ← НОВОЕ */
+  z-index: 0;
+}
+
+.contact-link__img-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;           
+  height: 100%;
+  background-image: url('assets/images/Contact Information/img-bg.png');
+  background-size: 300px 100%;
+  background-position: left center;
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform, opacity;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contact-link__text {
+  position: relative;
+  z-index: 2;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #000000;
+  transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover .contact-link__bg {
+    transform: scaleX(1); /* ← было width: 100% */
+  }
+  .contact-link:hover .contact-link__img-bg {
+    transform: scaleX(1); /* ← было width: 100% */
+    opacity: 0.5;
+  }
+  .contact-link:hover .contact-link__text {
+    color: #FFFFFF;
+  }
+}
+
+    /* =====================
+       ЭКРАН 1 — ГЛАВНАЯ
+    ===================== */
+    .screen-main {
+      position: relative;
+      width: 1920px;
+      height: 917px;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+
+    .main-video {
+      position: absolute;
+      width: 1920px;
+      height: 917px;
+      left: 0; top: 0;
+      object-fit: cover;
+      opacity: 0.8;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .main-by {
+      position: absolute;
+      width: 1097.44px;
+      height: 183.46px;
+      left: calc(50% - 1097.44px/2 + 17.14px);
+      top: calc(50% - 183.46px/2 + 0.03px);
+      background: url('assets/images/byApafenoz.webp') center/contain no-repeat;
+      mix-blend-mode: darken;
+      z-index: 2;
+    }
+
+    .main-003 {
+      position: absolute;
+      width: 183.46px;
+      height: 978.98px;
+      left: calc(50% - 183.46px/2 - 321.39px);
+      top: calc(50% - 978.98px/2 + 397.79px);
+      background: url('003.jpg') center/cover no-repeat;
+      mix-blend-mode: darken;
+      transform: rotate(90deg);
+      z-index: 1;
+    }
+
+    .main-icone {
+      position: absolute;
+      width: 71.95px;
+      height: 19.98px;
+      left: 311.1px;
+      top: 71.85px;
+      background: url('assets/images/icone 2.webp') center/contain no-repeat;
+      z-index: 5;
+    }
+
+    .main-pkd {
+      position: absolute;
+      width: 72.48px;
+      height: 14.97px;
+      left: calc(50% - 72.48px/2 + 612.66px);
+      top: calc(50% - 14.97px/2 + 405.17px);
+      background: url('assets/images/п.к.д..webp') center/contain no-repeat;
+      z-index: 4;
+    }
+
+    .main-label {
+      position: absolute;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: #323232;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .main-creative {
+      width: 268px;
+      height: 18px;
+      left: 1268.22px;
+      top: 550.26px;
+    }
+    .main-name {
+      width: 113px;
+      height: 18px;
+      left: 1418.84px;
+      top: 316.91px;
+    }
+    .main-type {
+      width: 193px;
+      height: 18px;
+      left: 527.4px;
+      top: 315.7px;
+    }
+    .main-desc {
+      width: 365px;
+      height: 18px;
+      left: 527.4px;
+      top: 733.6px;
+      text-transform: uppercase;
+    }
+
+    /* =====================
+       ЭКРАН 2 — ABOUT
+    ===================== */
+    .screen-about {
+      position: relative;
+      width: 1920px;
+      height: 800px;
+      overflow: hidden;
+    }
+
+    .about-bg {
+      position: absolute;
+      width: 1920px;
+      height: 800px;
+      left: 0; top: 0;
+      background: url('assets/images/bg-image.png') center/cover no-repeat;
+      z-index: 0;
+    }
+
+    .about-photo2 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 495px;
+      top: 253px;
+      background: url('assets/images/image-about-2.webp') center/cover no-repeat;
+      z-index: 3;
+    }
+
+    .about-photo1 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 659px;
+      top: 103px;
+      background: url('assets/images/image-about-1.webp') center/cover no-repeat;
+      z-index: 3;
+    }
+
+    .about-icone {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      left: 435px;
+      top: 25px;
+      background: url('assets/images/icones-about.webp') center/contain no-repeat;
+      z-index: 4;
+    }
+
+    .about-hello {
+      position: absolute;
+      width: 90px;
+      height: 32px;
+      left: 659px;
+      top: 278px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 16px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      z-index: 5;
+    }
+
+    .about-title {
+      position: absolute;
+      width: 430px;
+      height: 188px;
+      left: 945px;
+      top: 96px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 47px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      text-align: justify;
+      text-align-last: justify;
+      z-index: 5;
+    }
+
+    .about-text {
+      position: absolute;
+      width: 480px;
+      height: 126px;
+      left: 945px;
+      top: 334px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      text-align: justify;
+      text-align-last: justify;
+      z-index: 5;
+    }
+
+    .about-emo {
+  position: absolute;
+  left: 1560px;
+  top: 103px;
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
+      z-index: 5;
+    }
+
+    .about-emo span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      color: #6C6C6C;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+    }
+
+    .about-label-img {
+  position: absolute;
+  width: 140px;
+  height: 79px;
+  left: 1422px;
+  top: 570px;
+  background: url('assets/images/image-about-lable.webp') center/contain no-repeat;
+  z-index: 6;
+}
+
+/* фото внизу — v1021_173 */
+.about-photo-bottom {
+  position: absolute;
+  width: 217px;
+  height: 155px;
+  left: 945px;
+  top: 620px;
+  background: url('assets/images/image-delivery-2.webp') center/cover no-repeat;
+  z-index: 3;
+}
+
+/* подпись к фото — v1021_174 */
+.about-caption-bottom {
+  position: absolute;
+  left: 1160px;
+  top: 620px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  color: #6B6B6B;
+}
+
+    .page-wrapper {
+      transform-origin: top left;
+    }
+
+        /* =====================
+   ЭКРАН 3 — ВСТАВКА
+===================== */
+.screen-insert {
+  position: relative;
+  width: 1920px;
+  height: 332px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.insert-bg {
+  position: absolute;
+  width: 1920px;
+  height: 332px;
+  left: 0;
+  top: 0;
+  background: url('assets/images/bg-about.png') center/cover no-repeat;
+  z-index: 0;
+}
+
+.insert-caption1 {
+  position: absolute;
+  left: 945px;
+  top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 17px;
+  letter-spacing: -0.06em;
+  color: #6B6B6B;
+  white-space: nowrap;
+  z-index: 5;
+}
+
+.insert-photo1-pos {
+  position: absolute;
+  left: 945px;
+  top: 25px;
+  width: 413px;
+  height: 281px;
+  z-index: 2;
+}
+
+.insert-photo1-wrap {
+  position: absolute;
+  width: 413px;
+  height: 281px;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.insert-photo1-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: url('assets/images/image-delivery-1.webp') center/cover no-repeat;
+}
+
+.insert-text {
+  position: absolute;
+  left: 1378px;
+  top: 21px;
+  width: 184px;
+  height: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #000000;
+  text-align: justify;
+  text-align-last: justify;
+  z-index: 5;
+}
+
+    /* =====================
+       ЭКРАН 4 — INSET 2
+    ===================== */
+    .screen-inset2 {
+      position: relative;
+      width: 1920px;
+      height: 739px;
+      overflow: hidden;
+    }
+
+    .inset2-bg {
+      position: absolute;
+      width: 1920px; height: 739px;
+      left: 0; top: 0;
+      background: url('assets/images/bg-Inset3.webp') center/cover no-repeat;
+      z-index: 0;
+    }
+
+    .inset2-text {
+      position: absolute;
+      width: 386px;
+      height: 105px;
+      left: 360px;
+      top: 346px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      text-align: justify;
+      letter-spacing: -0.06em;
+      color: #FFFFFF;
+      margin: 0;
+      z-index: 2;
+    }
+
+    .inset2-logo {
+      position: absolute;
+      width: 60px; height: 60px;
+      left: 780px;
+      top: 355px;
+      z-index: 3;
+    }
+
+/* =====================
+   ЭКРАН 5 — DIRECTION
+===================== */
+.screen-direction {
+  position: relative;
+  width: 1920px;
+  height: 1300px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.direction-bg {
+  position: absolute;
+  width: 1920px;
+  height: 1300px;
+  left: 0; top: 0;
+  background: url('assets/images/direction/bg.png') center/cover no-repeat;
+  z-index: 0;
+}
+
+.direction-label {
+  position: absolute;
+  width: 1200px;
+  height: 56px;
+  left: calc(50% - 600px);
+  top: 35px;
+  background: url('assets/images/direction/lable.png') center/contain no-repeat;
+  z-index: 3;
+}
+
+.direction-title1 {
+  position: absolute;
+  width: 467px;
+  height: 47px;
+  left: calc(50% - 467px/2 - 199.1px);
+  top: 183.98px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: #2A005E;
+  z-index: 3;
+}
+
+.direction-title2 {
+  position: absolute;
+  width: 372px;
+  height: 47px;
+  left: calc(50% - 372px/2 + 247.35px);
+  top: 230.98px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: #2A005E;
+  z-index: 3;
+}
+
+.direction-poster-wrap {
+  position: absolute;
+  width: 815px;
+  height: 410px;
+  right: 0px;
+  top: 777px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.direction-poster-img {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: url('assets/images/direction/image-poster.webp') center/cover no-repeat;
+}
+
+.direction-poster-overlay {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: #2A005E;
+  mix-blend-mode: hue;
+}
+
+.direction-product-wrap {
+  position: absolute;
+  width: 815px;
+  height: 410px;
+  left: 0px;
+  top: 328.14px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.direction-product-img {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: url('assets/images/direction/image-product.webp') center/cover no-repeat;
+}
+
+.direction-product-overlay {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: #2A005E;
+  mix-blend-mode: hue;
+}
+
+.direction-scan1 {
+  position: absolute;
+  width: 300px;
+  height: 150px;
+  left: 1107.3px;
+  top: 677px;
+  background: url('assets/images/direction/image-1.webp') center/contain no-repeat;
+  z-index: 4;
+}
+
+.direction-scan2 {
+  position: absolute;
+  width: 300px;
+  height: 100px;
+  left: 515px;
+  top: 720px;
+  background: url('assets/images/direction/image-2.webp') center/contain no-repeat;
+  z-index: 4;
+}
+
+.direction-caption1 {
+  position: absolute;
+  width: 260px;
+  height: 21px;
+  left: calc(50% - 260px/2 + 277.3px);
+  top: 700px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #2A005E;
+  z-index: 4;
+}
+
+.direction-caption2 {
+  position: absolute;
+  width: 286px;
+  height: 25px;
+  left: calc(50% - 286px/2 - 302px);
+  top: 800px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #2A005E;
+  z-index: 4;
+}
+
+/* Иконка 1 — обёртка для поворота */
+.direction-icone1-wrap {
+  position: absolute;
+  width: 19.98px;
+  height: 71.94px;
+  left: 1080.41px;
+  top: 1115.06px;
+  z-index: 4;
+}
+
+.direction-icone1 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0; top: 0;
+  background: url('assets/images/direction/icone-1.webp') center/contain no-repeat;
+}
+
+/* Иконка 2 */
+.direction-icone2 {
+  position: absolute;
+  width: 12px;
+  height: 76.37px;
+  left: 817.66px;
+  top: 661.77px;
+  background: url('assets/images/direction/icone-2.webp') center/contain no-repeat;
+  z-index: 4;
+}
+
+/* =====================
+   ЭКРАН 6 — CONTACT
+===================== */
+.screen-contact {
+  position: relative;
+  width: 1920px;
+  height: 800px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.contact-bg {
+  position: absolute;
+  width: 1920px;
+  height: 800px;
+  left: 0;
+  top: 0;
+  background: url('assets/images/Contact Information/bg.png') center/cover no-repeat;
+  z-index: 0;
+}
+
+.contact-photo {
+  position: absolute;
+  width: 970px;
+  height: 800px;
+  left: 0;
+  top: 0;
+  background: url('assets/images/Contact Information/image.webp') center/cover no-repeat;
+  z-index: 1;
+}
+
+.contact-title {
+  position: absolute;
+  width: 158px;
+  height: 47px;
+  left: 1051px;
+  top: 307px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+  letter-spacing: -0.06em;
+  color: #000000;
+  z-index: 2;
+}
+
+/* контейнер кнопки */
+.contact-link {
+  position: absolute;
+  width: 300px;
+  height: 30px;
+  left: 1262px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #FFFFFF;
+  z-index: 10;
+  cursor: pointer;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+/* позиции */
+.contact-link.instagram { top: 330px; }
+.contact-link.telegram { top: 380px; }
+.contact-link.vk        { top: 430px; }
+.contact-link.mail      { top: 480px; }
+
+/* footer */
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 28px 473px;
+  gap: 239px;
+
+  position: relative;
+  width: 1920px;
+  height: 110px;
+
+  background: #FFFFFF;
+  box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.25);
+
+  box-sizing: border-box;
+}
+
+/* name */
+.footer-name {
+  flex: none;
+  order: 2;
+  flex-grow: 0;
+
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
+
+  color: #2A005E;
+
+  white-space: nowrap;
+}  
+
+/* logo */
+.footer-logo {
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+
+  width: 258.99px;
+  height: 43.29px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* direction */
+.footer-direction {
+  flex: none;
+  order: 0;        /* ← было 2, исправлено */
+  flex-grow: 0;
+
+  width: 93px;
+  height: 54px;
+
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+
+  color: #2A005E;
+}
+
+/* Мобильная адаптация */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate {
+    transition: opacity 0.2s ease;
+    transform: none !important;
+  }
+
+  .contact-link__bg,
+  .contact-link__img-bg {
+    transition: none;
+  }
+}
+
+.ibm-plex-mono-light {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.ibm-plex-mono-regular {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ibm-plex-mono-medium {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.ibm-plex-mono-semibold {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.ibm-plex-mono-bold {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+.ibm-plex-mono-light-italic {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.ibm-plex-mono-regular-italic {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="preloader-logo"></div>
+</div>                       
+
+<div class="page-wrapper">
+
+  <!-- ==================
+       ЭКРАН 1 — ГЛАВНАЯ
+  ================== -->
+  <div class="screen-main">
+ <video
+  class="main-video"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto"
+  id="main-video"
+>
+  <source src="assets/video/bg-video.mp4" type="video/mp4">
+</video>
+
+<div class="main-by     animate scale-in  delay-1"></div>
+  <div class="main-003"></div>
+  <div class="main-icone  animate scale-in  delay-2"></div>
+  <div class="main-pkd    animate scale-in  delay-3"></div>
+  <div class="main-label main-creative animate delay-4">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ — в каждом проекте</div>
+  <div class="main-label main-name     animate delay-2">Сафронов Денис</div>
+  <div class="main-label main-type     animate delay-2">Графический и продуктовый дизайн</div>
+  <div class="main-label main-desc     animate delay-4">ДИЗАЙН, КОТОРЫЙ ЧУВСТВУЮТ</div>
+
+</div>
+
+  <div class="screen-about">
+    <div class="about-bg"></div>
+
+    <div class="about-icone   animate scale-in  delay-1"></div>
+    <div class="about-photo1  animate from-left delay-2"></div>
+    <div class="about-photo2  animate from-left delay-3"></div>
+    <div class="about-hello   animate           delay-4">Привет,<br>я Денис</div>
+
+    <div class="about-title animate from-right delay-2">
+  Я дизайнер.<br>
+  Создаю дизайн-контент,<br>
+  и&nbsp;исследую его влияние<br>
+  на&nbsp;эмоции людей.
+</div>
+
+    <div class="about-text    animate from-bottom delay-3">
+      В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия.
+      Там научился работать с сетками, типографикой и деталями.
+      Сейчас фокусируюсь на UX/UI. Проектирую пользовательские сценарии
+      и интерфейсы.
+    </div>
+
+   <div class="about-emo     animate from-right delay-5">
+  <span>экспериментирую,</span>
+  <span>создаю, исследую.</span>
+</div>
+
+<div class="about-label-img animate scale-in delay-6"></div>
+<div class="about-photo-bottom animate from-bottom delay-5"></div>
+<div class="about-caption-bottom animate from-bottom delay-6">Сочи, лето 2025</div>
+  </div>
+
+  <!-- ==================
+     ЭКРАН 3 — ВСТАВКА
+================== -->
+<div class="screen-insert">
+  <div class="insert-bg"></div>
+
+  <div class="insert-caption1 animate delay-2">Санкт-Петербург, весна 2025</div>
+
+  <div class="insert-photo1-pos animate from-left delay-2">
+    <div class="insert-photo1-wrap">
+      <div class="insert-photo1-img"></div>
+    </div>
+  </div>
+<div class="insert-text animate from-bottom delay-3">
+  Увлекаюсь поиском деталей в нашей повседневности, а также их обработкой.
+</div>
+
+</div>
+
+  <!-- ==================
+       ЭКРАН 4 — INSET 2
+  ================== -->
+  <div class="screen-inset2">
+    <div class="inset2-bg"></div>
+
+    <p class="inset2-text animate from-bottom delay-2">
+      Чтобы переключаться и держать фокус, я создаю плакаты вручную,
+      вырезаю из дерева, играю на музыкальных инструментах. Физическая
+      работа помогает мне структурировать мысли и возвращаться к задачам
+      со свежим взглядом.
+    </p>
+
+    <div class="inset2-logo animate scale-in delay-3">
+      <img src="assets/images/logo.webp" width="60" height="60" alt="">
+    </div>
+  </div>
+
+  <!-- ==================
+       ЭКРАН 5 — DIRECTION
+  ================== -->
+  <div class="screen-direction">
+    <div class="direction-bg"></div>
+
+    <div class="direction-label animate scale-in delay-1"></div>
+
+    <div class="direction-title1 animate from-left delay-2">
+      СЕЙЧАС Я СКОНЦЕНТРИРОВАН
+    </div>
+    <div class="direction-title2 animate from-right delay-3">
+      В ДВУХ НАПРАВЛЕНИЯХ
+    </div>
+
+    <div class="direction-product-wrap animate from-left delay-2">
+      <div class="direction-product-img"></div>
+      <div class="direction-product-overlay"></div>
+    </div>
+
+    <div class="direction-poster-wrap animate from-right delay-3">
+      <div class="direction-poster-img"></div>
+      <div class="direction-poster-overlay"></div>
+    </div>
+
+    <div class="direction-scan1 animate scale-in delay-4"></div>
+    <div class="direction-scan2 animate scale-in delay-4"></div>
+
+    <div class="direction-caption1 animate from-bottom delay-3">
+      как самовыражение и творчество
+    </div>
+    <div class="direction-caption2 animate from-bottom delay-4">
+      структура и основная деятельность
+    </div>
+
+    <!-- Иконка 1 — через обёртку, animate на обёртке -->
+    <div class="direction-icone1-wrap animate scale-in delay-5">
+      <div class="direction-icone1"></div>
+    </div>
+
+    <div class="direction-icone2 animate scale-in delay-5"></div>
+  </div>
+
+<!-- ==================
+     ЭКРАН 6 — CONTACT
+================== -->
+<div class="screen-contact">
+  <div class="contact-bg"></div>
+  <div class="contact-photo animate from-left delay-1"></div>
+  <h2 class="contact-title animate from-right delay-2">Контакты</h2>
+
+   <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" 
+   class="contact-link instagram animate from-right delay-3">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">Instagram</span>
+</a>
+
+<a href="https://t.me/apafenoz" target="_blank" rel="noopener noreferrer" 
+   class="contact-link telegram animate from-right delay-4">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">Telegram</span>
+</a>
+
+<a href="https://vk.com/apafenoz" target="_blank" rel="noopener noreferrer" 
+   class="contact-link vk animate from-right delay-5">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">VK</span>
+</a>
+
+<a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" 
+   target="_blank" rel="noopener noreferrer"
+   class="contact-link mail animate from-right delay-6">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">apafenoz@yandex.ru</span>
+</a>
+</div>
+ 
+  <div class="footer">
+
+  <div class="footer-direction animate from-left delay-1">
+    ГРАФИЧЕСКИЙ<br>ВЕБ<br>ПРОДУКТ
+  </div>
+
+  <div class="footer-logo animate scale-in delay-2">
+    <img src="assets/images/footer/logo.webp" alt="APAFENOZ">
+  </div>
+
+  <div class="footer-name animate from-right delay-3">SAFRONOV DENIS</div>
+
+  </div><!-- конец footer -->
+
+</div><!-- конец page-wrapper -->
+
+<script>
+// ── Высоты секций ──────────────────────────────────────
+const SECTION_TOPS = {
+  'screen-main':      0,
+  'screen-about':     917,
+  'screen-insert':    917 + 800,
+  'screen-inset2':    917 + 800 + 332,
+  'screen-direction': 917 + 800 + 332 + 739,
+  'screen-contact':   917 + 800 + 332 + 739 + 1300,
+  'footer':           917 + 800 + 332 + 739 + 1300 + 800,
+};
+
+// ── Масштаб страницы ───────────────────────────────────
+function scalePage() {
+  const wrapper = document.querySelector('.page-wrapper');
+  const scale = window.innerWidth / 1920;
+  const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
+  wrapper.style.width = '1920px';
+  wrapper.style.height = totalHeight + 'px';
+  wrapper.style.transform = `scale(${scale})`;
+  wrapper.style.transformOrigin = 'top left';
+  document.body.style.height = totalHeight * scale + 'px';
+}
+
+function getScale() {
+  return window.innerWidth / 1920;
+}
+
+// ── Позиция элемента в layout ──────────────────────────
+function getSectionTop(el) {
+  for (const [cls, top] of Object.entries(SECTION_TOPS)) {
+    if (el.closest('.' + cls)) return top;
+  }
+  return 0;
+}
+
+function getAbsLayoutTop(el) {
+  const sectionTop = getSectionTop(el);
+  let top = 0;
+  let node = el;
+  const section = el.closest(
+    '.screen-main,.screen-about,.screen-insert,.screen-inset2,.screen-direction,.screen-contact,.footer'
+  );
+  while (node && node !== section) {
+    top += node.offsetTop;
+    node = node.offsetParent;
+  }
+  return sectionTop + top;
+}
+
+// ── Анимации появления ─────────────────────────────────
+function initAnimations() {
+  const els = Array.from(document.querySelectorAll('.animate'));
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+
+  let pending = els;
+
+  function check() {
+    const vh     = window.innerHeight;
+    const sc     = getScale();
+    const scrollY = window.scrollY;
+
+    pending = pending.filter(el => {
+      const layoutTop    = getAbsLayoutTop(el);
+      const layoutBottom = layoutTop + el.offsetHeight;
+      const screenTop    = layoutTop    * sc - scrollY;
+      const screenBottom = layoutBottom * sc - scrollY;
+
+      if (screenTop < vh - 30 && screenBottom > 0) {
+        el.classList.add('visible');
+        el.addEventListener('transitionend', () => {
+          el.style.willChange = 'auto';
+        }, { once: true });
+        return false;
+      }
+      return true;
+    });
+
+    if (pending.length === 0) {
+      window.removeEventListener('scroll', onScroll);
+    }
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => { check(); ticking = false; });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  check();
+}
+
+// ── Прелоадер ──────────────────────────────────────────
+function hidePreloader() {
+  const preloader = document.getElementById('preloader');
+  preloader.classList.add('hidden');
+  // Удаляем из DOM после окончания transition
+  preloader.addEventListener('transitionend', () => {
+    preloader.remove();
+  }, { once: true });
+}
+
+function initPreloader() {
+  const video = document.getElementById('main-video');
+  
+  // Таймаут — если видео грузится дольше 4 сек, всё равно показываем страницу
+  const fallbackTimer = setTimeout(hidePreloader, 4000);
+
+  function onVideoReady() {
+    clearTimeout(fallbackTimer);
+    // Небольшая пауза чтобы первый кадр точно отрисовался
+    requestAnimationFrame(() => {
+      requestAnimationFrame(hidePreloader);
+    });
+  }
+
+  if (video) {
+    // canplaythrough — браузер считает что может воспроизвести без остановок
+    video.addEventListener('canplaythrough', onVideoReady, { once: true });
+    // На мобильных autoplay может быть заблокирован — fallback через loadeddata
+    video.addEventListener('loadeddata', () => {
+      // Если видео уже готово — сразу скрываем
+      if (video.readyState >= 3) onVideoReady();
+    }, { once: true });
+  } else {
+    // Видео нет — скрываем сразу
+    clearTimeout(fallbackTimer);
+    hidePreloader();
+  }
+}
+
+// ── Инициализация ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  scalePage();
+  initPreloader();
+  initAnimations();
+});
+
+let resizeTicking = false;
+window.addEventListener('resize', () => {
+  if (!resizeTicking) {
+    requestAnimationFrame(() => {
+      scalePage();
+      window.dispatchEvent(new Event('scroll'));
+      resizeTicking = false;
+    });
+    resizeTicking = true;
+  }
+}, { passive: true });
+</script>
+
+</body>
+</html>
