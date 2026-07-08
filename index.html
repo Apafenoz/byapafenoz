@@ -46,6 +46,24 @@
   50%       { opacity: 0.4; transform: scale(0.92); }
 }
 
+    .screen-mobile { display: none; }
+
+@media(max-width:600px) {
+  .screen-mobile { display:block !important; width:100vw; min-height:100vh; }
+  /* Desktop скрываем */
+  .page-wrapper, 
+  .screen-main,
+  .screen-about,
+  .screen-insert,
+  .screen-inset2,
+  .screen-direction,
+  .screen-contact, 
+  .footer {
+    display: none !important;
+  }
+  /* Мобильные базовые стили — добавь дальше кастом */
+}
+    
     body {
   background: #fff;
   overflow-x: hidden;
@@ -866,76 +884,6 @@
   color: #2A005E;
 }
 
-/* Мобильная адаптация */
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-}
-@media (prefers-reduced-motion: reduce) {
-  .animate {
-    transition: opacity 0.2s ease;
-    transform: none !important;
-  }
-
-  .contact-link__bg,
-  .contact-link__img-bg {
-    transition: none;
-  }
-}
-
-.ibm-plex-mono-light {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.ibm-plex-mono-regular {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.ibm-plex-mono-medium {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.ibm-plex-mono-semibold {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.ibm-plex-mono-bold {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 700;
-  font-style: normal;
-}
-
-
-.ibm-plex-mono-light-italic {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.ibm-plex-mono-regular-italic {
-  font-family: "IBM Plex Mono", monospace;
-  font-weight: 400;
-  font-style: italic;
-}
-
-</style>
-</head>
-<body>
-
-<div id="preloader">
-  <div class="preloader-logo"></div>
-</div>                       
-
-<div class="page-wrapper">
-
   <!-- ==================
        ЭКРАН 1 — ГЛАВНАЯ
   ================== -->
@@ -1129,6 +1077,165 @@ html, body {
 
 </div><!-- конец page-wrapper -->
 
+    <section class="screen-mobile screen-mobile-main">
+  <div class="mobile-main-content">
+    <img 
+      src="assets/mobile/bg1.jpg" 
+      alt="Фон главный" 
+      class="mobile-main-bg"
+    >
+    <div class="main-overlay">
+      <div class="main-top">
+        <div class="mobile-caption">
+          ПРОДУКТОВЫЙ ДИЗАЙНЕР С БЭКГРАУНДОМ В ГРАФИКЕ
+        </div>
+        <div class="mobile-icons">
+          <!-- SVG или <img> для иконок если что -->
+          <img src="assets/mobile/social-1.png" alt="" width="16">
+          <img src="assets/mobile/social-2.png" alt="" width="16">
+          <img src="assets/mobile/social-3.png" alt="" width="16">
+        </div>
+      </div>
+      <div class="mobile-logo-vert">
+        <img src="assets/mobile/ARAFENOZ-vertical.png" alt="ARAFENOZ" style="width:112px;">
+      </div>
+      <div class="mobile-side-label">графический / web / продукт</div>
+      <div class="mobile-by">
+        <span style="color: #721bff; font-weight: bold;">by</span>
+        <span class="by-icon">
+          <img src="assets/mobile/ico-by.png" style="vertical-align:middle;" alt="by">
+        </span>
+      </div>
+      <div class="main-bottom">
+        <div class="mobile-author">
+          <strong>SAFRONOV DENIS</strong>
+        </div>
+        <div class="mobile-motto">
+          ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ<br>
+          <b style="color:#721bff;">п.к.д.</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-about">
+  <div class="mobile-section">
+    <div class="about-heading">
+      <span class="about-sub">ЭКСПЕРИМЕНТИРУЮ, <br>СОЗДАЮ, ИССЛЕДУЮ.</span>
+    </div>
+    <h1 class="about-title">Я дизайнер<br>
+      <span style="font-weight:700;">
+      Создаю дизайн-контент,<br>
+      и исследую его влияние<br>
+      на эмоции людей.
+      </span>
+    </h1>
+    <p class="about-desc">
+      В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия. 
+      Там научился работать с сетками, типографикой и деталями.
+    </p>
+    <p class="about-desc">
+      Сейчас фокусируюсь на UX/UI. Проектирую пользовательские сценарии и интерфейсы. 
+      Делаю продукты, в которых нет лишних элементов.
+    </p>
+    <div class="about-photos-row">
+      <div class="about-photo">
+        <img src="assets/mobile/about-1.jpg" alt="Фото Дениса сбоку">
+      </div>
+      <div class="about-photo">
+        <img src="assets/mobile/about-2.jpg" alt="Фото Дениса фронтально">
+        <div class="about-photo-caption">Привет,<br>я Денис</div>
+      </div>
+    </div>
+    <div class="about-label-row">
+      <img src="assets/mobile/about-label.png" alt="Логотипы/штампы" class="about-label-img"/>
+      <div class="about-label-side">
+        <img src="assets/mobile/sochi2025.jpg" alt="Сочи, лето 2025" class="about-photo-small">
+        <div class="about-label-caption-vert">Сочи, лето 2025</div>
+      </div>
+    </div>
+    <div class="about-footer-row">
+      <span class="about-footer-city">Санкт-Петербург, весна 2025</span>
+    </div>
+    <div class="about-passion-text">
+      Увлекаюсь поиском деталей в нашей повседневности, а также их обработкой.
+    </div>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-create">
+  <div class="mobile-dark-section" style="background-image:url('assets/mobile/bg-poster.jpg');">
+    <div class="create-logo">
+      <img src="assets/mobile/creative-logo.png" alt="Логотип">
+    </div>
+    <div class="create-desc">
+      Чтобы переключаться и держать фокус, я создаю плакаты вручную, 
+      вырезаю из дерева, играю на музыкальных инструментах.<br>
+      <br>
+      Физическая работа помогает мне структурировать мысли и возвращаться к задачам со свежим взглядом.
+    </div>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-direction">
+  <div class="mobile-section">
+    <div class="direction-labels-top">
+      <img src="assets/mobile/dir-ico-1.png" width="34" alt=""> 
+      <img src="assets/mobile/dir-ico-2.png" width="34" alt=""> 
+      <span class="direction-label-date">2026</span>
+      <span class="direction-label-pkd">п.к.д</span>
+      <span class="direction-label-100">100%</span>
+    </div>
+    <h2 class="direction-main-title">
+      Я<br>СКОНЦЕНТРИРОВАН<br>В ДВУХ НАПРАВЛЕНИЯХ
+    </h2>
+    <div class="direction-keywords">
+      <span class="direction-keyword direction-keyword-bold">ПРОДУКТ</span><br>
+      <span class="direction-keyword direction-keyword-bold">ПЛАКАТЫ</span>
+    </div>
+    <div class="direction-labels-bottom">
+      <img src="assets/mobile/dir-labels.png" width="120" alt="">
+    </div>
+    <div class="direction-footer">
+      <img src="assets/mobile/byapafenoz-sm.png" width="95" alt="">
+      <span class="direction-nav">WEB &bull; ГРАФИКА &bull; ПРОДУКТ</span>
+    </div>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-contact">
+  <div class="mobile-section">
+    <div class="contact-header-img">
+      <img src="assets/mobile/contacts-birds.jpg" style="width:100%;" alt="Птицы">
+    </div>
+    <h2 class="contact-title">Контакты</h2>
+    <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" class="contact-link contact-link-insta">
+      Instagram
+    </a>
+    <a href="https://t.me/apafenoz" target="_blank" rel="noopener noreferrer" class="contact-link contact-link-tg">
+      Telegram
+    </a>
+    <a href="https://vk.com/apafenoz" target="_blank" rel="noopener noreferrer" class="contact-link contact-link-vk">
+      VK
+    </a>
+    <a href="mailto:apafenoz@yandex.ru" class="contact-link contact-link-mail">
+      apafenoz@yandex.ru
+    </a>
+    <div class="contact-footer">
+      <div class="contact-footer-top">
+        <span>1997 &bull; 2026</span>
+        <span><img src="assets/mobile/logo-footer.png" width="90" alt="ARAFENOZ"></span>
+        <span>100% ОГРАНИЧЕНИЙ</span>
+      </div>
+      <div class="contact-footer-name">
+        SAFRONOV DENIS
+      </div>
+    </div>
+  </div>
+</section>
+
+    
 <script>
 // ── Высоты секций ──────────────────────────────────────
 const SECTION_TOPS = {
