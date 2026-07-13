@@ -65,6 +65,14 @@
     .screen-mobile-main .m-main-scaler {
       display: block;
     }
+    .screen-mobile-direction {
+      width: 100%;
+      line-height: 0;
+      font-size: 0;
+    }
+    .screen-mobile-direction .d-main-scaler {
+      display: block;
+    }
 
   .page-wrapper,
   .screen-main, .screen-about, .screen-insert,
@@ -73,162 +81,130 @@
     display: none !important;
   }
 
-  /* ---------- ЭКРАН 1: MAIN ---------- */
-  /* Скейлер: масштабирует canvas 402px под ширину экрана */
-  .m-main-scaler {
-    width: 100vw;
-    height: calc(100vw * 874 / 402);  /* сохраняем пропорцию 402×874 */
-    overflow: hidden;
-  }
-  .m-main-canvas {
-    position: relative;
-    width: 402px;
-    height: 874px;
-    background: #FFFFFF;
-    isolation: isolate;              /* замыкаем blend внутри экрана */
-    transform-origin: top left;
-    transform: scale(calc(100vw / 402));
-  }
+  /* ================= MOBILE — ПЕРВЫЙ ЭКРАН ================= */
+/* Канва 402×874, точные координаты из Figma */
 
-  /* ── bg-mobile: exclusion + rotate(90) ── */
-  .fg-bg {
-    position: absolute;
-    width: 1060.88px;
-    height: 532.24px;
-    right: -580.64px;
-    top: calc(50% - 532.24px/2 - 264.32px);
-    background-size: cover;
-    background-position: center;
-    mix-blend-mode: exclusion;
-    opacity: 0.8;
-    transform: rotate(90deg);
-  }
+.mobile-main-screen {
+  position: relative;
+  width: 100vw;
+  overflow: hidden;
+  display: none; 
+}
 
-    /* ── logo-main: вертикальный, darken (по Figma, без поворота) ── */
-  .fg-logo {
-    position: absolute;
-    width: 121.63px;
-    height: 725.75px;
-    left: 34.44px;
-    top: 88.25px;
-    object-fit: contain;
-    mix-blend-mode: darken;
-  }
+.mm-frame {
+  position: relative;
+  width: 402px;
+  height: 874px;
+  background: #ffffff;
+  overflow: hidden;
+  transform-origin: top left;
+}
 
-  /* ── Vector (полоса под текстом) ── */
-  .fg-vector {
-    position: absolute;
-    width: 78.1px;
-    height: 30.96px;
-    left: calc(50% - 78.1px/2 - 52.96px);
-    top: calc(50% - 30.96px/2 + 314.38px);
-    background: #2A005E;
-    transform: rotate(-90deg);
-  }
+.mm-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 402px;
+  height: 874px;
+  background: url("assets/images/mobile/bg-mobile.webp") no-repeat center center;
+  background-size: cover;
+  
+  transform-origin: center center;
+  mix-blend-mode: exclusion;
+}
 
-  /* ── Верхний текст ── */
-  .fg-txt-top {
-    position: absolute;
-    width: 219.27px;
-    left: 146.18px;
-    top: 120px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 10px;
-    line-height: 10px;
-    text-align: right;
-    text-transform: uppercase;
-    color: #323232;
-  }
+/* --- ЛОГОТИП:--- */
+.mm-logo {
+  position: absolute;
+  left: 34px;
+  top: 88px;
+  width: 121px;
+  height: 725px;
+  background: url("assets/images/mobile/logo-main.webp") no-repeat center center;
+  background-size: contain;
+  mix-blend-mode: darken;
+}
 
-  /* ── Вертикальный текст ── */
-  .fg-txt-vertical {
-    position: absolute;
-    width: 138px;
-    height: 13px;
-    left: 146.06px;
-    top: 571.09px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 10px;
-    line-height: 13px;
-    text-align: right;
-    color: #323232;
-    transform: rotate(-90deg);
-  }
+/* --- ИКОНКА верхняя: 36×10 --- */
+.mm-icon-top {
+  position: absolute;
+  left: 328px;
+  top: 110px;
+  width: 36px;
+  height: 10px;
+  background: url("assets/images/mobile/icone1-main.webp") no-repeat center center;
+  background-size: contain;
+}
 
-  /* ── Имя SAFRONOV DENIS ── */
-  .fg-name {
-    position: absolute;
-    width: 120.45px;
-    left: 245px;
-    top: 759.09px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 20px;
-    text-align: right;
-    color: #323232;
-  }
+/* --- ИКОНКА нижняя: 36×8 --- */
+.mm-icon-bottom {
+  position: absolute;
+  left: 330px;
+  top: 815px;
+  width: 36px;
+  height: 8px;
+  background: url("assets/images/mobile/icone2-main.webp") no-repeat center center;
+  background-size: contain;
+}
 
-  /* ── Девиз ── */
-  .fg-motto {
-    position: absolute;
-    width: 192px;
-    height: 13px;
-    left: 173.45px;
-    top: 801px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-style: italic;
-    font-weight: 400;
-    font-size: 10px;
-    line-height: 13px;
-    color: #323232;
-  }
+/* --- ТЕКСТ: SAFRONOV DENIS --- */
+.mm-name {
+  position: absolute;
+  left: 245px;
+  top: 760px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 24px;
+  line-height: 20px;
+  color: #323232;
+  text-align: right;
+  white-space: pre-line;    /* чтобы перенос "SAFRONOV / DENIS" работал */
+}
 
-  /* ── Иконки ── */
-  .fg-icone1 {
-    position: absolute;
-    width: 36.54px;
-    height: 10.15px;
-    left: 328.91px;
-    top: 107.85px;
-    object-fit: contain;
-  }
-  .fg-icone2 {
-    position: absolute;
-    width: 36.42px;
-    height: 7.52px;
-    left: calc(50% - 36.42px/2 + 146.12px);
-    top: calc(50% - 7.52px/2 + 384.67px);
-    background: #2A005E;
-  }
+/* --- ТЕКСТ: ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ (rotate 90°) --- */
+.mm-cat {
+  position: absolute;
+  left: 160px;
+  top: 571px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 10px;
+  color: #323232;
+  transform: rotate(90deg);
+  transform-origin: left top;
+  white-space: nowrap;
+}
 
-  /* ── Верхний правый лейбл ── */
-  .fg-caption {
-    position: absolute;
-    right: 20px;
-    top: 32px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-style: italic;
-    font-size: 9px;
-    line-height: 12px;
-    text-align: right;
-    text-transform: uppercase;
-    color: #323232;
-  }
+/* --- ТЕКСТ: Продуктовый дизайнер... --- */
+.mm-role {
+  position: absolute;
+  left: 146px;
+  top: 120px;
+  width: 219px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 10px;
+  color: #323232;
+  text-align: right;
+}
 
-  /* ---------- ОБЩИЙ КОНТЕЙНЕР ---------- */
-  .mobile-section {
-    position: relative;
-    width: 100%;
-    background: #E6E6E6;
-    overflow: hidden;
-    padding: 24px 0 36px;
-  }
+/* --- ТЕКСТ: ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ --- */
+.mm-tags {
+  position: absolute;
+  left: 173px;
+  top: 801px;
+  width: 192px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 10px;
+  color: #323232;
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .mobile-main-screen { display: block; }
+  .desktop-main-screen { display: none; }
+}
 
   /* ---------- ЭКРАН 2: ABOUT ---------- */
   .about-heading {
@@ -377,67 +353,105 @@
   }
 
     /* ---------- ЭКРАН 4: DIRECTION ---------- */
-  .direction-labels-top {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 0 20px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: #2A005E;
+  .d-main-scaler {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    line-height: 0;
+    font-size: 0;
   }
-  .direction-label-date,
-  .direction-label-pkd,
-  .direction-label-100 { color: #2A005E; }
+  .d-main-canvas {
+    position: absolute;
+    width: 402px;
+    min-height: 100vh;
+    background: #E6E6E6;
+    isolation: isolate;
+    transform-origin: top left;
+  }
 
-  .direction-main-title {
-    margin: 30px 20px 24px;
+  /* фоновая текстура (та же переиспользуемая фотография) */
+  .d-bg {
+  position: absolute;
+  width: 874px;
+  height: 402px;
+  left: 0;
+  top: 0;
+  background-size: cover;
+  background-position: center;
+  transform: rotate(-90deg);
+  transform-origin: top left;
+  translate: 0 402px;
+}
+
+  .d-headline-1 {
+    position: absolute;
+    width: 290.22px;
+    height: 77.53px;
+    left: 37.7px;
+    top: 217.87px;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 700;
-    font-size: 30px;
-    line-height: 36px;
+    font-size: 36px;
+    line-height: 40px;
     letter-spacing: -0.04em;
     text-transform: uppercase;
+    text-align: left;
     color: #2A005E;
   }
 
-  /* keywords растягиваются, занимая свободное место */
-  .direction-keywords {
-    margin: 10px 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 16px;
-  }
-  .direction-keywords img {
-    width: 100%;
-    aspect-ratio: 328/70;
-    object-fit: contain;
-    display: block;
-  }
-
-  .direction-labels-bottom {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin: 20px 20px;
-  }
-  .direction-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    margin-top: auto;   /* прижимает футер к низу секции */
-  }
-  .direction-nav {
+  .d-headline-2 {
+    position: absolute;
+    width: 234.93px;
+    height: 72.34px;
+    left: 132.375px;
+    top: 311.87px;
     font-family: 'IBM Plex Mono', monospace;
-    font-style: italic;
-    font-size: 10px;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 40px;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    text-align: right;
     color: #2A005E;
   }
-  .direction-nav:first-child { font-weight: 700; font-style: normal; }
+
+  .d-keyword {
+    position: absolute;
+    width: 328.91px;
+    left: 36.545px;
+    object-fit: contain;
+  }
+  .d-keyword-1 { height: 58.45px; top: 457.09px; }
+  .d-keyword-2 { height: 58.41px; top: 545.6px; }
+
+  .d-top-cluster {
+    position: absolute;
+    width: 108.97px;
+    height: 29.24px;
+    left: 255.82px;
+    top: 60.59px;
+    object-fit: contain;
+  }
+
+  .d-icon-row {
+    position: absolute;
+    width: 255px;
+    height: 11.29px;
+    left: 73.5px;
+    top: 697.47px;
+    object-fit: contain;
+  }
+
+  .d-bottom-bar {
+    position: absolute;
+    width: 218px;
+    height: 23.19px;
+    left: 36.55px;
+    top: 820.81px;
+    object-fit: contain;
+  }
 
   /* ---------- ЭКРАН 5: CONTACT ---------- */
   .contact-header-img {
@@ -491,6 +505,7 @@
     max-width: 60%;
     margin: 0 auto 16px;
     display: block;
+    mix-blend-mode: darken;
   }
   .contact-footer-top {
     display: flex;
@@ -1417,7 +1432,7 @@
     </p>
 
     <div class="inset2-logo animate scale-in delay-3">
-      <img src="assets/images/logo.webp" width="60" height="60" alt="">
+      <img src="assets/images/image-about-lable.webp" alt="Логотипы/штампы" class="m-about-label-img"/>
     </div>
   </div>
 
@@ -1519,32 +1534,16 @@
 </div><!-- конец page-wrapper -->
   
 </div>
-    <section class="screen-mobile screen-mobile-main">
-  <div class="m-main-scaler">
-    <div class="m-main-canvas">
-
-      <!-- Фоновая текстура: exclusion + rotate(90) -->
-      <div class="fg-bg"
-           style="background-image:url('assets/images/mobile/bg-mobile.webp');"></div>
-
-      <!-- Логотип: вертикальный, darken -->
-      <img class="fg-logo" src="assets/images/mobile/logo-main.webp" alt="APAFRNOZ">
-
-      <!-- Иконки -->
-      <img class="fg-icone1" src="assets/images/mobile/icone1-main.webp" alt="">
-      <div class="fg-icone2"></div>
-      <div class="fg-vector"></div>
-
-      <!-- Тексты -->
-      <div class="fg-txt-top">Продуктовый дизайнер с бэкграундом в графике</div>
-      <div class="fg-txt-vertical">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</div>
-      <div class="fg-name">SAFRONOV<br>DENIS</div>
-      <div class="fg-motto">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ</div>
-
-      <!-- Верхний правый лейбл -->
-      <div class="fg-caption">ЭКСПЕРЕМЕНТИРУЮ,<br>СОЗДАЮ, ИСЛЕДУЮ.</div>
-
-    </div>
+    <section class="mobile-main-screen" aria-label="Главный экран (моб.)">
+  <div class="mm-frame">
+    <div class="mm-bg"></div>
+    <div class="mm-logo"></div>
+    <div class="mm-icon-top"></div>
+    <div class="mm-icon-bottom"></div>
+    <span class="mm-role">Продуктовый дизайнер с бэкграундом в графике</span>
+    <span class="mm-cat">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</span>
+    <span class="mm-name">SAFRONOV&#10;DENIS</span>
+    <span class="mm-tags">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ</span>
   </div>
 </section>
 
@@ -1578,7 +1577,7 @@
       </div>
     </div>
     <div class="about-label-row">
-      <img src="assets/images/mobile/icon-about-Mobile.webp" alt="Логотипы/штампы" class="m-about-label-img"/>
+      <img src="assets/images/image-about-lable.webp" alt="Логотипы/штампы" class="image-about-lable.webp"/>
       <div class="about-label-side">
         <img src="assets/images/mobile/image-about-Mobil-4.webp" alt="Сочи, лето 2025" class="about-photo-small">
         <div class="about-label-caption-vert">Сочи, лето 2025</div>
@@ -1611,27 +1610,22 @@
 </section>
 
     <section class="screen-mobile screen-mobile-direction">
-  <div class="mobile-section">
-    <div class="direction-labels-top">
-      <img src="assets/images/mobile/icone-3-direction-Mobile.webp" width="29" alt=""> 
-      <span class="direction-label-date">2026</span>
-      <span class="direction-label-pkd">п.к.д</span>
-      <span class="direction-label-100">100%</span>
-    </div>
-    <h2 class="direction-main-title">
-      Я<br>СКОНЦЕНТРИРОВАН<br>В ДВУХ НАПРАВЛЕНИЯХ
-    </h2>
-    <div class="direction-keywords">
-      <img src="assets/images/mobile/image-1-direction-Mobile.webp" alt="ПРОДУКТ">
-      <img src="assets/images/mobile/image-2-direction-Mobile.webp" alt="ПЛАКАТЫ">
-    </div>
-    <div class="direction-labels-bottom">
-      <img src="assets/images/mobile/icone-4-direction-Mobile.webp" width="40" alt="">
-      <img src="assets/images/mobile/icone-5-direction-Mobile.webp" width="40" alt="">
-    </div>
-    <div class="direction-footer">
-      <span class="direction-nav">BY\APAFRNOZ</span>
-      <span class="direction-nav">WEB &bull; ГРАФИКА &bull; ПРОДУКТ</span>
+  <div class="d-main-scaler">
+    <div class="d-main-canvas">
+
+      <div class="d-bg" style="background-image:url('assets/images/mobile/bg-direction-Mobile.webp');"></div>
+
+      <img class="d-top-cluster" src="assets/images/mobile/icone-5-direction-Mobile.webp" alt="2026 п.к.д. 100% органики">
+
+      <div class="d-headline-1">я<br>сконцентрирован</div>
+      <div class="d-headline-2">в двух направлениях</div>
+
+      <img class="d-keyword d-keyword-1" src="assets/images/mobile/image-2-direction-Mobile.webp" alt="ПРОДУКТ">
+      <img class="d-keyword d-keyword-2" src="assets/images/mobile/image-1-direction-Mobile.webp" alt="ПЛАКАТЫ">
+
+      <img class="d-icon-row" src="assets/images/mobile/icone-4-direction-Mobile.webp" alt="">
+      <img class="d-bottom-bar" src="assets/images/mobile/icone-3-direction-Mobile.webp" alt="BY\APAFRNOZ">
+
     </div>
   </div>
 </section>
@@ -1732,9 +1726,54 @@ function initPreloader() {
 
 // ── Инициализация ──────────────────────────────────────
 const MOBILE_QUERY = window.matchMedia('(max-width: 600px)');
+function isMobile() {
+  return MOBILE_QUERY.matches || window.innerWidth <= 600;
+}
+
+// ── Масштаб мобильных canvas-экранов (main, direction) ──────────────────
+function scaleMobileCanvases() {
+  document.querySelectorAll('[class$="-main-scaler"]').forEach(scaler => {
+    const canvas = scaler.querySelector('[class$="-main-canvas"]');
+    if (!canvas) return;
+
+    const availableWidth = scaler.getBoundingClientRect().width;
+    if (availableWidth === 0) return;              // ещё не отрисован
+
+    const scale = availableWidth / 402;
+    canvas.style.transform = `scale(${scale})`;
+    canvas.style.transformOrigin = 'top left';
+    scaler.style.height = Math.ceil(874 * scale) + 'px';
+  });
+}
+
+function scaleMobileMain() {
+  try {
+    const screen = document.querySelector('.mobile-main-screen');
+    const frame = document.querySelector('.mm-frame');
+    if (!screen || !frame) return;
+
+    const BASE_W = 402, BASE_H = 874;
+    const scale = Math.max(0.1, window.innerWidth / BASE_W);
+
+    frame.style.transform = `scale(${scale})`;
+    frame.style.transformOrigin = 'top left';
+    screen.style.height = `${Math.ceil(BASE_H * scale)}px`;
+  } catch (err) {
+    console.error('scaleMobileMain error:', err);
+  }
+}
+
+// следим за реальным изменением размера контейнеров
+let mobileResizeObserver = null;
+function observeMobileMain() {
+  const scalers = document.querySelectorAll('[class$="-main-scaler"]');
+  if (!scalers.length || mobileResizeObserver) return;
+  mobileResizeObserver = new ResizeObserver(() => scaleMobileCanvases());
+  scalers.forEach(s => mobileResizeObserver.observe(s));
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!MOBILE_QUERY.matches) {
+  if (!isMobile()) {
     scalePage();
     initAnimations();
   } else {
@@ -1745,23 +1784,28 @@ document.addEventListener('DOMContentLoaded', () => {
       wrapper.style.width = 'auto';
       wrapper.style.height = 'auto';
     }
+    // тройная страховка масштаба
+    requestAnimationFrame(scaleMobileMain);
+    window.addEventListener('load', scaleMobileMain, { once: true });
+    observeMobileMain();
   }
   initPreloader();
 });
 
 let resizeTicking = false;
 window.addEventListener('resize', () => {
-  if (!resizeTicking) {
-    requestAnimationFrame(() => {
-      if (!MOBILE_QUERY.matches) {
-        scalePage();
-      } else {
-        document.body.style.height = 'auto';
-      }
-      resizeTicking = false;
-    });
-    resizeTicking = true;
-  }
+  if (resizeTicking) return;
+  resizeTicking = true;
+  requestAnimationFrame(() => {
+    if (isMobile()) {
+      document.body.style.height = 'auto';
+      scaleMobileMain();       
+      scaleMobileCanvases();   
+    } else {
+      scalePage();             
+    }
+    resizeTicking = false;
+  });
 }, { passive: true });
 </script>
 
