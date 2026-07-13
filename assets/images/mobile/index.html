@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARAFENOZ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Sans:ital@1&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity;
+  transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#preloader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Логотип-заглушка пока грузится */
+.preloader-logo {
+  width: 120px;
+  height: 120px;
+  background: url('assets/images/logo.webp') center/contain no-repeat;
+  will-change: opacity;
+  animation: preloader-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes preloader-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.4; transform: scale(0.92); }
+}
+
+    .screen-mobile { display: none; }
+
+@media(max-width:600px) {
+  html, body {
+    height: auto !important;
+    overflow-x: hidden;
+    background: #E6E6E6;
+  }
+
+        .screen-mobile { display:block !important; width:100%; }
+
+    /* Главный экран строго по высоте canvas, без зазоров */
+    .screen-mobile-main {
+      width: 100%;
+      line-height: 0;      /* убирает inline-зазор под scaler */
+      font-size: 0;
+    }
+    .screen-mobile-main .m-main-scaler {
+      display: block;
+    }
+    .screen-mobile-direction {
+      width: 100%;
+      line-height: 0;
+      font-size: 0;
+    }
+    .screen-mobile-direction .d-main-scaler {
+      display: block;
+    }
+
+  .page-wrapper,
+  .screen-main, .screen-about, .screen-insert,
+  .screen-inset2, .screen-direction,
+  .screen-contact, .footer {
+    display: none !important;
+  }
+
+  /* ================= MOBILE — ПЕРВЫЙ ЭКРАН ================= */
+/* Канва 402×874, точные координаты из Figma */
+
+.mobile-main-screen {
+  position: relative;
+  width: 100vw;
+  overflow: hidden;
+  display: none; 
+}
+
+.mm-frame {
+  position: relative;
+  width: 402px;
+  height: 874px;
+  background: #ffffff;
+  overflow: hidden;
+  transform-origin: top left;
+}
+
+.mm-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 402px;
+  height: 874px;
+  background: url("assets/images/mobile/bg-mobile.webp") no-repeat center center;
+  background-size: cover;
+  
+  transform-origin: center center;
+  mix-blend-mode: exclusion;
+}
+
+/* --- ЛОГОТИП:--- */
+.mm-logo {
+  position: absolute;
+  left: 34px;
+  top: 88px;
+  width: 121px;
+  height: 725px;
+  background: url("assets/images/mobile/logo-main.webp") no-repeat center center;
+  background-size: contain;
+  mix-blend-mode: darken;
+}
+
+/* --- ИКОНКА верхняя: 36×10 --- */
+.mm-icon-top {
+  position: absolute;
+  left: 328px;
+  top: 110px;
+  width: 36px;
+  height: 10px;
+  background: url("assets/images/mobile/icone1-main.webp") no-repeat center center;
+  background-size: contain;
+}
+
+/* --- ИКОНКА нижняя: 36×8 --- */
+.mm-icon-bottom {
+  position: absolute;
+  left: 330px;
+  top: 815px;
+  width: 36px;
+  height: 8px;
+  background: url("assets/images/mobile/icone2-main.webp") no-repeat center center;
+  background-size: contain;
+}
+
+/* --- ТЕКСТ: SAFRONOV DENIS --- */
+.mm-name {
+  position: absolute;
+  left: 245px;
+  top: 760px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 24px;
+  line-height: 20px;
+  color: #323232;
+  text-align: right;
+  white-space: pre-line;    /* чтобы перенос "SAFRONOV / DENIS" работал */
+}
+
+/* --- ТЕКСТ: ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ (rotate 90°) --- */
+.mm-cat {
+  position: absolute;
+  left: 160px;
+  top: 571px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 10px;
+  color: #323232;
+  transform: rotate(90deg);
+  transform-origin: left top;
+  white-space: nowrap;
+}
+
+/* --- ТЕКСТ: Продуктовый дизайнер... --- */
+.mm-role {
+  position: absolute;
+  left: 146px;
+  top: 120px;
+  width: 219px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 10px;
+  color: #323232;
+  text-align: right;
+}
+
+/* --- ТЕКСТ: ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ --- */
+.mm-tags {
+  position: absolute;
+  left: 173px;
+  top: 801px;
+  width: 192px;
+  font-family: "IBM Plex Mono", monospace;
+  font-style: italic;
+  font-size: 10px;
+  color: #323232;
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .mobile-main-screen { display: block; }
+  .desktop-main-screen { display: none; }
+}
+
+  /* ---------- ЭКРАН 2: ABOUT ---------- */
+  .about-heading {
+    text-align: right;
+    padding: 0 20px;
+    margin-bottom: 30px;
+  }
+  .about-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: italic;
+    font-size: 10px;
+    line-height: 13px;
+    text-transform: uppercase;
+    color: #6C6C6C;
+  }
+  .m-about-title {
+    margin: 0 20px 18px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 30px;
+    letter-spacing: -0.04em;
+    color: #000;
+  }
+  .m-about-title span {
+    display: block;
+    margin-top: 6px;
+    font-weight: 700;
+  }
+  .about-desc {
+    margin: 0 20px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    line-height: 15px;
+    letter-spacing: -0.03em;
+    text-align: justify;
+    color: #000;
+  }
+
+  /* Фото-ряд: 2 фото со сдвигом, подпись между */
+  .about-photos-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    align-items: end;
+    margin: 34px 20px 24px;
+  }
+  .about-photo-1 {
+    grid-column: 1; grid-row: 1 / 3;
+    aspect-ratio: 110/152;
+    align-self: start;
+  }
+  .about-photo-caption {
+    grid-column: 2; grid-row: 1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 15px;
+    color: #000;
+    padding-bottom: 10px;
+  }
+  .about-photo-2 {
+    grid-column: 2; grid-row: 2;
+    aspect-ratio: 110/152;
+  }
+  .about-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
+
+  /* Ряд: штампы слева + фото Сочи справа */
+  .about-label-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 24px 20px;
+  }
+  .m-about-label-img { height: 48px; width: auto; }
+  .about-label-side {
+    display: flex; align-items: flex-end; gap: 8px;
+  }
+  .about-photo-small {
+    width: 96px; height: 96px;
+    object-fit: cover; display: block;
+  }
+  .about-label-caption-vert {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: italic;
+    font-size: 10px;
+    color: #6C6C6C;
+    white-space: nowrap;
+  }
+
+  .about-footer-row { margin: 12px 20px 0; }
+  .about-footer-city {
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: italic;
+    font-size: 11px;
+    color: #6C6C6C;
+  }
+
+  /* Широкое неоновое фото */
+  .about-neon-photo { margin: 14px 20px 0; }
+  .about-neon-photo img {
+    width: 100%;
+    aspect-ratio: 328/174;
+    object-fit: cover;
+    display: block;
+  }
+
+  .about-passion-text {
+    margin: 20px 20px 0;
+    max-width: 250px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    line-height: 13px;
+    text-align: justify;
+    color: #000;
+  }
+
+  /* ---------- ЭКРАН 3: CREATE ---------- */
+  .mobile-dark-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    padding: 40px 26px;
+  }
+  .create-logo img { width: 56px; height: 56px; }
+  .create-desc {
+    max-width: 320px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: justify;
+    color: #fff;
+  }
+
+    /* ---------- ЭКРАН 4: DIRECTION ---------- */
+  .d-main-scaler {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    line-height: 0;
+    font-size: 0;
+  }
+  .d-main-canvas {
+    position: absolute;
+    width: 402px;
+    min-height: 100vh;
+    background: #E6E6E6;
+    isolation: isolate;
+    transform-origin: top left;
+  }
+
+  /* фоновая текстура (та же переиспользуемая фотография) */
+  .d-bg {
+  position: absolute;
+  width: 874px;
+  height: 402px;
+  left: 0;
+  top: 0;
+  background-size: cover;
+  background-position: center;
+  transform: rotate(-90deg);
+  transform-origin: top left;
+  translate: 0 402px;
+}
+
+  .d-headline-1 {
+    position: absolute;
+    width: 290.22px;
+    height: 77.53px;
+    left: 37.7px;
+    top: 217.87px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 40px;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    text-align: left;
+    color: #2A005E;
+  }
+
+  .d-headline-2 {
+    position: absolute;
+    width: 234.93px;
+    height: 72.34px;
+    left: 132.375px;
+    top: 311.87px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 40px;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    text-align: right;
+    color: #2A005E;
+  }
+
+  .d-keyword {
+    position: absolute;
+    width: 328.91px;
+    left: 36.545px;
+    object-fit: contain;
+  }
+  .d-keyword-1 { height: 58.45px; top: 457.09px; }
+  .d-keyword-2 { height: 58.41px; top: 545.6px; }
+
+  .d-top-cluster {
+    position: absolute;
+    width: 108.97px;
+    height: 29.24px;
+    left: 255.82px;
+    top: 60.59px;
+    object-fit: contain;
+  }
+
+  .d-icon-row {
+    position: absolute;
+    width: 255px;
+    height: 11.29px;
+    left: 73.5px;
+    top: 697.47px;
+    object-fit: contain;
+  }
+
+  .d-bottom-bar {
+    position: absolute;
+    width: 218px;
+    height: 23.19px;
+    left: 36.55px;
+    top: 820.81px;
+    object-fit: contain;
+  }
+
+  /* ---------- ЭКРАН 5: CONTACT ---------- */
+  .contact-header-img {
+    width: 100%;
+    aspect-ratio: 402/300;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .contact-header-img img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
+  .m-contact-title {
+    margin: 0 20px 26px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 44px;
+    letter-spacing: -0.04em;
+    color: #2A005E;
+  }
+  .m-contact-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 40px);
+    height: 34px;
+    margin: 0 20px 14px;
+    padding-left: 16px;
+    background-color: #fff;
+    background-size: cover;
+    background-position: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.04em;
+    color: #2A005E;
+    text-decoration: none;
+    overflow: hidden;
+  }
+  .m-contact-link:active {
+    background-color: #2A005E;
+    background-image: none !important;
+    color: #fff;
+  }
+
+  /* Footer контактов */
+  .contact-footer { margin: 40px 20px 0; }
+  .contact-footer-logo {
+    width: 200px;
+    max-width: 60%;
+    margin: 0 auto 16px;
+    display: block;
+    mix-blend-mode: darken;
+  }
+  .contact-footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: #2A005E;
+  }
+  .contact-footer-name {
+    margin-top: 14px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-style: italic;
+    font-size: 14px;
+    color: #2A005E;
+  }
+}
+    body {
+  background: #fff;
+  overflow-x: hidden;
+}
+
+    /* === АНИМАЦИИ === */
+.animate {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  will-change: transform, opacity;
+}
+
+.animate.from-left   { transform: translateX(-20px); }
+.animate.from-right  { transform: translateX(20px); }
+.animate.scale-in    { transform: scale(0.95); opacity: 0; }
+
+.animate.visible {
+  opacity: 1;
+  transform: none !important;
+}
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.35s; }
+.delay-4 { transition-delay: 0.5s; }
+.delay-5 { transition-delay: 0.65s; }
+.delay-6 { transition-delay: 0.8s; }
+
+/* === КНОПКИ === */
+.contact-link__bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;         
+  height: 100%;
+  background: #2A005E;
+  transform: scaleX(0); 
+  transform-origin: right center; 
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); 
+  will-change: transform; /* ← НОВОЕ */
+  z-index: 0;
+}
+
+.contact-link__img-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;           
+  height: 100%;
+  background-image: url('assets/images/Contact Information/img-bg.png');
+  background-size: 300px 100%;
+  background-position: left center;
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform, opacity;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contact-link__text {
+  position: relative;
+  z-index: 2;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #000000;
+  transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  padding-left: 8px;
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover .contact-link__bg {
+    transform: scaleX(1); /* ← было width: 100% */
+  }
+  .contact-link:hover .contact-link__img-bg {
+    transform: scaleX(1); /* ← было width: 100% */
+    opacity: 0.5;
+  }
+  .contact-link:hover .contact-link__text {
+    color: #FFFFFF;
+  }
+}
+
+    /* =====================
+       ЭКРАН 1 — ГЛАВНАЯ
+    ===================== */
+    .screen-main {
+      position: relative;
+      width: 1920px;
+      height: 917px;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+
+    .main-video {
+      position: absolute;
+      width: 1920px;
+      height: 917px;
+      left: 0; top: 0;
+      object-fit: cover;
+      opacity: 0.8;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .main-by {
+      position: absolute;
+      width: 1097.44px;
+      height: 183.46px;
+      left: calc(50% - 1097.44px/2 + 17.14px);
+      top: calc(50% - 183.46px/2 + 0.03px);
+      background: url('assets/images/byApafenoz.webp') center/contain no-repeat;
+      mix-blend-mode: darken;
+      z-index: 2;
+    }
+
+
+    .main-icone {
+      position: absolute;
+      width: 71.95px;
+      height: 19.98px;
+      left: 311.1px;
+      top: 71.85px;
+      background: url('assets/images/icone 2.webp') center/contain no-repeat;
+      z-index: 5;
+    }
+
+    .main-pkd {
+      position: absolute;
+      width: 72.48px;
+      height: 14.97px;
+      left: calc(50% - 72.48px/2 + 612.66px);
+      top: calc(50% - 14.97px/2 + 405.17px);
+      background: url('assets/images/п.к.д..webp') center/contain no-repeat;
+      z-index: 4;
+    }
+
+    .main-label {
+      position: absolute;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: #323232;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    .main-creative {
+      width: 268px;
+      height: 18px;
+      left: 1268.22px;
+      top: 550.26px;
+    }
+    .main-name {
+      width: 113px;
+      height: 18px;
+      left: 1418.84px;
+      top: 316.91px;
+    }
+    .main-type {
+      width: 193px;
+      height: 18px;
+      left: 527.4px;
+      top: 315.7px;
+    }
+    .main-desc {
+      width: 365px;
+      height: 18px;
+      left: 527.4px;
+      top: 733.6px;
+      text-transform: uppercase;
+    }
+
+    /* =====================
+       ЭКРАН 2 — ABOUT
+    ===================== */
+    .screen-about {
+      position: relative;
+      width: 1920px;
+      height: 800px;
+      overflow: hidden;
+    }
+
+    .about-bg {
+      position: absolute;
+      width: 1920px;
+      height: 800px;
+      left: 0; top: 0;
+      background: url('assets/images/bg-image.png') center/cover no-repeat;
+      z-index: 0;
+    }
+
+    .about-photo2 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 495px;
+      top: 253px;
+      background: url('assets/images/image-about-2.webp') center/cover no-repeat;
+      z-index: 3;
+    }
+
+    .about-photo1 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 659px;
+      top: 103px;
+      background: url('assets/images/image-about-1.webp') center/cover no-repeat;
+      z-index: 3;
+    }
+
+    .about-icone {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      left: 435px;
+      top: 25px;
+      background: url('assets/images/icones-about.webp') center/contain no-repeat;
+      z-index: 4;
+    }
+
+    .about-hello {
+      position: absolute;
+      width: 90px;
+      height: 32px;
+      left: 659px;
+      top: 278px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 16px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      z-index: 5;
+    }
+
+    .about-title {
+      position: absolute;
+      width: 430px;
+      height: 188px;
+      left: 945px;
+      top: 96px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 47px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      text-align: justify;
+      text-align-last: justify;
+      z-index: 5;
+    }
+
+    .about-text {
+      position: absolute;
+      width: 480px;
+      height: 126px;
+      left: 945px;
+      top: 334px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      text-align: justify;
+      text-align-last: justify;
+      z-index: 5;
+    }
+
+    .about-emo {
+  position: absolute;
+  left: 1560px;
+  top: 103px;
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
+      z-index: 5;
+    }
+
+    .about-emo span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      color: #6C6C6C;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+    }
+
+    .about-label-img {
+  position: absolute;
+  width: 140px;
+  height: 79px;
+  left: 1422px;
+  top: 570px;
+  background: url('assets/images/image-about-lable.webp') center/contain no-repeat;
+  z-index: 6;
+}
+
+/* фото внизу — v1021_173 */
+.about-photo-bottom {
+  position: absolute;
+  width: 217px;
+  height: 155px;
+  left: 945px;
+  top: 620px;
+  background: url('assets/images/image-delivery-2.webp') center/cover no-repeat;
+  z-index: 3;
+}
+
+/* подпись к фото — v1021_174 */
+.about-caption-bottom {
+  position: absolute;
+  left: 1160px;
+  top: 620px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  color: #6B6B6B;
+}
+
+    .page-wrapper {
+      transform-origin: top left;
+    }
+
+        /* =====================
+   ЭКРАН 3 — ВСТАВКА
+===================== */
+.screen-insert {
+  position: relative;
+  width: 1920px;
+  height: 332px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.insert-bg {
+  position: absolute;
+  width: 1920px;
+  height: 332px;
+  left: 0;
+  top: 0;
+  background: url('assets/images/bg-about.png') center/cover no-repeat;
+  z-index: 0;
+}
+
+.insert-caption1 {
+  position: absolute;
+  left: 945px;
+  top: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 17px;
+  letter-spacing: -0.06em;
+  color: #6B6B6B;
+  white-space: nowrap;
+  z-index: 5;
+}
+
+.insert-photo1-pos {
+  position: absolute;
+  left: 945px;
+  top: 25px;
+  width: 413px;
+  height: 281px;
+  z-index: 2;
+}
+
+.insert-photo1-wrap {
+  position: absolute;
+  width: 413px;
+  height: 281px;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.insert-photo1-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: url('assets/images/image-delivery-1.webp') center/cover no-repeat;
+}
+
+.insert-text {
+  position: absolute;
+  left: 1378px;
+  top: 21px;
+  width: 184px;
+  height: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #000000;
+  text-align: justify;
+  text-align-last: justify;
+  z-index: 5;
+}
+
+    /* =====================
+       ЭКРАН 4 — INSET 2
+    ===================== */
+    .screen-inset2 {
+      position: relative;
+      width: 1920px;
+      height: 739px;
+      overflow: hidden;
+    }
+
+    .inset2-bg {
+      position: absolute;
+      width: 1920px; height: 739px;
+      left: 0; top: 0;
+      background: url('assets/images/bg-Inset3.webp') center/cover no-repeat;
+      z-index: 0;
+    }
+
+    .inset2-text {
+      position: absolute;
+      width: 386px;
+      height: 105px;
+      left: 360px;
+      top: 346px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      text-align: justify;
+      letter-spacing: -0.06em;
+      color: #FFFFFF;
+      margin: 0;
+      z-index: 2;
+    }
+
+    .inset2-logo {
+      position: absolute;
+      width: 60px; height: 60px;
+      left: 780px;
+      top: 355px;
+      z-index: 3;
+    }
+
+/* =====================
+   ЭКРАН 5 — DIRECTION
+===================== */
+.screen-direction {
+  position: relative;
+  width: 1920px;
+  height: 1300px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.direction-bg {
+  position: absolute;
+  width: 1920px;
+  height: 1300px;
+  left: 0; top: 0;
+  background: url('assets/images/direction/bg.png') center/cover no-repeat;
+  z-index: 0;
+}
+
+.direction-label {
+  position: absolute;
+  width: 1200px;
+  height: 56px;
+  left: calc(50% - 600px);
+  top: 35px;
+  background: url('assets/images/direction/lable.png') center/contain no-repeat;
+  z-index: 3;
+}
+
+.direction-title1 {
+  position: absolute;
+  width: 467px;
+  height: 47px;
+  left: calc(50% - 467px/2 - 199.1px);
+  top: 183.98px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: #2A005E;
+  z-index: 3;
+}
+
+.direction-title2 {
+  position: absolute;
+  width: 372px;
+  height: 47px;
+  left: calc(50% - 372px/2 + 247.35px);
+  top: 230.98px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: #2A005E;
+  z-index: 3;
+}
+
+.direction-poster-wrap {
+  position: absolute;
+  width: 815px;
+  height: 410px;
+  right: 0px;
+  top: 777px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.direction-poster-img {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: url('assets/images/direction/image-poster.webp') center/cover no-repeat;
+}
+
+.direction-poster-overlay {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: #2A005E;
+  mix-blend-mode: hue;
+}
+
+.direction-product-wrap {
+  position: absolute;
+  width: 815px;
+  height: 410px;
+  left: 0px;
+  top: 328.14px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.direction-product-img {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: url('assets/images/direction/image-product.webp') center/cover no-repeat;
+}
+
+.direction-product-overlay {
+  position: absolute;
+  width: 100%; height: 100%;
+  left: 0; top: 0;
+  background: #2A005E;
+  mix-blend-mode: hue;
+}
+
+.direction-scan1 {
+  position: absolute;
+  width: 300px;
+  height: 150px;
+  left: 1107.3px;
+  top: 677px;
+  background: url('assets/images/direction/image-1.webp') center/contain no-repeat;
+  z-index: 4;
+}
+
+.direction-scan2 {
+  position: absolute;
+  width: 300px;
+  height: 100px;
+  left: 515px;
+  top: 720px;
+  background: url('assets/images/direction/image-2.webp') center/contain no-repeat;
+  z-index: 4;
+}
+
+.direction-caption1 {
+  position: absolute;
+  width: 260px;
+  height: 21px;
+  left: calc(50% - 260px/2 + 277.3px);
+  top: 700px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #2A005E;
+  z-index: 4;
+}
+
+.direction-caption2 {
+  position: absolute;
+  width: 286px;
+  height: 25px;
+  left: calc(50% - 286px/2 - 302px);
+  top: 800px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.06em;
+  color: #2A005E;
+  z-index: 4;
+}
+
+/* Иконка 1 — обёртка для поворота */
+.direction-icone1-wrap {
+  position: absolute;
+  width: 19.98px;
+  height: 71.94px;
+  left: 1080.41px;
+  top: 1115.06px;
+  z-index: 4;
+}
+
+.direction-icone1 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0; top: 0;
+  background: url('assets/images/direction/icone-1.webp') center/contain no-repeat;
+}
+
+/* Иконка 2 */
+.direction-icone2 {
+  position: absolute;
+  width: 12px;
+  height: 76.37px;
+  left: 817.66px;
+  top: 661.77px;
+  background: url('assets/images/direction/icone-2.webp') center/contain no-repeat;
+  z-index: 4;
+}
+
+/* =====================
+   ЭКРАН 6 — CONTACT
+===================== */
+.screen-contact {
+  position: relative;
+  width: 1920px;
+  height: 800px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.contact-bg {
+  position: absolute;
+  width: 1920px;
+  height: 800px;
+  left: 0;
+  top: 0;
+  background: url('assets/images/Contact Information/bg.png') center/cover no-repeat;
+  z-index: 0;
+}
+
+.contact-photo {
+  position: absolute;
+  width: 970px;
+  height: 800px;
+  left: 0;
+  top: 0;
+  background: url('assets/images/Contact Information/image.webp') center/cover no-repeat;
+  z-index: 1;
+}
+
+.contact-title {
+  position: absolute;
+  width: 158px;
+  height: 47px;
+  left: 1051px;
+  top: 307px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 47px;
+  letter-spacing: -0.06em;
+  color: #000000;
+  z-index: 2;
+}
+
+/* контейнер кнопки */
+.contact-link {
+  position: absolute;
+  width: 300px;
+  height: 30px;
+  left: 1262px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #FFFFFF;
+  z-index: 10;
+  cursor: pointer;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+/* позиции */
+.contact-link.instagram { top: 330px; }
+.contact-link.telegram { top: 380px; }
+.contact-link.vk        { top: 430px; }
+.contact-link.mail      { top: 480px; }
+
+/* footer */
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 28px 473px;
+  gap: 239px;
+
+  position: relative;
+  width: 1920px;
+  height: 110px;
+
+  background: #FFFFFF;
+  box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.25);
+
+  box-sizing: border-box;
+}
+
+/* name */
+.footer-name {
+  flex: none;
+  order: 2;
+  flex-grow: 0;
+
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
+
+  color: #2A005E;
+
+  white-space: nowrap;
+}  
+
+/* logo */
+.footer-logo {
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+
+  width: 258.99px;
+  height: 43.29px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* direction */
+.footer-direction {
+  flex: none;
+  order: 0;        /* ← было 2, исправлено */
+  flex-grow: 0;
+
+  width: 93px;
+  height: 54px;
+
+  font-family: 'IBM Plex Mono', monospace;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+
+  color: #2A005E;
+}
+      </style>
+</head>
+<body>
+
+  <div id="preloader">
+    <div class="preloader-logo"></div>
+  </div>
+
+  <div class="page-wrapper">
+
+  <!-- ==================
+       ЭКРАН 1 — ГЛАВНАЯ
+  ================== -->
+  <div class="screen-main">
+ <video
+  class="main-video"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto"
+  id="main-video"
+>
+  <source src="assets/video/bg-video.mp4" type="video/mp4">
+</video>
+
+<div class="main-by     animate scale-in  delay-1"></div>
+   <div class="main-icone  animate scale-in  delay-2"></div>
+  <div class="main-pkd    animate scale-in  delay-3"></div>
+  <div class="main-label main-creative animate delay-4">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ</div>
+  <div class="main-label main-name     animate delay-2">SAFRONOV DENIS</div>
+  <div class="main-label main-type     animate delay-2">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</div>
+  <div class="main-label main-desc     animate delay-4">Продуктовый дизайнер с бэкграундом в графике</div>
+
+</div>
+
+  <div class="screen-about">
+    <div class="about-bg"></div>
+
+    <div class="about-icone   animate scale-in  delay-1"></div>
+    <div class="about-photo1  animate from-left delay-2"></div>
+    <div class="about-photo2  animate from-left delay-3"></div>
+    <div class="about-hello   animate           delay-4">Привет,<br>я Денис</div>
+
+    <div class="about-title animate from-right delay-2">
+  Я дизайнер.<br>
+  Создаю дизайн-контент,<br>
+  и&nbsp;исследую его влияние<br>
+  на&nbsp;эмоции людей.
+</div>
+
+    <div class="about-text animate delay-3">
+      В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия.
+      Там научился работать с сетками, типографикой и деталями.
+      Сейчас фокусируюсь на UX/UI. Проектирую пользовательские сценарии
+      и интерфейсы.
+    </div>
+
+   <div class="about-emo     animate from-right delay-5">
+  <span>экспериментирую,</span>
+  <span>создаю, исследую.</span>
+</div>
+
+<div class="about-label-img animate scale-in delay-6"></div>
+<div class="about-photo-bottom animate delay-5"></div>
+<div class="about-caption-bottom animate delay-6">Сочи, лето 2025</div>
+  </div>
+
+  <!-- ==================
+     ЭКРАН 3 — ВСТАВКА
+================== -->
+<div class="screen-insert">
+  <div class="insert-bg"></div>
+
+  <div class="insert-caption1 animate delay-2">Санкт-Петербург, весна 2025</div>
+
+  <div class="insert-photo1-pos animate from-left delay-2">
+    <div class="insert-photo1-wrap">
+      <div class="insert-photo1-img"></div>
+    </div>
+  </div>
+<div class="insert-text animate delay-3">
+  Увлекаюсь поиском деталей в нашей повседневности, а также их обработкой.
+</div>
+
+</div>
+
+  <!-- ==================
+       ЭКРАН 4 — INSET 2
+  ================== -->
+  <div class="screen-inset2">
+    <div class="inset2-bg"></div>
+
+    <p class="inset2-text animate delay-2">
+      Чтобы переключаться и держать фокус, я создаю плакаты вручную,
+      вырезаю из дерева, играю на музыкальных инструментах. Физическая
+      работа помогает мне структурировать мысли и возвращаться к задачам
+      со свежим взглядом.
+    </p>
+
+    <div class="inset2-logo animate scale-in delay-3">
+      <img src="assets/images/image-about-lable.webp" alt="Логотипы/штампы" class="m-about-label-img"/>
+    </div>
+  </div>
+
+  <!-- ==================
+       ЭКРАН 5 — DIRECTION
+  ================== -->
+  <div class="screen-direction">
+    <div class="direction-bg"></div>
+
+    <div class="direction-label animate scale-in delay-1"></div>
+
+    <div class="direction-title1 animate from-left delay-2">
+      СЕЙЧАС Я СКОНЦЕНТРИРОВАН
+    </div>
+    <div class="direction-title2 animate from-right delay-3">
+      В ДВУХ НАПРАВЛЕНИЯХ
+    </div>
+
+    <div class="direction-product-wrap animate from-left delay-2">
+      <div class="direction-product-img"></div>
+      <div class="direction-product-overlay"></div>
+    </div>
+
+    <div class="direction-poster-wrap animate from-right delay-3">
+      <div class="direction-poster-img"></div>
+      <div class="direction-poster-overlay"></div>
+    </div>
+
+    <div class="direction-scan1 animate scale-in delay-4"></div>
+    <div class="direction-scan2 animate scale-in delay-4"></div>
+
+    <div class="direction-caption1 animate delay-3">
+      как самовыражение и творчество
+    </div>
+    <div class="direction-caption2 animate delay-4">
+      структура и основная деятельность
+    </div>
+
+    <!-- Иконка 1 — через обёртку, animate на обёртке -->
+    <div class="direction-icone1-wrap animate scale-in delay-5">
+      <div class="direction-icone1"></div>
+    </div>
+
+    <div class="direction-icone2 animate scale-in delay-5"></div>
+  </div>
+
+<!-- ==================
+     ЭКРАН 6 — CONTACT
+================== -->
+<div class="screen-contact">
+  <div class="contact-bg"></div>
+  <div class="contact-photo animate from-left delay-1"></div>
+  <h2 class="contact-title animate from-right delay-2">Контакты</h2>
+
+   <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" 
+   class="contact-link instagram animate from-right delay-3">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">Instagram</span>
+</a>
+
+<a href="https://t.me/apafenoz" target="_blank" rel="noopener noreferrer" 
+   class="contact-link telegram animate from-right delay-4">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">Telegram</span>
+</a>
+
+<a href="https://vk.com/apafenoz" target="_blank" rel="noopener noreferrer" 
+   class="contact-link vk animate from-right delay-5">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">VK</span>
+</a>
+
+<a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" 
+   target="_blank" rel="noopener noreferrer"
+   class="contact-link mail animate from-right delay-6">
+  <span class="contact-link__bg"></span>
+  <span class="contact-link__img-bg"></span>
+  <span class="contact-link__text">apafenoz@yandex.ru</span>
+</a>
+</div>
+ 
+  <div class="footer">
+
+  <div class="footer-direction animate from-left delay-1">
+    ГРАФИЧЕСКИЙ<br>ВЕБ<br>ПРОДУКТ
+  </div>
+
+  <div class="footer-logo animate scale-in delay-2">
+    <img src="assets/images/footer/logo.webp" alt="APAFENOZ">
+  </div>
+
+  <div class="footer-name animate from-right delay-3">SAFRONOV DENIS</div>
+
+  </div><!-- конец footer -->
+
+</div><!-- конец page-wrapper -->
+  
+</div>
+    <section class="mobile-main-screen" aria-label="Главный экран (моб.)">
+  <div class="mm-frame">
+    <div class="mm-bg"></div>
+    <div class="mm-logo"></div>
+    <div class="mm-icon-top"></div>
+    <div class="mm-icon-bottom"></div>
+    <span class="mm-role">Продуктовый дизайнер с бэкграундом в графике</span>
+    <span class="mm-cat">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</span>
+    <span class="mm-name">SAFRONOV&#10;DENIS</span>
+    <span class="mm-tags">ТВОРЧЕСТВО, ПОИСК, САМОВЫРАЖЕНИЕ</span>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-about">
+  <div class="mobile-section">
+    <div class="about-heading">
+      <span class="about-sub">ЭКСПЕРИМЕНТИРУЮ, <br>СОЗДАЮ, ИССЛЕДУЮ.</span>
+    </div>
+        <h1 class="m-about-title">Я дизайнер<br>
+      <span>
+      Создаю дизайн-контент,<br>
+      и исследую его влияние<br>
+      на эмоции людей.
+      </span>
+    </h1>
+    <p class="about-desc">
+      В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия. 
+      Там научился работать с сетками, типографикой и деталями.
+    </p>
+    <p class="about-desc">
+      Сейчас фокусируюсь на UX/UI. Проектирую пользовательские сценарии и интерфейсы. 
+      Делаю продукты, в которых нет лишних элементов.
+    </p>
+    <div class="about-photos-row">
+      <div class="about-photo about-photo-1">
+        <img src="assets/images/mobile/image-about-Mobile-1.webp" alt="Фото Дениса сбоку">
+      </div>
+      <div class="about-photo-caption">Привет,<br>я Денис</div>
+      <div class="about-photo about-photo-2">
+        <img src="assets/images/mobile/image-about-Mobile-2.webp" alt="Фото Дениса фронтально">
+      </div>
+    </div>
+    <div class="about-label-row">
+      <img src="assets/images/image-about-lable.webp" alt="Логотипы/штампы" class="image-about-lable.webp"/>
+      <div class="about-label-side">
+        <img src="assets/images/mobile/image-about-Mobil-4.webp" alt="Сочи, лето 2025" class="about-photo-small">
+        <div class="about-label-caption-vert">Сочи, лето 2025</div>
+      </div>
+    </div>
+    <div class="about-footer-row">
+      <span class="about-footer-city">Санкт-Петербург, весна 2025</span>
+    </div>
+    <div class="about-neon-photo">
+            <img src="assets/images/mobile/image-about-Mobile-3.webp" alt="Санкт-Петербург, весна 2025">
+    </div>
+    <div class="about-passion-text">
+      Увлекаюсь поиском деталей в нашей повседневности, а также их обработкой.
+    </div>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-create">
+  <div class="mobile-dark-section" style="background-image:url('assets/images/mobile/bg-Inset-Mobile.webp');">
+    <div class="create-logo">
+      <img src="assets/images/mobile/logo-Inset-Mobile.webp" alt="Логотип">
+    </div>
+    <div class="create-desc">
+      Чтобы переключаться и держать фокус, я создаю плакаты вручную, 
+      вырезаю из дерева, играю на музыкальных инструментах.<br>
+      <br>
+      Физическая работа помогает мне структурировать мысли и возвращаться к задачам со свежим взглядом.
+    </div>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-direction">
+  <div class="d-main-scaler">
+    <div class="d-main-canvas">
+
+      <div class="d-bg" style="background-image:url('assets/images/mobile/bg-direction-Mobile.webp');"></div>
+
+      <img class="d-top-cluster" src="assets/images/mobile/icone-5-direction-Mobile.webp" alt="2026 п.к.д. 100% органики">
+
+      <div class="d-headline-1">я<br>сконцентрирован</div>
+      <div class="d-headline-2">в двух направлениях</div>
+
+      <img class="d-keyword d-keyword-1" src="assets/images/mobile/image-2-direction-Mobile.webp" alt="ПРОДУКТ">
+      <img class="d-keyword d-keyword-2" src="assets/images/mobile/image-1-direction-Mobile.webp" alt="ПЛАКАТЫ">
+
+      <img class="d-icon-row" src="assets/images/mobile/icone-4-direction-Mobile.webp" alt="">
+      <img class="d-bottom-bar" src="assets/images/mobile/icone-3-direction-Mobile.webp" alt="BY\APAFRNOZ">
+
+    </div>
+  </div>
+</section>
+
+    <section class="screen-mobile screen-mobile-contact">
+  <div class="mobile-section">
+    <div class="contact-header-img">
+      <img src="assets/images/mobile/image-Contact-mobile.webp" alt="Птицы">
+    </div>
+    <h2 class="m-contact-title">Контакты</h2>
+    <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" class="m-contact-link contact-link-insta" style="background-image:url('assets/images/mobile/contact-Instagram-mobile.webp');">
+      Instagram
+    </a>
+    <a href="https://t.me/apafenoz" target="_blank" rel="noopener noreferrer" class="m-contact-link contact-link-tg" style="background-image:url('assets/images/mobile/contact-Telegramm-mobile.webp');">
+      Telegram
+    </a>
+    <a href="https://vk.com/apafenoz" target="_blank" rel="noopener noreferrer" class="m-contact-link contact-link-vk" style="background-image:url('assets/images/mobile/contact-vk-mobile.webp');">
+      VK
+    </a>
+    <a href="mailto:apafenoz@yandex.ru" class="m-contact-link contact-link-mail" style="background-image:url('assets/images/mobile/contact-mail-mobile.webp');">
+      apafenoz@yandex.ru
+    </a>
+    <div class="contact-footer">
+      <img src="assets/images/mobile/logo-Contact-mobile.webp" alt="ARAFENOZ" class="contact-footer-logo">
+      <div class="contact-footer-top">
+        <span>1997 <img src="assets/images/mobile/icone-1-Contact-mobile.webp" width="14" alt="" style="vertical-align:middle;"> 2026</span>
+        <span>100% <img src="assets/images/mobile/icone-2-Contact-mobile.webp" width="14" alt="" style="vertical-align:middle;"> ОРГАНИКИ</span>
+      </div>
+      <div class="contact-footer-name">
+        SAFRONOV DENIS
+      </div>
+    </div>
+  </div>
+</section>
+   
+<script>
+// ── Масштаб страницы (десктоп) ─────────────────────────
+function scalePage() {
+  const wrapper = document.querySelector('.page-wrapper');
+  if (!wrapper) return;
+  const scale = window.innerWidth / 1920;
+  const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
+  wrapper.style.width = '1920px';
+  wrapper.style.height = totalHeight + 'px';
+  wrapper.style.transform = `scale(${scale})`;
+  wrapper.style.transformOrigin = 'top left';
+  document.body.style.height = totalHeight * scale + 'px';
+}
+
+// ── Анимации появления ─────────────────────────────────
+function initAnimations() {
+  const els = document.querySelectorAll('.animate');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries, obs) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      e.target.classList.add('visible');
+      e.target.addEventListener('transitionend',
+        () => { e.target.style.willChange = 'auto'; }, { once: true });
+      obs.unobserve(e.target);
+    }
+  }, { rootMargin: '0px 0px -30px 0px' });
+  els.forEach(el => io.observe(el));
+}
+
+// ── Прелоадер ──────────────────────────────────────────
+function hidePreloader() {
+  const preloader = document.getElementById('preloader');
+  if (!preloader) return;
+  preloader.classList.add('hidden');
+  preloader.addEventListener('transitionend', () => preloader.remove(), { once: true });
+}
+
+function initPreloader() {
+  if (MOBILE_QUERY.matches) {
+    window.addEventListener('load', hidePreloader, { once: true });
+    setTimeout(hidePreloader, 1500);
+    return;
+  }
+  const video = document.getElementById('main-video');
+  const fallbackTimer = setTimeout(hidePreloader, 4000);
+
+  function onVideoReady() {
+    clearTimeout(fallbackTimer);
+    requestAnimationFrame(() => requestAnimationFrame(hidePreloader));
+  }
+
+  if (video) {
+    video.addEventListener('canplaythrough', onVideoReady, { once: true });
+  } else {
+    clearTimeout(fallbackTimer);
+    hidePreloader();
+  }
+}
+
+// ── Инициализация ──────────────────────────────────────
+const MOBILE_QUERY = window.matchMedia('(max-width: 600px)');
+function isMobile() {
+  return MOBILE_QUERY.matches || window.innerWidth <= 600;
+}
+
+// ── Масштаб мобильных canvas-экранов (main, direction) ──────────────────
+function scaleMobileCanvases() {
+  document.querySelectorAll('[class$="-main-scaler"]').forEach(scaler => {
+    const canvas = scaler.querySelector('[class$="-main-canvas"]');
+    if (!canvas) return;
+
+    const availableWidth = scaler.getBoundingClientRect().width;
+    if (availableWidth === 0) return;              // ещё не отрисован
+
+    const scale = availableWidth / 402;
+    canvas.style.transform = `scale(${scale})`;
+    canvas.style.transformOrigin = 'top left';
+    scaler.style.height = Math.ceil(874 * scale) + 'px';
+  });
+}
+
+function scaleMobileMain() {
+  try {
+    const screen = document.querySelector('.mobile-main-screen');
+    const frame = document.querySelector('.mm-frame');
+    if (!screen || !frame) return;
+
+    const BASE_W = 402, BASE_H = 874;
+    const scale = Math.max(0.1, window.innerWidth / BASE_W);
+
+    frame.style.transform = `scale(${scale})`;
+    frame.style.transformOrigin = 'top left';
+    screen.style.height = `${Math.ceil(BASE_H * scale)}px`;
+  } catch (err) {
+    console.error('scaleMobileMain error:', err);
+  }
+}
+
+// следим за реальным изменением размера контейнеров
+let mobileResizeObserver = null;
+function observeMobileMain() {
+  const scalers = document.querySelectorAll('[class$="-main-scaler"]');
+  if (!scalers.length || mobileResizeObserver) return;
+  mobileResizeObserver = new ResizeObserver(() => scaleMobileCanvases());
+  scalers.forEach(s => mobileResizeObserver.observe(s));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!isMobile()) {
+    scalePage();
+    initAnimations();
+  } else {
+    document.body.style.height = 'auto';
+    const wrapper = document.querySelector('.page-wrapper');
+    if (wrapper) {
+      wrapper.style.transform = 'none';
+      wrapper.style.width = 'auto';
+      wrapper.style.height = 'auto';
+    }
+    // тройная страховка масштаба
+    requestAnimationFrame(scaleMobileMain);
+    window.addEventListener('load', scaleMobileMain, { once: true });
+    observeMobileMain();
+  }
+  initPreloader();
+});
+
+let resizeTicking = false;
+window.addEventListener('resize', () => {
+  if (resizeTicking) return;
+  resizeTicking = true;
+  requestAnimationFrame(() => {
+    if (isMobile()) {
+      document.body.style.height = 'auto';
+      scaleMobileMain();       
+      scaleMobileCanvases();   
+    } else {
+      scalePage();             
+    }
+    resizeTicking = false;
+  });
+}, { passive: true });
+</script>
+
+</body>
+</html>
