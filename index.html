@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#fffff">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>ARAFENOZ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,19 +89,16 @@ html, body {
   /* ================= MOBILE — ПЕРВЫЙ ЭКРАН ================= */
 /* Канва 402×874, точные координаты из Figma */
 
-.mobile-main-screen {
-  position: relative;
-  width: 100vw;
-  overflow: hidden;
-  display: block;
-  background: #E6E6E6;   /* ✅ совпадает с фоном body — зазора не видно */
-  margin: 0;
-  padding: 0;
-  /* прижимаем к самому верху, под шторку статус-бара */
-  margin-top: 0;
-  /* компенсируем safe-area, чтобы контент уходил под чёлку */
-  margin-top: calc(-1 * env(safe-area-inset-top, 0px));
-}
+  .mobile-main-screen {
+    position: relative;
+    width: 100vw;
+    overflow: hidden;
+    display: block;
+    background: #ffffff;
+    margin: 0;
+    padding: 0
+    margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+  }
 
 .mm-frame {
   position: relative;
