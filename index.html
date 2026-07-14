@@ -209,12 +209,33 @@ html, body {
   text-align: left;
 }
   /* ---------- ЭКРАН 2: ABOUT ---------- */
-  .about-heading {
-    text-align: right;
-    padding: 0 20px;
-    margin-bottom: 30px;
+  /* Канва 402×1113 — масштабируется целиком, как экраны 1 и 4 */
+  .ab-main-scaler {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+    line-height: 0;
+    font-size: 0;
   }
-  .about-sub {
+  .ab-main-canvas {
+    position: absolute;
+    width: 402px;
+    height: 1113px;
+    background: #ffffff;
+    overflow: hidden;
+    isolation: isolate;
+    transform-origin: top left;
+  }
+
+  .ab-heading {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    width: 362px;
+    text-align: right;
+  }
+  .ab-sub {
     font-family: 'IBM Plex Mono', monospace;
     font-style: italic;
     font-size: 10px;
@@ -222,8 +243,11 @@ html, body {
     text-transform: uppercase;
     color: #6C6C6C;
   }
-  .m-about-title {
-    margin: 0 20px 18px;
+  .ab-title {
+    position: absolute;
+    left: 20px;
+    top: 68px;
+    width: 362px;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 700;
     font-size: 26px;
@@ -231,13 +255,15 @@ html, body {
     letter-spacing: -0.04em;
     color: #000;
   }
-  .m-about-title span {
+  .ab-title span {
     display: block;
     margin-top: 6px;
     font-weight: 700;
   }
-  .about-desc {
-    margin: 0 20px 14px;
+  .ab-desc {
+    position: absolute;
+    left: 20px;
+    width: 362px;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
     line-height: 15px;
@@ -245,22 +271,27 @@ html, body {
     text-align: justify;
     color: #000;
   }
+  .ab-desc-1 { top: 212px; }
+  .ab-desc-2 { top: 271px; }
 
   /* Фото-ряд: 2 фото со сдвигом, подпись между */
-  .about-photos-row {
+  .ab-photos-row {
+    position: absolute;
+    left: 20px;
+    top: 350px;
+    width: 362px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
     column-gap: 12px;
     align-items: end;
-    margin: 34px 20px 24px;
   }
-  .about-photo-1 {
+  .ab-photo-1 {
     grid-column: 1; grid-row: 1 / 3;
     aspect-ratio: 110/152;
     align-self: start;
   }
-  .about-photo-caption {
+  .ab-photo-caption {
     grid-column: 2; grid-row: 1;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 13px;
@@ -268,32 +299,35 @@ html, body {
     color: #000;
     padding-bottom: 10px;
   }
-  .about-photo-2 {
+  .ab-photo-2 {
     grid-column: 2; grid-row: 2;
     aspect-ratio: 110/152;
   }
-  .about-photo img {
+  .ab-photo img {
     width: 100%; height: 100%;
     object-fit: cover; display: block;
   }
 
   /* Ряд: штампы слева + фото Сочи справа */
-  .about-label-row {
+  .ab-label-row {
+    position: absolute;
+    left: 20px;
+    top: 656px;
+    width: 362px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 16px;
-    margin: 24px 20px;
   }
-  .m-about-label-img { height: 48px; width: auto; }
-  .about-label-side {
+  .ab-label-img { height: 48px; width: auto; }
+  .ab-label-side {
     display: flex; align-items: flex-end; gap: 8px;
   }
-  .about-photo-small {
+  .ab-photo-small {
     width: 96px; height: 96px;
     object-fit: cover; display: block;
   }
-  .about-label-caption-vert {
+  .ab-label-caption-vert {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     font-family: 'IBM Plex Mono', monospace;
@@ -303,8 +337,8 @@ html, body {
     white-space: nowrap;
   }
 
-  .about-footer-row { margin: 12px 20px 0; }
-  .about-footer-city {
+  .ab-footer-row { position: absolute; left: 20px; top: 776px; }
+  .ab-footer-city {
     font-family: 'IBM Plex Mono', monospace;
     font-style: italic;
     font-size: 11px;
@@ -312,16 +346,18 @@ html, body {
   }
 
   /* Широкое неоновое фото */
-  .about-neon-photo { margin: 14px 20px 0; }
-  .about-neon-photo img {
+  .ab-neon-photo { position: absolute; left: 20px; top: 809px; width: 362px; }
+  .ab-neon-photo img {
     width: 100%;
     aspect-ratio: 328/174;
     object-fit: cover;
     display: block;
   }
 
-  .about-passion-text {
-    margin: 20px 20px 0;
+  .ab-passion-text {
+    position: absolute;
+    left: 20px;
+    top: 1021px;
     max-width: 250px;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 10px;
@@ -1550,49 +1586,51 @@ html, body {
 </section>
 
     <section class="screen-mobile screen-mobile-about">
-  <div class="mobile-section">
-    <div class="about-heading">
-      <span class="about-sub">ЭКСПЕРИМЕНТИРУЮ, <br>СОЗДАЮ, ИССЛЕДУЮ.</span>
-    </div>
-        <h1 class="m-about-title">Я дизайнер<br>
-      <span>
-      Создаю дизайн-контент,<br>
-      и исследую его влияние<br>
-      на эмоции людей.
-      </span>
-    </h1>
-    <p class="about-desc">
-      В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия. 
-      Там научился работать с сетками, типографикой и деталями.
-    </p>
-    <p class="about-desc">
-      Сейчас фокусируюсь на UX/UI. Проектирую пользовательские сценарии и интерфейсы. 
-      Делаю продукты, в которых нет лишних элементов.
-    </p>
-    <div class="about-photos-row">
-      <div class="about-photo about-photo-1">
-        <img src="assets/images/mobile/image-about-Mobile-1.webp" alt="Фото Дениса сбоку">
+  <div class="ab-main-scaler" data-base-height="1113">
+    <div class="ab-main-canvas">
+      <div class="ab-heading">
+        <span class="ab-sub">ЭКСПЕРИМЕНТИРУЮ, <br>СОЗДАЮ, ИССЛЕДУЮ.</span>
       </div>
-      <div class="about-photo-caption">Привет,<br>я Денис</div>
-      <div class="about-photo about-photo-2">
-        <img src="assets/images/mobile/image-about-Mobile-2.webp" alt="Фото Дениса фронтально">
+      <h1 class="ab-title">Я дизайнер<br>
+        <span>
+        Создаю дизайн-контент,<br>
+        и исследую его влияние<br>
+        на эмоции людей.
+        </span>
+      </h1>
+      <p class="ab-desc ab-desc-1">
+        В дизайне с 2019 года. Начинал в графике: брендинг, афиши, полиграфия. 
+        Там научился работать с сетками, типографикой и деталями.
+      </p>
+      <p class="ab-desc ab-desc-2">
+        Сейчас фокусируюсь на UX/UI. Проектирую пользовательские сценарии и интерфейсы. 
+        Делаю продукты, в которых нет лишних элементов.
+      </p>
+      <div class="ab-photos-row">
+        <div class="ab-photo ab-photo-1">
+          <img src="assets/images/mobile/image-about-Mobile-1.webp" alt="Фото Дениса сбоку">
+        </div>
+        <div class="ab-photo-caption">Привет,<br>я Денис</div>
+        <div class="ab-photo ab-photo-2">
+          <img src="assets/images/mobile/image-about-Mobile-2.webp" alt="Фото Дениса фронтально">
+        </div>
       </div>
-    </div>
-    <div class="about-label-row">
-      <img src="assets/images/image-about-lable.webp" alt="Логотипы/штампы" class="image-about-lable.webp"/>
-      <div class="about-label-side">
-        <img src="assets/images/mobile/image-about-Mobil-4.webp" alt="Сочи, лето 2025" class="about-photo-small">
-        <div class="about-label-caption-vert">Сочи, лето 2025</div>
+      <div class="ab-label-row">
+        <img src="assets/images/image-about-lable.webp" alt="Логотипы/штампы" class="ab-label-img"/>
+        <div class="ab-label-side">
+          <img src="assets/images/mobile/image-about-Mobil-4.webp" alt="Сочи, лето 2025" class="ab-photo-small">
+          <div class="ab-label-caption-vert">Сочи, лето 2025</div>
+        </div>
       </div>
-    </div>
-    <div class="about-footer-row">
-      <span class="about-footer-city">Санкт-Петербург, весна 2025</span>
-    </div>
-    <div class="about-neon-photo">
-            <img src="assets/images/mobile/image-about-Mobile-3.webp" alt="Санкт-Петербург, весна 2025">
-    </div>
-    <div class="about-passion-text">
-      Увлекаюсь поиском деталей в нашей повседневности, а также их обработкой.
+      <div class="ab-footer-row">
+        <span class="ab-footer-city">Санкт-Петербург, весна 2025</span>
+      </div>
+      <div class="ab-neon-photo">
+        <img src="assets/images/mobile/image-about-Mobile-3.webp" alt="Санкт-Петербург, весна 2025">
+      </div>
+      <div class="ab-passion-text">
+        Увлекаюсь поиском деталей в нашей повседневности, а также их обработкой.
+      </div>
     </div>
   </div>
 </section>
@@ -1732,7 +1770,7 @@ function isMobile() {
   return MOBILE_QUERY.matches || window.innerWidth <= 600;
 }
 
-// ── Масштаб мобильных canvas-экранов (main, direction) ──────────────────
+// ── Масштаб мобильных canvas-экранов (main, about, direction) ──────────────────
 function scaleMobileCanvases() {
   document.querySelectorAll('[class$="-main-scaler"]').forEach(scaler => {
     const canvas = scaler.querySelector('[class$="-main-canvas"]');
@@ -1741,10 +1779,11 @@ function scaleMobileCanvases() {
     const availableWidth = scaler.getBoundingClientRect().width;
     if (availableWidth === 0) return;              // ещё не отрисован
 
+    const baseHeight = parseFloat(scaler.dataset.baseHeight) || 874; // 874 — главный/direction, 1113 — about
     const scale = availableWidth / 402;
     canvas.style.transform = `scale(${scale})`;
     canvas.style.transformOrigin = 'top left';
-    scaler.style.height = Math.ceil(874 * scale) + 'px';
+    scaler.style.height = Math.ceil(baseHeight * scale) + 'px';
   });
 }
 
