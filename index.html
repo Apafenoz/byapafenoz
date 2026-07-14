@@ -225,7 +225,21 @@ html, body {
     isolation: isolate;
     transform-origin: top left;
   }
-
+.ab-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 402px;
+    height: 1113px;
+    background: url("assets/images/mobile/bg-about-Mobile.webp") no-repeat center top;
+    background-size: cover;
+    z-index: 0;
+  }
+  
+  .ab-main-canvas > *:not(.ab-bg) {
+    z-index: 1;
+  }
+  
   /* --- Иконка сверху 30×30, x36 y30 --- */
   .ab-icon {
     position: absolute;
@@ -1634,7 +1648,10 @@ html, body {
 
         <section class="screen-mobile screen-mobile-about">
   <div class="ab-main-scaler" data-base-height="1113">
-    <div class="ab-main-canvas">
+        <div class="ab-main-canvas">
+
+      <!-- ФОН — самый нижний слой -->
+      <div class="ab-bg"></div>
 
       <!-- Иконка сверху x36 y30 -->
       <img class="ab-icon" src="assets/images/mobile/icon-about-Mobile.webp" alt="">
