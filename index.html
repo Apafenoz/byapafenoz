@@ -66,14 +66,19 @@ html, body {
 /* ↓↓↓ ВСЁ МОБИЛЬНОЕ ВНУТРИ ОДНОГО МЕДИА ↓↓↓ */
 @media (max-width: 600px) {
 
-  html, body {
+   html {
+    background: #ffffff;
+  }
+  body {
     height: auto !important;
     overflow-x: hidden;
     background: #ffffff;
     margin: 0;
     padding: 0;
-    /* убираем любой отступ сверху под статус-бар */
-    padding-top: 0;
+  }
+  /* контейнер верхней секции уходит под статус-бар */
+  .mobile-main-screen:first-of-type {
+    margin-top: calc(-1 * env(safe-area-inset-top, 0px)) !important;
   }
 
   /* первая мобильная секция — строго к верху экрана */
