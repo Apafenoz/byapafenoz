@@ -2,14 +2,24 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0", viewport-fit=cover">
   <title>ARAFENOZ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Sans:ital@1&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background: #000;   /* ← чтобы зазор, если появится, был чёрным, а не белым */
+}
     :root {
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -56,30 +66,15 @@
 
         .screen-mobile { display:block !important; width:100%; }
 
-    /* Главный экран строго по высоте canvas, без зазоров */
-    .screen-mobile-main {
-      width: 100%;
-      line-height: 0;      /* убирает inline-зазор под scaler */
-      font-size: 0;
-    }
-    .screen-mobile-main .m-main-scaler {
-      display: block;
-    }
-    .screen-mobile-direction {
-      width: 100%;
-      line-height: 0;
-      font-size: 0;
-    }
-    .screen-mobile-direction .d-main-scaler {
-      display: block;
-    }
+.screen-mobile {
+  margin: 0;
+  padding: 0;
+}
 
-  .page-wrapper,
-  .screen-main, .screen-about, .screen-insert,
-  .screen-inset2, .screen-direction,
-  .screen-contact, .footer {
-    display: none !important;
-  }
+.screen-mobile-main:first-child,
+.screen-mobile:first-of-type {
+  margin-top: 0;   /* ✅ прижать к самому верху */
+}
 
   /* ================= MOBILE — ПЕРВЫЙ ЭКРАН ================= */
 /* Канва 402×874, точные координаты из Figma */
@@ -201,7 +196,13 @@
   text-align: left;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .page-wrapper {
+    margin: 0;
+    padding: 0;
+    margin-top: 0;
+  }
+}
   .mobile-main-screen { display: block; }
   .desktop-main-screen { display: none; }
 }
