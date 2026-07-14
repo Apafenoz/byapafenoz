@@ -451,11 +451,11 @@ html, body {
     color: #fff;
   }
 
-    /* ---------- ЭКРАН 4: DIRECTION ---------- */
+      /* ---------- ЭКРАН 4: DIRECTION ---------- */
+  /* Канва 402×874 — точные координаты из Figma */
   .d-main-scaler {
     width: 100%;
     max-width: 100%;
-    min-height: 100vh;
     overflow: hidden;
     position: relative;
     line-height: 0;
@@ -464,92 +464,105 @@ html, body {
   .d-main-canvas {
     position: absolute;
     width: 402px;
-    min-height: 100vh;
+    height: 874px;
     background: #E6E6E6;
+    overflow: hidden;
     isolation: isolate;
     transform-origin: top left;
   }
 
-  /* фоновая текстура (та же переиспользуемая фотография) */
+  /* фон: картинка 874×402, повёрнута на -90° и уложена в канву 402×874 */
   .d-bg {
-  position: absolute;
-  width: 874px;
-  height: 402px;
-  left: 0;
-  top: 0;
-  background-size: cover;
-  background-position: center;
-  transform: rotate(-90deg);
-  transform-origin: top left;
-  translate: 0 402px;
-}
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 874px;
+    height: 402px;
+    background-size: cover;
+    background-position: center;
+    transform: rotate(-90deg);
+    transform-origin: top left;
+    translate: 0 402px;         /* компенсация поворота */
+    z-index: 0;
+  }
+  .d-main-canvas > *:not(.d-bg) { z-index: 1; }
 
+  /* верхний кластер: x255 y60 w109 h30 */
+  .d-top-cluster {
+    position: absolute;
+    left: 255px;
+    top: 60px;
+    width: 109px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* заголовок 1: "я сконцентрирован" 36 Bold, x36 y206 w323 h94 */
   .d-headline-1 {
     position: absolute;
-    width: 290.22px;
-    height: 77.53px;
-    left: 37.7px;
-    top: 217.87px;
+    left: 36px;
+    top: 206px;
+    width: 323px;
+    height: 94px;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 700;
     font-size: 36px;
     line-height: 40px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.06em;
     text-transform: uppercase;
     text-align: left;
     color: #2A005E;
   }
 
+  /* заголовок 2: "в двух направлениях" 36 Bold, x36 y300 w328 h94 */
   .d-headline-2 {
     position: absolute;
-    width: 234.93px;
-    height: 72.34px;
-    left: 132.375px;
-    top: 311.87px;
+    left: 36px;
+    top: 300px;
+    width: 328px;
+    height: 94px;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 700;
     font-size: 36px;
     line-height: 40px;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.06em;
     text-transform: uppercase;
-    text-align: right;
+    text-align: left;
     color: #2A005E;
   }
 
+  /* keyword-картинки: w328, x36 */
   .d-keyword {
     position: absolute;
-    width: 328.91px;
-    left: 36.545px;
+    left: 36px;
+    width: 328px;
     object-fit: contain;
+    display: block;
   }
-  .d-keyword-1 { height: 58.45px; top: 457.09px; }
-  .d-keyword-2 { height: 58.41px; top: 545.6px; }
+  .d-keyword-1 { top: 457px; height: 58px; }   /* image-2 x36 y457 */
+  .d-keyword-2 { top: 545px; height: 58px; }   /* image-1 x36 y545 */
 
-  .d-top-cluster {
-    position: absolute;
-    width: 108.97px;
-    height: 29.24px;
-    left: 255.82px;
-    top: 60.59px;
-    object-fit: contain;
-  }
-
+  /* строка иконок: x73 y697 w255 h11 */
   .d-icon-row {
     position: absolute;
+    left: 73px;
+    top: 697px;
     width: 255px;
-    height: 11.29px;
-    left: 73.5px;
-    top: 697.47px;
+    height: 11px;
     object-fit: contain;
+    display: block;
   }
 
+  /* нижний бар: x36 y820 w218 h23 */
   .d-bottom-bar {
     position: absolute;
+    left: 36px;
+    top: 820px;
     width: 218px;
-    height: 23.19px;
-    left: 36.55px;
-    top: 820.81px;
+    height: 23px;
     object-fit: contain;
+    display: block;
   }
 
   /* ---------- ЭКРАН 5: CONTACT ---------- */
@@ -1731,22 +1744,29 @@ html, body {
   </div>
 </section>
 
-    <section class="screen-mobile screen-mobile-direction">
-  <div class="d-main-scaler">
+        <section class="screen-mobile screen-mobile-direction">
+  <div class="d-main-scaler" data-base-height="874">
     <div class="d-main-canvas">
 
-      <div class="d-bg" style="background-image:url('assets/images/mobile/bg-direction-Mobile.webp');"></div>
+      <!-- ФОН -->
+      <div class="d-bg" style="background-image:url('assets/images/mobile/bg-mobile-1.webp');"></div>
 
+      <!-- верхний кластер x255 y60 -->
       <img class="d-top-cluster" src="assets/images/mobile/icone-5-direction-Mobile.webp" alt="2026 п.к.д. 100% органики">
 
+      <!-- заголовки -->
       <div class="d-headline-1">я<br>сконцентрирован</div>
-      <div class="d-headline-2">в двух направлениях</div>
+      <div class="d-headline-2">в двух<br>направлениях</div>
 
+      <!-- keyword-картинки -->
       <img class="d-keyword d-keyword-1" src="assets/images/mobile/image-2-direction-Mobile.webp" alt="ПРОДУКТ">
       <img class="d-keyword d-keyword-2" src="assets/images/mobile/image-1-direction-Mobile.webp" alt="ПЛАКАТЫ">
 
+      <!-- строка иконок x73 y697 -->
       <img class="d-icon-row" src="assets/images/mobile/icone-4-direction-Mobile.webp" alt="">
-      <img class="d-bottom-bar" src="assets/images/mobile/icone-3-direction-Mobile.webp" alt="BY\APAFRNOZ">
+
+      <!-- нижний бар x36 y820 -->
+      <img class="d-bottom-bar" src="assets/images/mobile/icone-3-direction-Mobile.webp" alt="BY\APAFENOZ">
 
     </div>
   </div>
