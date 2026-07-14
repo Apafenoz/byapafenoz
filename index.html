@@ -562,77 +562,120 @@ html, body {
     display: block;
   }
 
-  /* ---------- ЭКРАН 5: CONTACT ---------- */
-  .contact-header-img {
+   /* ---------- ЭКРАН 5: CONTACT ---------- */
+  /* Канва 402×874 — точные координаты из Figma */
+  .c-main-scaler {
     width: 100%;
-    aspect-ratio: 402/300;
-    margin-bottom: 40px;
+    max-width: 100%;
     overflow: hidden;
-  }
-  .contact-header-img img {
-    width: 100%; height: 100%;
-    object-fit: cover; display: block;
-  }
-  .m-contact-title {
-    margin: 0 20px 26px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 34px;
-    line-height: 44px;
-    letter-spacing: -0.04em;
-    color: #2A005E;
-  }
-  .m-contact-link {
     position: relative;
-    display: flex;
-    align-items: center;
-    width: calc(100% - 40px);
-    height: 34px;
-    margin: 0 20px 14px;
-    padding-left: 16px;
-    background-color: #fff;
-    background-size: cover;
-    background-position: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.04em;
-    color: #2A005E;
-    text-decoration: none;
-    overflow: hidden;
+    line-height: 0;
+    font-size: 0;
   }
-  .m-contact-link:active {
-    background-color: #2A005E;
-    background-image: none !important;
-    color: #fff;
+  .c-main-canvas {
+    position: absolute;
+    width: 402px;
+    height: 874px;
+    background: #E6E6E6;
+    overflow: hidden;
+    isolation: isolate;
+    transform-origin: top left;
   }
 
-  /* Footer контактов */
-  .contact-footer { margin: 40px 20px 0; }
-  .contact-footer-logo {
-    width: 200px;
-    max-width: 60%;
-    margin: 0 auto 16px;
+  /* фон 874×402 горизонтальный, повёрнут -90° по центру */
+  .c-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 874px;
+    height: 402px;
+    background-size: cover;
+    background-position: center;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    transform-origin: center center;
+    z-index: 0;
+  }
+  .c-main-canvas > *:not(.c-bg) { z-index: 1; }
+
+  /* верхнее фото контакта x0 y64 w402 h270 */
+  .c-hero {
+    position: absolute;
+    left: 0;
+    top: 64px;
+    width: 402px;
+    height: 270px;
+    object-fit: cover;
     display: block;
-    mix-blend-mode: darken;
   }
-  .contact-footer-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+
+  /* заголовок "Контакты" x48 y394 w158 h47, 36 Bold */
+  .c-title {
+    position: absolute;
+    left: 48px;
+    top: 394px;
+    width: 158px;
+    height: 47px;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: #2A005E;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 47px;
+    letter-spacing: -0.06em;
+    color: #000;
   }
-  .contact-footer-name {
-    margin-top: 14px;
-    text-align: center;
+
+  /* ссылки-картинки соцсетей: w300 h30, x51 */
+  .c-link {
+    position: absolute;
+    left: 51px;
+    width: 300px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+  }
+  .c-link-instagram { top: 454px; }   /* Instagram y454 */
+  .c-link-telegram  { top: 514px; }   /* Telegram  y514 */
+  .c-link-vk        { top: 574px; }   /* VK        y574 */
+  .c-link-mail      { top: 634px; }   /* Mail      y634 */
+
+  /* иконки снизу w36 h31, y813 */
+  .c-icon {
+    position: absolute;
+    top: 813px;
+    width: 36px;
+    height: 31px;
+    object-fit: contain;
+    display: block;
+  }
+  .c-icon-1 { left: 36px; }    /* x36 */
+  .c-icon-2 { left: 328px; }   /* x328 */
+
+  /* логотип x90 y776 w221.33 h37 */
+  .c-logo {
+    position: absolute;
+    left: 90px;
+    top: 776px;
+    width: 221.33px;
+    height: 37px;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* подпись "SAFRONOV DENIS" italic 14, x142 y826 w118 h18 */
+  .c-signature {
+    position: absolute;
+    left: 142px;
+    top: 826px;
+    width: 118px;
+    height: 18px;
     font-family: 'IBM Plex Mono', monospace;
     font-style: italic;
+    font-weight: 400;
     font-size: 14px;
-    color: #2A005E;
+    line-height: 18px;
+    letter-spacing: -0.06em;
+    text-align: center;
+    color: #000;
   }
-}
     body {
   background: #fff;
   overflow-x: hidden;
@@ -1769,33 +1812,43 @@ html, body {
   </div>
 </section>
 
-    <section class="screen-mobile screen-mobile-contact">
-  <div class="mobile-section">
-    <div class="contact-header-img">
-      <img src="assets/images/mobile/image-Contact-mobile.webp" alt="Птицы">
-    </div>
-    <h2 class="m-contact-title">Контакты</h2>
-    <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" class="m-contact-link contact-link-insta" style="background-image:url('assets/images/mobile/contact-Instagram-mobile.webp');">
-      Instagram
-    </a>
-    <a href="https://t.me/apafenoz" target="_blank" rel="noopener noreferrer" class="m-contact-link contact-link-tg" style="background-image:url('assets/images/mobile/contact-Telegramm-mobile.webp');">
-      Telegram
-    </a>
-    <a href="https://vk.com/apafenoz" target="_blank" rel="noopener noreferrer" class="m-contact-link contact-link-vk" style="background-image:url('assets/images/mobile/contact-vk-mobile.webp');">
-      VK
-    </a>
-    <a href="mailto:apafenoz@yandex.ru" class="m-contact-link contact-link-mail" style="background-image:url('assets/images/mobile/contact-mail-mobile.webp');">
-      apafenoz@yandex.ru
-    </a>
-    <div class="contact-footer">
-      <img src="assets/images/mobile/logo-Contact-mobile.webp" alt="ARAFENOZ" class="contact-footer-logo">
-      <div class="contact-footer-top">
-        <span>1997 <img src="assets/images/mobile/icone-1-Contact-mobile.webp" width="14" alt="" style="vertical-align:middle;"> 2026</span>
-        <span>100% <img src="assets/images/mobile/icone-2-Contact-mobile.webp" width="14" alt="" style="vertical-align:middle;"> ОРГАНИКИ</span>
-      </div>
-      <div class="contact-footer-name">
-        SAFRONOV DENIS
-      </div>
+            <section class="screen-mobile screen-mobile-contact">
+  <div class="c-main-scaler" data-base-height="874">
+    <div class="c-main-canvas">
+
+      <!-- ФОН -->
+      <div class="c-bg" style="background-image:url('assets/images/mobile/bg-mobile-1.webp');"></div>
+
+      <!-- Фото сверху x0 y64 -->
+      <img class="c-hero" src="assets/images/mobile/image-Contact-mobile.webp" alt="Контакт">
+
+      <!-- Заголовок x48 y394 -->
+      <h2 class="c-title">Контакты</h2>
+
+      <!-- Соцсети-ссылки (реальные URL из ПК-версии) -->
+      <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer">
+        <img class="c-link c-link-instagram" src="assets/images/mobile/contact-Instagram-mobile.webp" alt="Instagram">
+      </a>
+      <a href="https://t.me/apafenoz" target="_blank" rel="noopener noreferrer">
+        <img class="c-link c-link-telegram" src="assets/images/mobile/contact-Telegramm-mobile.webp" alt="Telegram">
+      </a>
+      <a href="https://vk.com/apafenoz" target="_blank" rel="noopener noreferrer">
+        <img class="c-link c-link-vk" src="assets/images/mobile/contact-vk-mobile.webp" alt="VK">
+      </a>
+      <a href="https://mail.yandex.ru/compose?to=apafenoz@yandex.ru&subject=Заказ проекта" target="_blank" rel="noopener noreferrer">
+        <img class="c-link c-link-mail" src="assets/images/mobile/contact-mail-mobile.webp" alt="apafenoz@yandex.ru">
+      </a>
+
+      <!-- Логотип x90 y776 -->
+      <img class="c-logo" src="assets/images/mobile/logo-Contact-mobile.webp" alt="Логотип">
+
+      <!-- Иконки снизу -->
+      <img class="c-icon c-icon-1" src="assets/images/mobile/icone-1-Contact-mobile.webp" alt="">
+      <img class="c-icon c-icon-2" src="assets/images/mobile/icone-2-Contact-mobile.webp" alt="">
+
+      <!-- Подпись x142 y826 -->
+      <div class="c-signature">SAFRONOV DENIS</div>
+
     </div>
   </div>
 </section>
