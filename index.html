@@ -55,29 +55,26 @@ html, body {
   50%       { opacity: 0.4; transform: scale(0.92); }
 }
 
- .screen-mobile { display: none; }
+/* ===== ПЕРЕКЛЮЧЕНИЕ ДЕСКТОП / МОБИЛКА ===== */
+/* ПК по умолчанию: мобильные секции скрыты */
+.mobile-main-screen,
+.screen-mobile { display: none; }
 
-@media(max-width:600px) {
+/* ↓↓↓ ВСЁ МОБИЛЬНОЕ ВНУТРИ ОДНОГО МЕДИА ↓↓↓ */
+@media (max-width: 600px) {
+
   html, body {
     height: auto !important;
     overflow-x: hidden;
     background: #E6E6E6;
-    margin: 0;          
-    padding: 0;        
+    margin: 0;
+    padding: 0;
   }
-}
 
-.screen-mobile { display:block !important; width:100%; }
-
-.screen-mobile {
-  margin: 0;
-  padding: 0;
-}
-
-.screen-mobile-main:first-child,
-.screen-mobile:first-of-type {
-  margin-top: 0;   /* ✅ прижать к самому верху */
-}
+  /* скрываем ВЕСЬ десктоп, показываем мобилку */
+  .page-wrapper { display: none !important; }
+  .mobile-main-screen { display: block; }
+  .screen-mobile { display: block; width: 100%; margin: 0; padding: 0; }
 
   /* ================= MOBILE — ПЕРВЫЙ ЭКРАН ================= */
 /* Канва 402×874, точные координаты из Figma */
@@ -201,18 +198,6 @@ html, body {
   color: #323232;
   text-align: left;
 }
-
-@media (max-width: 600px) {
-  .page-wrapper {
-    margin: 0;
-    padding: 0;
-    margin-top: 0;
-  }
-}
-  .mobile-main-screen { display: block; }
-  .desktop-main-screen { display: none; }
-}
-
   /* ---------- ЭКРАН 2: ABOUT ---------- */
   .about-heading {
     text-align: right;
