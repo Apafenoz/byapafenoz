@@ -59,10 +59,12 @@ html, body {
   50%       { opacity: 0.4; transform: scale(0.92); }
 }
 
-/* ===== ПЕРЕКЛЮЧЕНИЕ ДЕСКТОП / МОБИЛКА ===== */
-/* ПК по умолчанию: мобильные секции скрыты */
+/* ПК: жёстко прячем всё мобильное */
 .mobile-main-screen,
-.screen-mobile { display: none; }
+.screen-mobile { display: none !important; }
+
+/* ПК: показываем десктоп */
+.page-wrapper { display: block; }
 
 /* ↓↓↓ ВСЁ МОБИЛЬНОЕ ВНУТРИ ОДНОГО МЕДИА ↓↓↓ */
 @media (max-width: 600px) {
@@ -1850,6 +1852,7 @@ html, body {
 function scalePage() {
   const wrapper = document.querySelector('.page-wrapper');
   if (!wrapper) return;
+  wrapper.style.display = 'block';               // ← гарантируем видимость на ПК
   const scale = window.innerWidth / 1920;
   const totalHeight = 917 + 800 + 332 + 739 + 1300 + 800 + 110;
   wrapper.style.width = '1920px';
