@@ -24,7 +24,6 @@
       width: 100%;
       background: #fff;
       overflow-x: hidden;
-      overflow-y: auto;
     }
 
     :root {
@@ -66,11 +65,21 @@
     .mobile-main-screen,
     .screen-mobile { display: none !important; }
 
-    /* ПК: показываем десктоп */
+    /* ===== ОБЁРТКА-ВЬЮПОРТ: съедает лишнюю высоту от scale() ===== */
+    .page-viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;   /* обрезает несжатую высоту wrapper */
+    }
+
+    /* ПК: показываем десктоп. wrapper вынут из потока (absolute) */
     .page-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
       display: block;
       transform-origin: top left;
-      overflow: visible; /* ← у wrapper нет своего скролла */
+      overflow: visible;
     }
 
     /* ↓↓↓ ВСЁ МОБИЛЬНОЕ ВНУТРИ ОДНОГО МЕДИА ↓↓↓ */
@@ -85,7 +94,8 @@
       }
 
       /* скрываем ВЕСЬ десктоп, показываем мобилку */
-      .page-wrapper { display: none !important; }
+      .page-viewport { display: none !important; }
+      .page-wrapper  { display: none !important; }
       .mobile-main-screen { display: block !important; }
       .screen-mobile { display: block !important; width: 100%; margin: 0; padding: 0; }
 
@@ -678,7 +688,1331 @@
     }
 
     @media (hover: hover) and (pointer: fine) {
-      /* will-change включаем только на hover — экономим память */
+      .contact-link:hover .contact-link__bg,
+      .contact-link:hover .contact-link__img-bg {
+        will-change: transform, opacity;
+      }
+      .contact-link:hover .contact-link__bg {
+        transform: scaleX(1);
+      }
+      .contact-link:hover .contact-link__img-bg {
+        transform: scaleX(1);
+        opacity: 0.5;
+      }
+      .contact-link:hover .contact-link__text {
+        color: #FFFFFF;
+      }
+    }
+
+    /* =====================
+       ЭКРАН 1 — ГЛАВНАЯ
+    ===================== */
+    .screen-main {
+      position: relative;
+      width: 1920px;
+      height: 917px;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+    .main-video {
+      position: absolute;
+      width: 1920px;
+      height: 917px;
+      left: 0; top: 0;
+      object-fit: cover;
+      opacity: 0.8;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .main-by {
+      position: absolute;
+      width: 1097.44px;
+      height: 183.46px;
+      left: calc(50% - 1097.44px/2 + 17.14px);
+      top: calc(50% - 183.46px/2 + 0.03px);
+      background: url('assets/images/byApafenoz.webp') center/contain no-repeat;
+      mix-blend-mode: darken;
+      z-index: 2;
+    }
+    .main-icone {
+      position: absolute;
+      width: 71.95px;
+      height: 19.98px;
+      left: 311.1px;
+      top: 71.85px;
+      background: url('assets/images/icone 2.webp') center/contain no-repeat;
+      z-index: 5;
+    }
+    .main-pkd {
+      position: absolute;
+      width: 72.48px;
+      height: 14.97px;
+      left: calc(50% - 72.48px/2 + 612.66px);
+      top: calc(50% - 14.97px/2 + 405.17px);
+      background: url('assets/images/п.к.д..webp') center/contain no-repeat;
+      z-index: 4;
+    }
+    .main-label {
+      position: absolute;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      color: #323232;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .main-creative {
+      width: 268px;
+      height: 18px;
+      left: 1268.22px;
+      top: 550.26px;
+    }
+    .main-name {
+      width: 113px;
+      height: 18px;
+      left: 1418.84px;
+      top: 316.91px;
+    }
+    .main-type {
+      width: 193px;
+      height: 18px;
+      left: 527.4px;
+      top: 315.7px;
+    }
+    .main-desc {
+      width: 365px;
+      height: 18px;
+      left: 527.4px;
+      top: 733.6px;
+      text-transform: uppercase;
+    }
+
+    /* =====================
+       ЭКРАН 2 — ABOUT
+    ===================== */
+    .screen-about {
+      position: relative;
+      width: 1920px;
+      height: 800px;
+      overflow: hidden;
+    }
+    .about-bg {
+      position: absolute;
+      width: 1920px;
+      height: 800px;
+      left: 0; top: 0;
+      background: url('assets/images/bg-image.png') center/cover no-repeat;
+      z-index: 0;
+    }
+    .about-photo2 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 495px;
+      top: 253px;
+      background: url('assets/images/image-about-2.webp') center/cover no-repeat;
+      z-index: 3;
+    }
+    .about-photo1 {
+      position: absolute;
+      width: 120px;
+      height: 162px;
+      left: 659px;
+      top: 103px;
+      background: url('assets/images/image-about-1.webp') center/cover no-repeat;
+      z-index: 3;
+    }
+    .about-icone {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      left: 435px;
+      top: 25px;
+      background: url('assets/images/icones-about.webp') center/contain no-repeat;
+      z-index: 4;
+    }
+    .about-hello {
+      position: absolute;
+      width: 90px;
+      height: 32px;
+      left: 659px;
+      top: 278px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 16px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      z-index: 5;
+    }
+    .about-title {
+      position: absolute;
+      width: 430px;
+      height: 188px;
+      left: 945px;
+      top: 96px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 47px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      text-align: justify;
+      text-align-last: justify;
+      z-index: 5;
+    }
+    .about-text {
+      position: absolute;
+      width: 480px;
+      height: 126px;
+      left: 945px;
+      top: 334px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      text-align: justify;
+      text-align-last: justify;
+      z-index: 5;
+    }
+    .about-emo {
+      position: absolute;
+      left: 1560px;
+      top: 103px;
+      display: flex;
+      flex-direction: row;
+      gap: 2px;
+      z-index: 5;
+    }
+    .about-emo span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      color: #6C6C6C;
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+    }
+    .about-label-img {
+      position: absolute;
+      width: 140px;
+      height: 79px;
+      left: 1422px;
+      top: 570px;
+      background: url('assets/images/image-about-lable.webp') center/contain no-repeat;
+      z-index: 6;
+    }
+    .about-photo-bottom {
+      position: absolute;
+      width: 217px;
+      height: 155px;
+      left: 945px;
+      top: 620px;
+      background: url('assets/images/image-delivery-2.webp') center/cover no-repeat;
+      z-index: 3;
+    }
+    .about-caption-bottom {
+      position: absolute;
+      left: 1160px;
+      top: 620px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 13px;
+      color: #6B6B6B;
+    }
+
+    /* =====================
+       ЭКРАН 3 — ВСТАВКА
+    ===================== */
+    .screen-insert {
+      position: relative;
+      width: 1920px;
+      height: 332px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .insert-bg {
+      position: absolute;
+      width: 1920px;
+      height: 332px;
+      left: 0;
+      top: 0;
+      background: url('assets/images/bg-about.png') center/cover no-repeat;
+      z-index: 0;
+    }
+    .insert-caption1 {
+      position: absolute;
+      left: 945px;
+      top: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 13px;
+      line-height: 17px;
+      letter-spacing: -0.06em;
+      color: #6B6B6B;
+      white-space: nowrap;
+      z-index: 5;
+    }
+    .insert-photo1-pos {
+      position: absolute;
+      left: 945px;
+      top: 25px;
+      width: 413px;
+      height: 281px;
+      z-index: 2;
+    }
+    .insert-photo1-wrap {
+      position: absolute;
+      width: 413px;
+      height: 281px;
+      left: 0;
+      top: 0;
+      overflow: hidden;
+    }
+    .insert-photo1-img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background: url('assets/images/image-delivery-1.webp') center/cover no-repeat;
+    }
+    .insert-text {
+      position: absolute;
+      left: 1378px;
+      top: 21px;
+      width: 184px;
+      height: 11px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      text-align: justify;
+      text-align-last: justify;
+      z-index: 5;
+    }
+
+    /* =====================
+       ЭКРАН 4 — INSET 2
+    ===================== */
+    .screen-inset2 {
+      position: relative;
+      width: 1920px;
+      height: 739px;
+      overflow: hidden;
+    }
+    .inset2-bg {
+      position: absolute;
+      width: 1920px; height: 739px;
+      left: 0; top: 0;
+      background: url('assets/images/bg-Inset3.webp') center/cover no-repeat;
+      z-index: 0;
+    }
+    .inset2-text {
+      position: absolute;
+      width: 386px;
+      height: 105px;
+      left: 360px;
+      top: 346px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      text-align: justify;
+      letter-spacing: -0.06em;
+      color: #FFFFFF;
+      margin: 0;
+      z-index: 2;
+    }
+    .inset2-logo {
+      position: absolute;
+      width: 60px; height: 60px;
+      left: 780px;
+      top: 355px;
+      z-index: 3;
+    }
+
+    /* =====================
+       ЭКРАН 5 — DIRECTION
+    ===================== */
+    .screen-direction {
+      position: relative;
+      width: 1920px;
+      height: 1300px;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+    .direction-bg {
+      position: absolute;
+      width: 1920px;
+      height: 1300px;
+      left: 0; top: 0;
+      background: url('assets/images/direction/bg.png') center/cover no-repeat;
+      z-index: 0;
+    }
+    .direction-label {
+      position: absolute;
+      width: 1200px;
+      height: 56px;
+      left: calc(50% - 600px);
+      top: 35px;
+      background: url('assets/images/direction/lable.png') center/contain no-repeat;
+      z-index: 3;
+    }
+    .direction-title1 {
+      position: absolute;
+      width: 467px;
+      height: 47px;
+      left: calc(50% - 467px/2 - 199.1px);
+      top: 183.98px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 47px;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      color: #2A005E;
+      z-index: 3;
+    }
+    .direction-title2 {
+      position: absolute;
+      width: 372px;
+      height: 47px;
+      left: calc(50% - 372px/2 + 247.35px);
+      top: 230.98px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 47px;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      color: #2A005E;
+      z-index: 3;
+    }
+    .direction-poster-wrap {
+      position: absolute;
+      width: 815px;
+      height: 410px;
+      right: 0px;
+      top: 777px;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .direction-poster-img {
+      position: absolute;
+      width: 100%; height: 100%;
+      left: 0; top: 0;
+      background: url('assets/images/direction/image-poster.webp') center/cover no-repeat;
+    }
+    .direction-poster-overlay {
+      position: absolute;
+      width: 100%; height: 100%;
+      left: 0; top: 0;
+      background: #2A005E;
+      mix-blend-mode: hue;
+    }
+    .direction-product-wrap {
+      position: absolute;
+      width: 815px;
+      height: 410px;
+      left: 0px;
+      top: 328.14px;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .direction-product-img {
+      position: absolute;
+      width: 100%; height: 100%;
+      left: 0; top: 0;
+      background: url('assets/images/direction/image-product.webp') center/cover no-repeat;
+    }
+    .direction-product-overlay {
+      position: absolute;
+      width: 100%; height: 100%;
+      left: 0; top: 0;
+      background: #2A005E;
+      mix-blend-mode: hue;
+    }
+    .direction-scan1 {
+      position: absolute;
+      width: 300px;
+      height: 150px;
+      left: 1107.3px;
+      top: 677px;
+      background: url('assets/images/direction/image-1.webp') center/contain no-repeat;
+      z-index: 4;
+    }
+    .direction-scan2 {
+      position: absolute;
+      width: 300px;
+      height: 100px;
+      left: 515px;
+      top: 720px;
+      background: url('assets/images/direction/image-2.webp') center/contain no-repeat;
+      z-index: 4;
+    }
+    .direction-caption1 {
+      position: absolute;
+      width: 260px;
+      height: 21px;
+      left: calc(50% - 260px/2 + 277.3px);
+      top: 700px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: -0.06em;
+      color: #2A005E;
+      z-index: 4;
+    }
+    .direction-caption2 {
+      position: absolute;
+      width: 286px;
+      height: 25px;
+      left: calc(50% - 286px/2 - 302px);
+      top: 800px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: -0.06em;
+      color: #2A005E;
+      z-index: 4;
+    }
+    .direction-icone1-wrap {
+      position: absolute;
+      width: 19.98px;
+      height: 71.94px;
+      left: 1080.41px;
+      top: 1115.06px;
+      z-index: 4;
+    }
+    .direction-icone1 {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0; top: 0;
+      background: url('assets/images/direction/icone-1.webp') center/contain no-repeat;
+    }
+    .direction-icone2 {
+      position: absolute;
+      width: 12px;
+      height: 76.37px;
+      left: 817.66px;
+      top: 661.77px;
+      background: url('assets/images/direction/icone-2.webp') center/contain no-repeat;
+      z-index: 4;
+    }
+
+    /* =====================
+       ЭКРАН 6 — CONTACT
+    ===================== */
+    .screen-contact {
+      position: relative;
+      width: 1920px;
+      height: 800px;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+    .contact-bg {
+      position: absolute;
+      width: 1920px;
+      height: 800px;
+      left: 0;
+      top: 0;
+      background: url('assets/images/Contact Information/bg.png') center/cover no-repeat;
+      z-index: 0;
+    }
+    .contact-photo {
+      position: absolute;
+      width: 970px;
+      height: 800px;
+      left: 0;
+      top: 0;
+      background: url('assets/images/Contact Information/image.webp') center/cover no-repeat;
+      z-index: 1;
+    }
+    .contact-title {
+      position: absolute;
+      width: 158px;
+      height: 47px;
+      left: 1051px;
+      top: 307px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 47px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      z-index: 2;
+    }
+    .contact-link {
+      position: absolute;
+      width: 300px;
+      height: 30px;
+      left: 1262px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: #FFFFFF;
+      z-index: 10;
+      cursor: pointer;
+      text-decoration: none;
+      isolation: isolate;
+    }
+    .contact-link.instagram { top: 330px; }
+    .contact-link.telegram  { top: 380px; }
+    .contact-link.vk        { top: 430px; }
+    .contact-link.mail      { top: 480px; }
+
+    /* footer */
+    .footer {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 28px 473px;
+      gap: 239px;
+      position: relative;
+      width: 1920px;
+      height: 110px;
+      background: #FFFFFF;
+      box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.25);
+      box-sizing: border-box;
+    }
+    .footer-name {
+      flex: none;
+      order: 2;
+      flex-grow: 0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.1em;
+      color: #2A005E;
+      white-space: nowrap;
+    }
+    .footer-logo {
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+      width: 258Держи полный файл целиком — с обёрткой `.page-viewport`, которая убирает двойной скролл и белый хвост. Просто замени старый файл этим.
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>ARAFENOZ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=IBM+Plex+Sans:ital@1&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ← ЕДИНЫЙ вертикальный скролл, горизонтальный прибит */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background: #fff;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    :root {
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: opacity;
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    #preloader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Логотип-заглушка пока грузится */
+    .preloader-logo {
+      width: 120px;
+      height: 120px;
+      background: url('assets/images/logo.webp') center/contain no-repeat;
+      will-change: opacity;
+      animation: preloader-pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes preloader-pulse {
+      0%, 100% { opacity: 1;   transform: scale(1);    }
+      50%       { opacity: 0.4; transform: scale(0.92); }
+    }
+
+    /* ПК: жёстко прячем всё мобильное */
+    .mobile-main-screen,
+    .screen-mobile { display: none !important; }
+
+    /* Обёртка-вьюпорт: съедает лишнюю высоту от scale() */
+    .page-viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;   /* обрезает несжатую высоту wrapper */
+    }
+
+    /* ПК: показываем десктоп */
+    .page-wrapper {
+      position: absolute;   /* вынимаем из потока — высоту даёт .page-viewport */
+      top: 0;
+      left: 0;
+      display: block;
+      transform-origin: top left;
+      overflow: visible;
+    }
+
+    /* ↓↓↓ ВСЁ МОБИЛЬНОЕ ВНУТРИ ОДНОГО МЕДИА ↓↓↓ */
+    @media (max-width: 600px) {
+
+      html {
+        background: #ffffff;
+      }
+      /* контейнер верхней секции уходит под статус-бар */
+      .mobile-main-screen:first-of-type {
+        margin-top: calc(-1 * env(safe-area-inset-top, 0px)) !important;
+      }
+
+      /* скрываем ВЕСЬ десктоп, показываем мобилку */
+      .page-viewport { display: none !important; }
+      .page-wrapper  { display: none !important; }
+      .mobile-main-screen { display: block !important; }
+      .screen-mobile { display: block !important; width: 100%; margin: 0; padding: 0; }
+
+      /* ================= MOBILE — ПЕРВЫЙ ЭКРАН ================= */
+      .mobile-main-screen {
+        position: relative;
+        width: 100vw;
+        overflow: hidden;
+        display: block;
+        background: #ffffff;
+        margin: 0;
+        padding: 0;
+        margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+      }
+
+      .mm-frame {
+        position: relative;
+        width: 402px;
+        height: 874px;
+        background: #ffffff;
+        overflow: hidden;
+        transform-origin: top left;
+      }
+
+      .mm-bg {
+        position: absolute;
+        width: 402px;
+        height: 874px;
+        background: url("assets/images/mobile/bg-mobile.webp") no-repeat center top;
+        background-size: cover;
+        transform-origin: center center;
+        mix-blend-mode: exclusion;
+      }
+
+      .mm-logo {
+        position: absolute;
+        left: 34px;
+        top: 88px;
+        width: 121px;
+        height: 725px;
+        background: url("assets/images/mobile/logo-main.webp") no-repeat center center;
+        background-size: contain;
+        mix-blend-mode: darken;
+      }
+
+      .mm-icon-top {
+        position: absolute;
+        left: 328px;
+        top: 110px;
+        width: 36px;
+        height: 10px;
+        background: url("assets/images/mobile/icone1-main.webp") no-repeat center center;
+        background-size: contain;
+      }
+
+      .mm-icon-bottom {
+        position: absolute;
+        left: 330px;
+        top: 815px;
+        width: 36px;
+        height: 8px;
+        background: url("assets/images/mobile/icone2-main.webp") no-repeat center center;
+        background-size: contain;
+      }
+
+      .mm-name {
+        position: absolute;
+        left: 245px;
+        top: 760px;
+        font-family: "IBM Plex Mono", monospace;
+        font-style: italic;
+        font-size: 24px;
+        line-height: 20px;
+        color: #323232;
+        text-align: right;
+        white-space: pre-line;
+      }
+
+      .mm-cat {
+        position: absolute;
+        left: 150px;
+        top: 715px;
+        font-family: "IBM Plex Mono", monospace;
+        font-style: italic;
+        font-size: 10px;
+        color: #323232;
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        white-space: nowrap;
+      }
+
+      .mm-role {
+        position: absolute;
+        left: 146px;
+        top: 120px;
+        width: 219px;
+        font-family: "IBM Plex Mono", monospace;
+        font-style: italic;
+        font-size: 10px;
+        color: #323232;
+        text-align: right;
+      }
+
+      .mm-tags {
+        position: absolute;
+        left: 173px;
+        top: 801px;
+        width: 192px;
+        font-family: "IBM Plex Mono", monospace;
+        font-style: italic;
+        font-size: 10px;
+        color: #323232;
+        text-align: left;
+      }
+
+      /* ---------- ЭКРАН 2: ABOUT ---------- */
+      .ab-main-scaler {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        position: relative;
+        line-height: 0;
+        font-size: 0;
+      }
+      .ab-main-canvas {
+        position: absolute;
+        width: 402px;
+        height: 1113px;
+        background: #ffffff;
+        overflow: hidden;
+        isolation: isolate;
+        transform-origin: top left;
+      }
+      .ab-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 402px;
+        height: 1113px;
+        background: url("assets/images/mobile/bg-mobile-1.webp") no-repeat center top;
+        background-size: cover;
+        z-index: 0;
+      }
+      .ab-main-canvas > *:not(.ab-bg) {
+        z-index: 1;
+      }
+      .ab-icon {
+        position: absolute;
+        left: 36px;
+        top: 30px;
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        display: block;
+      }
+      .ab-heading {
+        position: absolute;
+        left: 277px;
+        top: 30px;
+        width: 100px;
+        text-align: right;
+      }
+      .ab-sub {
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: italic;
+        font-size: 10px;
+        line-height: 12px;
+        letter-spacing: -0.06em;
+        text-transform: uppercase;
+        color: #6C6C6C;
+      }
+      .ab-title {
+        position: absolute;
+        left: 35px;
+        top: 120px;
+        width: 330px;
+        height: 140px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 700;
+        font-size: 27px;
+        line-height: 30px;
+        letter-spacing: -0.06em;
+        color: #000;
+      }
+      .ab-title span {
+        display: block;
+        margin-top: 6px;
+        font-weight: 700;
+      }
+      .ab-desc {
+        position: absolute;
+        left: 36px;
+        top: 271px;
+        width: 328px;
+        height: 112px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: -0.06em;
+        text-align: justify;
+        color: #000;
+      }
+      .ab-photo-1 {
+        position: absolute;
+        left: 36px;
+        top: 452px;
+        width: 110px;
+        height: 152px;
+      }
+      .ab-photo-caption {
+        position: absolute;
+        left: 190px;
+        top: 545px;
+        width: 62px;
+        height: 30px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+        letter-spacing: -0.06em;
+        color: #000;
+      }
+      .ab-photo-2 {
+        position: absolute;
+        left: 255px;
+        top: 544px;
+        width: 110px;
+        height: 165px;
+      }
+      .ab-label-img {
+        position: absolute;
+        left: 32px;
+        top: 750px;
+        width: 118px;
+        height: 66px;
+        object-fit: contain;
+        display: block;
+      }
+      .ab-photo-small {
+        position: absolute;
+        left: 256px;
+        top: 750px;
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        display: block;
+      }
+      .ab-label-caption-vert {
+        position: absolute;
+        left: 350px;
+        top: 750px;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: italic;
+        font-size: 10px;
+        letter-spacing: -0.06em;
+        color: #6C6C6C;
+        white-space: nowrap;
+      }
+      .ab-footer-city {
+        position: absolute;
+        left: 36px;
+        top: 828px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: italic;
+        font-size: 11px;
+        letter-spacing: -0.06em;
+        color: #6C6C6C;
+      }
+      .ab-neon-photo {
+        position: absolute;
+        left: 36px;
+        top: 862px;
+        width: 327px;
+        height: 175px;
+      }
+      .ab-neon-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .ab-passion-text {
+        position: absolute;
+        left: 36px;
+        top: 1043px;
+        width: 218px;
+        height: 26px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 13px;
+        letter-spacing: -0.06em;
+        text-align: justify;
+        color: #000;
+      }
+      .ab-photo-1 img,
+      .ab-photo-2 img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* ---------- ЭКРАН 3: CREATE ---------- */
+      .mobile-dark-section {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 36px;
+        padding: 40px 26px;
+      }
+      .create-logo img { width: 56px; height: 56px; }
+      .create-desc {
+        max-width: 320px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: justify;
+        color: #fff;
+      }
+
+      /* ---------- ЭКРАН 4: DIRECTION ---------- */
+      .d-main-scaler {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        position: relative;
+        line-height: 0;
+        font-size: 0;
+      }
+      .d-main-canvas {
+        position: absolute;
+        width: 402px;
+        height: 874px;
+        background: #E6E6E6;
+        overflow: hidden;
+        isolation: isolate;
+        transform-origin: top left;
+      }
+      .d-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 402px;
+        height: 874px;
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+      }
+      .d-main-canvas > *:not(.d-bg) { z-index: 1; }
+      .d-top-cluster {
+        position: absolute;
+        left: 255px;
+        top: 60px;
+        width: 109px;
+        height: 30px;
+        object-fit: contain;
+        display: block;
+      }
+      .d-headline-1 {
+        position: absolute;
+        left: 36px;
+        top: 206px;
+        width: 323px;
+        height: 94px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 40px;
+        letter-spacing: -0.06em;
+        text-transform: uppercase;
+        text-align: left;
+        color: #2A005E;
+      }
+      .d-headline-2 {
+        position: absolute;
+        left: 36px;
+        top: 300px;
+        width: 328px;
+        height: 94px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 40px;
+        letter-spacing: -0.06em;
+        text-transform: uppercase;
+        text-align: left;
+        color: #2A005E;
+      }
+      .d-keyword {
+        position: absolute;
+        left: 36px;
+        width: 328px;
+        object-fit: contain;
+        display: block;
+      }
+      .d-keyword-1 { top: 457px; height: 58px; }
+      .d-keyword-2 { top: 545px; height: 58px; }
+      .d-icon-row {
+        position: absolute;
+        left: 73px;
+        top: 697px;
+        width: 255px;
+        height: 11px;
+        object-fit: contain;
+        display: block;
+      }
+      .d-bottom-bar {
+        position: absolute;
+        left: 36px;
+        top: 820px;
+        width: 218px;
+        height: 23px;
+        object-fit: contain;
+        display: block;
+      }
+
+      /* ---------- ЭКРАН 5: CONTACT ---------- */
+      .c-main-scaler {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        position: relative;
+        line-height: 0;
+        font-size: 0;
+      }
+      .c-main-canvas {
+        position: absolute;
+        width: 402px;
+        height: 874px;
+        background: #E6E6E6;
+        overflow: hidden;
+        isolation: isolate;
+        transform-origin: top left;
+      }
+      .c-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 402px;
+        height: 874px;
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+      }
+      .c-main-canvas > *:not(.c-bg) { z-index: 1; }
+      .c-hero {
+        position: absolute;
+        left: 0;
+        top: 64px;
+        width: 402px;
+        height: 270px;
+        object-fit: cover;
+        display: block;
+      }
+      .c-title {
+        position: absolute;
+        left: 48px;
+        top: 394px;
+        width: 158px;
+        height: 47px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-weight: 700;
+        font-size: 36px;
+        line-height: 47px;
+        letter-spacing: -0.06em;
+        color: #000;
+      }
+      .c-link {
+        position: absolute;
+        left: 51px;
+        width: 300px;
+        height: 30px;
+        object-fit: contain;
+        display: block;
+      }
+      .c-link-instagram { top: 454px; }
+      .c-link-telegram  { top: 514px; }
+      .c-link-vk        { top: 574px; }
+      .c-link-mail      { top: 634px; }
+      .c-icon {
+        position: absolute;
+        top: 813px;
+        width: 36px;
+        height: 31px;
+        object-fit: contain;
+        display: block;
+      }
+      .c-icon-1 { left: 36px; }
+      .c-icon-2 { left: 328px; }
+      .c-logo {
+        position: absolute;
+        left: 90px;
+        top: 776px;
+        width: 221.33px;
+        height: 37px;
+        object-fit: contain;
+        display: block;
+        mix-blend-mode: darken;
+      }
+      .c-signature {
+        position: absolute;
+        left: 142px;
+        top: 826px;
+        width: 118px;
+        height: 18px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 18px;
+        letter-spacing: -0.06em;
+        text-align: center;
+        color: #000;
+      }
+    } /* /media 600 */
+
+    /* === АНИМАЦИИ === */
+    .animate {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+      will-change: transform, opacity;
+    }
+    .animate.from-left   { transform: translateX(-20px); }
+    .animate.from-right  { transform: translateX(20px); }
+    .animate.scale-in    { transform: scale(0.95); opacity: 0; }
+    .animate.visible {
+      opacity: 1;
+      transform: none !important;
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.35s; }
+    .delay-4 { transition-delay: 0.5s; }
+    .delay-5 { transition-delay: 0.65s; }
+    .delay-6 { transition-delay: 0.8s; }
+
+    /* === КНОПКИ === */
+    .contact-link__bg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: #2A005E;
+      transform: scaleX(0);
+      transform-origin: right center;
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 0;
+    }
+    .contact-link__img-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('assets/images/Contact Information/img-bg.png');
+      background-size: 300px 100%;
+      background-position: left center;
+      transform: scaleX(0);
+      transform-origin: left center;
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                  opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .contact-link__text {
+      position: relative;
+      z-index: 2;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 21px;
+      letter-spacing: -0.06em;
+      color: #000000;
+      transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      padding-left: 8px;
+      white-space: nowrap;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
       .contact-link:hover .contact-link__bg,
       .contact-link:hover .contact-link__img-bg {
         will-change: transform, opacity;
@@ -1342,6 +2676,8 @@
     <div class="preloader-logo"></div>
   </div>
 
+  <!-- ОБЁРТКА-ВЬЮПОРТ (задаёт высоту вместо body) -->
+  <div class="page-viewport">
   <div class="page-wrapper">
 
     <!-- ЭКРАН 1 — ГЛАВНАЯ -->
@@ -1502,7 +2838,8 @@
       <div class="footer-name animate from-right delay-3">SAFRONOV DENIS</div>
     </div>
 
-  </div><!-- /.page-wrapper  (лишний </div> удалён) -->
+  </div><!-- /.page-wrapper -->
+  </div><!-- /.page-viewport -->
 
   <!-- ================= МОБИЛЬНЫЕ ЭКРАНЫ ================= -->
   <section class="mobile-main-screen" aria-label="Главный экран (моб.)">
@@ -1615,28 +2952,33 @@
   </section>
 
   <script>
-  // ── Медиа-запрос и определение мобилки (объявлены В НАЧАЛЕ) ──
+  // ── Медиа-запрос и определение мобилки ──
   const MOBILE_QUERY = window.matchMedia('(max-width: 600px)');
   function isMobile() {
     return MOBILE_QUERY.matches || window.innerWidth <= 600;
   }
 
-  // ── Масштаб страницы (десктоп) — измеряем РЕАЛЬНУЮ высоту ──
+  // ── Масштаб страницы (десктоп) — высоту задаёт .page-viewport ──
   function scalePage() {
-    const wrapper = document.querySelector('.page-wrapper');
-    if (!wrapper) return;
+    const viewport = document.querySelector('.page-viewport');
+    const wrapper  = document.querySelector('.page-wrapper');
+    if (!viewport || !wrapper) return;
 
-    wrapper.style.display = 'block';
     const scale = window.innerWidth / 1920;
 
     wrapper.style.width = '1920px';
-    wrapper.style.height = 'auto';                 // пусть высота считается по контенту
+    wrapper.style.height = 'auto';
     wrapper.style.transform = `scale(${scale})`;
     wrapper.style.transformOrigin = 'top left';
 
-    // реальная высота ДО масштабирования, затем умножаем на scale
-    const realHeight = wrapper.scrollHeight;
-    document.body.style.height = (realHeight * scale) + 'px';
+    // реальная высота контента в координатах 1920px
+    const realHeight = wrapper.getBoundingClientRect().height / scale;
+
+    // высота вьюпорта = ровно масштабированный контент (без хвоста)
+    viewport.style.height = Math.round(realHeight * scale) + 'px';
+
+    // body не трогаем — высоту даёт viewport (один источник = один скролл)
+    document.body.style.height = 'auto';
   }
 
   // ── Анимации появления ──
@@ -1681,7 +3023,6 @@
     }
 
     if (video) {
-      // canplay быстрее, чем canplaythrough
       video.addEventListener('canplay', onVideoReady, { once: true });
     } else {
       clearTimeout(fallbackTimer);
@@ -1720,7 +3061,7 @@
     }
   }
 
-  // ── Слежение за реальным изменением размера контейнеров ──
+  // ── Слежение за изменением размера мобильных контейнеров ──
   let mobileResizeObserver = null;
   function observeMobileMain() {
     const scalers = document.querySelectorAll('[class$="-main-scaler"]');
@@ -1729,19 +3070,13 @@
     scalers.forEach(s => mobileResizeObserver.observe(s));
   }
 
-  // ── Применение нужного режима (десктоп / мобилка) ──
+  // ── Применение нужного режима ──
   function applyLayout() {
-    const wrapper = document.querySelector('.page-wrapper');
     if (!isMobile()) {
       scalePage();
       initAnimations();
     } else {
       document.body.style.height = 'auto';
-      if (wrapper) {
-        wrapper.style.transform = 'none';
-        wrapper.style.width = 'auto';
-        wrapper.style.height = 'auto';
-      }
       requestAnimationFrame(scaleMobileMain);
       scaleMobileCanvases();
       observeMobileMain();
@@ -1754,13 +3089,13 @@
     initPreloader();
   });
 
-  // пересчёт после полной загрузки (видео/картинки уже влияют на высоту)
+  // пересчёт после полной загрузки (видео/картинки влияют на высоту)
   window.addEventListener('load', () => {
     if (!isMobile()) scalePage();
     else scaleMobileMain();
   });
 
-  // пересчёт после загрузки шрифтов (высота текста меняется)
+  // пересчёт после загрузки шрифтов
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
       if (!isMobile()) scalePage();
@@ -1785,7 +3120,7 @@
     });
   }, { passive: true });
 
-  // ── Переключение через границу 600px (без reload) ──
+  // ── Переключение через границу 600px ──
   MOBILE_QUERY.addEventListener('change', () => {
     applyLayout();
     if (!isMobile()) scalePage();
