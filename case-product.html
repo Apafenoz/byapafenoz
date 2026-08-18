@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Приложение для контроля сотрудников — APAFENOZ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-mono:vf@latest/latin-wght-normal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-mono:vf@latest/latin-wght-italic.css">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --purple: #2A005E;
+      --purple-light: #f0ebf8;
+      --gray: #6C6C6C;
+      --gray-light: #f5f5f5;
+      --border: #e0e0e0;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--mono);
+      background: #fff;
+      color: #000;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /*── ШАПКА ── */
+    .case-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--purple);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: opacity 0.2s;
+    }
+    .back-btn:hover { opacity: 0.6; }
+    .back-btn::before {
+      content: '←';
+      font-size: 16px;
+    }
+
+    .header-category {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-style: italic;
+      color: var(--gray);
+      letter-spacing: -0.04em;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 60px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple);
+      border: 1px solid var(--purple);
+      padding: 4px 12px;
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      color: var(--purple);
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 60px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .meta-value {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      color: #000;
+      line-height: 1.5;
+    }
+
+    /* ── HERO ИЗОБРАЖЕНИЕ ── */
+    .hero-image {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      padding: 0 60px;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 2px;
+    }
+
+    /* ── КОНТЕНТ── */
+    .case-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    /* ── СЕКЦИИ── */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 20px;display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-title {
+      font-size: clamp(20px, 2.5vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      color: var(--purple);
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .section-text {
+      font-size: 14px;
+      letter-spacing: -0.04em;
+      color: #000;
+      line-height: 1.7;
+      max-width: 700px;}
+
+    .section-text + .section-text {
+      margin-top: 16px;
+    }
+
+    /* ── ДВУХКОЛОНОЧНЫЙ ГРИД ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    /* ── КАРТОЧКИ ── */
+    .card {
+      background: var(--gray-light);
+      padding: 28px;
+      border-left: 3px solid var(--purple);}
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 12px;
+    }
+
+    .card-text {
+      font-size: 13px;
+      letter-spacing: -0.04em;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* ── СПИСОК С МАРКЕРАМИ ── */
+    .bullet-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 16px;
+    }
+
+    .bullet-list li {
+      font-size: 13px;
+      letter-spacing: -0.04em;
+      color: #333;
+      line-height: 1.6;padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .bullet-list li::before {
+      content: '—';
+      color: var(--purple);
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+
+    .bullet-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ── ТАБЛИЦЫ ── */
+    .case-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+      font-size: 13px;
+      letter-spacing: -0.04em;
+    }
+
+    .case-table th {
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--purple);
+      background: #fff;
+    }
+
+    .case-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .case-table tr:hover td {
+      background: var(--gray-light);
+    }
+
+    .case-table td:first-child {
+      font-weight: 400;
+      color: var(--purple);
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 3px 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .tag-green {
+      background: #e6f4ea;
+      color: #1a7a3a;
+    }
+
+    .tag-yellow {
+      background: #fff8e1;
+      color: #b37a00;
+    }
+
+    .tag-purple {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    /* ── ИНСАЙТ-БЛОК ── */
+    .insight-block {
+      background: var(--purple);
+      color: #fff;
+      padding: 40px 48px;
+      margin: 40px 0;
+    }
+
+    .insight-block .insight-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 16px;
+    }
+
+    .insight-block p {
+      font-size: 16px;
+      letter-spacing: -0.04em;
+      line-height: 1.6;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    /* ── ГИПОТЕЗЫ ── */
+    .hypothesis {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hypothesis:last-child {
+      border-bottom: none;
+    }
+
+    .hypothesis-num {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .hypothesis-statement {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--purple);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .hypothesis-metric {
+      font-size: 12px;
+      letter-spacing: -0.04em;
+      color: var(--gray);
+      font-style: italic;
+    }
+
+    /* ── ЦИТАТА ── */
+    .quote {
+      border-left: 4px solid var(--purple);
+      padding: 16px 24px;
+      margin: 24px 0;
+      background: var(--gray-light);
+    }
+
+    .quote p {
+      font-size: 13px;
+      font-style: italic;
+      letter-spacing: -0.04em;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* ── ВИЗУАЛЬНЫЙ РАЗДЕЛ ── */
+    .visual-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .color-swatches {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .swatch-color {
+      width: 40px;
+      height: 40px;
+      border-radius: 2px;
+      flex-shrink: 0;}
+
+    .swatch-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .swatch-name {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .swatch-desc {
+      font-size: 11px;
+      color: var(--gray);
+      letter-spacing: -0.04em;
+    }
+
+    /* ──ЧТО Я БЫ УЛУЧШИЛ ── */
+    .improvement-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .improvement-item {
+      padding: 24px;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .improvement-item::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -12px;
+      left: 16px;
+      background: var(--purple);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+    }
+
+    .improvement-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--purple);
+      margin-bottom: 8px;
+    }
+
+    .improvement-text {
+      font-size: 12px;
+      letter-spacing: -0.04em;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* ── ФУТЕР КЕЙСА ── */
+    .case-footer {
+      margin-top: 100px;
+      padding: 60px;
+      background: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;}
+
+    .case-footer-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: #fff;
+    }
+
+    .case-footer-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .back-home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      color: var(--purple);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 28px;
+      transition: opacity 0.2s;
+    }
+
+    .back-home-btn:hover { opacity: 0.85; }
+
+    /* ── МОБИЛЬНАЯ АДАПТАЦИЯ ── */
+    @media (max-width: 768px) {
+      .case-header { padding: 0 20px; }
+      .hero { padding: 40px 20px 40px; }
+      .hero-image { padding: 0 20px; margin-bottom: 48px; }
+      .case-content { padding: 0 20px; }
+      .two-col { grid-template-columns: 1fr; gap: 32px; }
+      .three-col { grid-template-columns: 1fr; }
+      .visual-grid { grid-template-columns: 1fr; }
+      .improvement-list { grid-template-columns: 1fr; }
+      .case-footer { flex-direction: column; gap: 32px; padding: 40px 20px; }
+      .insight-block { padding: 28px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-meta { grid-template-columns: 1fr1fr; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ШАПКА -->
+  <header class="case-header">
+    <a href="index.html" class="back-btn">На главную</a>
+    <span class="header-category">Продуктовый дизайн /2024–2025</span>
+  </header>
+
+  <!-- ГЕРОЙ -->
+  <section class="hero">
+    <div class="hero-tag">Продуктовый дизайн</div>
+    <h1 class="hero-title">Приложение для контроля эффективности работы сотрудников</h1>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Моя роль</span>
+        <span class="meta-value">Продуктовый дизайнер</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Этапы</span>
+        <span class="meta-value">Discovery → Lo-Fi → Hi-Fi → Прототип</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Рынок</span>
+        <span class="meta-value">B2B / Парки иЖКХ</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Статус</span>
+        <span class="meta-value">MVP спроектирован</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ГЛАВНОЕ ИЗОБРАЖЕНИЕ -->
+  <div class="hero-image">
+    <img src="assets/images/direction/image-2.webp" alt="Приложение для контроля сотрудников — экраны">
+  </div>
+
+  <div class="case-content">
+
+    <!-- О ПРОЕКТЕ -->
+    <section class="section">
+      <div class="section-label">01— О проекте</div>
+      <div class="two-col">
+        <div>
+          <h2 class="section-title">Прозрачный<br>рабочий процесс<br>в парке</h2>
+        </div>
+        <div>
+          <p class="section-text">
+            Приложение для прозрачной отчётности и контроля эффективности работы сотрудников парков. Решает задачу хаоса в коммуникации и потери информации между сменами.
+          </p>
+          <ul class="bullet-list" style="margin-top: 24px;">
+            <li>Прозрачность и контроль — фотоотчёт по каждой задаче</li>
+            <li>Скорость реакции на инциденты (сломанные лампочки, лавочки и т.д.)</li>
+            <li>Контроль ресурсов — списание материалов под задачи</li>
+            <li>Борьба с «сарафанным радио» — вместо неразборчивой рации</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- МОЯ РОЛЬ -->
+    <section class="section">
+      <div class="section-label">02 — Моя роль</div>
+      <div class="three-col">
+        <div class="card">
+          <div class="card-title">Discovery</div>
+          <div class="card-text">Составление понимания задачи, интервью с сотрудниками парка, анализ конкурентов и сегментов рынка</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Проектирование</div>
+          <div class="card-text">Lo-Fi гипотезы, приоритизация фич, скоупинг MVP. Hi-Fi дизайн и интерактивное прототипирование</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Ревью</div>
+          <div class="card-text">Дизайн-ревью перед релизом. Проверка соответствия гипотез и готовых решений исходным болям</div>
+        </div></div>
+    </section>
+
+    <!-- СЕГМЕНТЫ РЫНКА -->
+    <section class="section">
+      <div class="section-label">03 — Рынок</div>
+      <h2 class="section-title">Сегменты рынка</h2>
+      <div class="three-col">
+        <div>
+          <div class="card-title" style="color: var(--purple); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;">Муниципальные парки</div>
+          <p style="font-size: 13px; letter-spacing: -0.04em; color: #555; line-height: 1.6;">ГБУ, ЖКХ. Строгая отчётность перед городом, фотоотчёты «До/После»</p>
+        </div>
+        <div>
+          <div class="card-title" style="color: var(--purple); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;">Крупные парки КиО</div>
+          <p style="font-size: 13px; letter-spacing: -0.04em; color: #555; line-height: 1.6;">Сотни сотрудников, сменный график, поток посетителей, постоянные поломки инфраструктуры</p>
+        </div>
+        <div>
+          <div class="card-title" style="color: var(--purple); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;">Управляющие компании</div>
+          <p style="font-size: 13px; letter-spacing: -0.04em; color: #555; line-height: 1.6;">Девелоперы. Поддержание идеального вида парковЖК бизнес-класса</p>
+        </div>
+      </div>
+
+      <div class="insight-block" style="margin-top: 40px;">
+        <div class="insight-label">Вывод по анализу конкурентов</div>
+        <p>На российском рынке отсутствует отраслевая платформа, специально решающая задачи управления парками. Существующие решения слишком общие, либо слишком дорогие, либо не подходят по архитектуре и UX для линейных сотрудников.</p>
+      </div>
+    </section>
+
+    <!-- ЗАДАЧА + ИНСАЙТЫ -->
+    <section class="section">
+      <div class="section-label">04 — Задача и инсайты</div>
+      <h2 class="section-title">Задача</h2>
+      <p class="section-text">Сделать рабочий процесс в парке прозрачным, управляемым и понятным. Основной пользователь MVP — линейный сотрудник.</p>
+
+      <table class="case-table" style="margin-top: 40px;">
+        <thead>
+          <tr>
+            <th>Инсайт</th>
+            <th>Гипотеза</th>
+            <th>Фича</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>«Задачи в10 мессенджерах, теряются»</td>
+            <td>Единый список задач по зонам</td>
+            <td>Главный экран задач + карта</td>
+          </tr>
+          <tr>
+            <td>«В глубине парка нет связи»</td>
+            <td>Офлайн-режим повысит завершаемость</td>
+            <td>Офлайн + синхронизация</td>
+          </tr>
+          <tr>
+            <td>«Бумажные журналы теряются, почерк неразборчив»</td>
+            <td>Фото До/После заменит бумагу</td>
+            <td>Фотофиксация + чек-листы</td>
+          </tr>
+          <tr>
+            <td>«Пароли забывают, работают в перчатках»</td>
+            <td>PIN повысит конверсию входа</td>
+            <td>Экран входа по номеру телефона</td>
+          </tr>
+          <tr>
+            <td>«Хожу к прорабу за материалами»</td>
+            <td>Запрос в контексте задачи ускорит коммуникацию</td>
+            <td>Кнопка «Запросить помощь»</td>
+          </tr><tr>
+            <td>«Сведение отчёта =1,5 часа вручную»</td>
+            <td>Авто-сведение уберёт ручной труд</td>
+            <td>Панель отчётов (итерация2)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ГИПОТЕЗЫ -->
+    <section class="section">
+      <div class="section-label">05 — Гипотезы</div>
+      <h2 class="section-title">Ключевые гипотезы</h2>
+
+      <div class="hypothesis">
+        <div class="hypothesis-num">Гипотеза 1 — Первый запуск</div>
+        <div class="hypothesis-statement">Если заменить пароль на короткий PIN, то вырастет доля успешных входов</div>
+        <div class="hypothesis-metric">Метрика: конверсия в успешный первый вход; кол-во обращений «не могу войти»</div>
+        <div class="quote" style="margin-top: 12px;"><p>Сначала думал про SMS, но SMS не работает офлайн (без связи) → выбрал PIN</p></div>
+      </div>
+
+      <div class="hypothesis">
+        <div class="hypothesis-num">Гипотеза 2 — Главный экран</div>
+        <div class="hypothesis-statement">Если группировать задачи по локациям, а не по времени, то сократится время на перемещения</div>
+        <div class="hypothesis-metric">Метрика: time-on-task «дойти до всех объектов»; субъективная оценка (SEQ)</div>
+      </div>
+
+      <div class="hypothesis">
+        <div class="hypothesis-num">Гипотеза 6 — Детали задачи</div>
+        <div class="hypothesis-statement">Если показывать фото «До» и геометку, то сотрудник быстрее находит объект</div>
+        <div class="hypothesis-metric">Метрика: время нахождения объекта; %ошибочных «не тот объект»</div>
+      </div>
+
+      <div class="hypothesis">
+        <div class="hypothesis-num">Гипотеза 8 — Офлайн</div>
+        <div class="hypothesis-statement">Если задачи и фотоотчёты сохраняются офлайн с автосинхронизацией, то вырастет % завершённых задач</div>
+        <div class="hypothesis-metric">Метрика: % задач, завершённых без потерь при отсутствии сети</div>
+      </div>
+
+      <div class="quote" style="margin-top: 32px;">
+        <p>MVP фокусируется на линейном сотруднике как основном пользователе. Управляющий — вторичная роль для итерации 2. Интервью с администрацией дало контекст болей процесса.</p>
+      </div>
+    </section>
+
+    <!-- ПРИОРИТИЗАЦИЯ -->
+    <section class="section">
+      <div class="section-label">06 — Приоритизация</div>
+      <h2 class="section-title">Скоупинг MVP</h2>
+
+      <table class="case-table">
+        <thead>
+          <tr>
+            <th>Фича</th>
+            <th>Ценность</th>
+            <th>Сложность</th>
+            <th>Решение</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Список задач + карта</td>
+            <td>Высокая</td>
+            <td>Средняя</td>
+            <td><span class="tag tag-green">✅ MVP</span></td>
+          </tr>
+          <tr>
+            <td>Фотофиксация До/После</td>
+            <td>Высокая</td>
+            <td>Низкая</td>
+            <td><span class="tag tag-green">✅ MVP</span></td>
+          </tr>
+          <tr>
+            <td>Офлайн-режим</td>
+            <td>Высокая</td>
+            <td>Высокая</td>
+            <td><span class="tag tag-green">✅ MVP (критично)</span></td>
+          </tr>
+          <tr>
+            <td>Запрос помощи в задаче</td>
+            <td>Средняя</td>
+            <td>Средняя</td>
+            <td><span class="tag tag-yellow">🟡 MVP light</span></td>
+          </tr>
+          <tr>
+            <td>Панель отчётов админа</td>
+            <td>Высокая</td>
+            <td>Высокая</td>
+            <td><span class="tag tag-purple">Итерация 2</span></td>
+          </tr>
+          <tr>
+            <td>Геймификация /ачивки</td>
+            <td>Низкая (не валид.)</td>
+            <td>Средняя</td>
+            <td><span class="tag tag-purple">После теста</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ИНТЕРВЬЮ -->
+    <section class="section">
+      <div class="section-label">07 — Ресёрч</div>
+      <h2 class="section-title">Интервью с сотрудниками</h2>
+      <p class="section-text">Интервью проводилось вживую в парке с несколькими сотрудниками.</p>
+
+      <div style="margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card">
+          <div class="card-title">Что съедает время</div>
+          <ul class="bullet-list" style="margin-top: 0;">
+            <li>Учёт посещаемости и продаж билетов вручную</li>
+            <li>Контроль персонала — кто вышел, где находится</li>
+            <li>Реагирование на внештатные ситуации</li>
+            <li>Сведение отчёта = 1,5 часа в конце смены</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Боли с текущими инструментами</div>
+          <ul class="bullet-list" style="margin-top: 0;">
+            <li>Разрозненность: касса — одна программа, аттракционы — журнал, персонал — Excel</li>
+            <li>Задержка информации о поломках и инцидентах</li>
+            <li>Ручной пересчёт →ошибки</li>
+            <li>Отсутствие офлайн-режима в существующих решениях</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="insight-block" style="margin-top: 40px;">
+        <div class="insight-label">Ключевой инсайт из интервью</div>
+        <p>«Нет единой картины — всё раздроблено по разным системам. Хочется одно место, где всё видно в реальном времени с телефона»</p>
+      </div>
+    </section>
+
+    <!-- ВИЗУАЛЬНОЕ ОБОСНОВАНИЕ -->
+    <section class="section">
+      <div class="section-label">08 — Визуальный язык</div>
+      <h2 class="section-title">Визуальное обоснование</h2>
+
+      <div class="visual-grid">
+        <div>
+          <div style="margin-bottom: 32px;">
+            <div class="card-title" style="color: var(--purple); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px;">Логотип</div>
+            <p style="font-size: 13px; letter-spacing: -0.04em; color: #555; line-height: 1.7;">Сознательный отказ от банальных листьев и деревьев. Абстрактная форма, вдохновлённая видом парков на картах: круглые элементы, извилистые дорожки, органичные очертания. Работает с ассоциациями картографии, а не с прямой иллюстрацией природы.</p>
+          </div>
+
+          <div>
+            <div class="card-title" style="color: var(--purple); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px;">Цвета</div>
+            <div class="color-swatches">
+              <div class="swatch">
+                <div class="swatch-color" style="background: #3D7A4A;"></div>
+                <div class="swatch-info">
+                  <div class="swatch-name">Зелёный</div>
+                  <div class="swatch-desc">Символизирует парки и природу</div>
+                </div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #FF6B35;"></div>
+                <div class="swatch-info">
+                  <div class="swatch-name">Оранжевый</div>
+                  <div class="swatch-desc">Приоритетные статусы — считывается на солнце</div>
+                </div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-color" style="background: #F5F0E8; border: 1px solid #ddd;"></div>
+                <div class="swatch-info">
+                  <div class="swatch-name">Текстура</div>
+                  <div class="swatch-desc">Связь с природой, отсылка к картографии</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card-title" style="color: var(--purple); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px;">Принципы</div>
+          <ul class="bullet-list">
+            <li>Простота — линейный персонал, обучение минимальное</li>
+            <li>Работа в перчатках — крупные кнопки, минимумввода текста</li>
+            <li>Читаемость на улице — высокий контраст, оранжевые акценты</li>
+            <li>Офлайн-first — интерфейс не должен «ломаться» без сети</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЧТО Я БЫ УЛУЧШИЛ -->
+    <section class="section">
+      <div class="section-label">09 — Что дальше</div>
+      <h2 class="section-title">Что бы я добавил или переделал</h2>
+
+      <div class="improvement-list">
+        <div class="improvement-item" data-num="01">
+          <div class="improvement-title">ПК-версия для управляющего</div>
+          <div class="improvement-text">Телефон удобен в поле, но управляющему нужно видеть всю картину на одном экране. Дашборд с аналитикой, статусом зон и отчётами — итерация 2.</div>
+        </div>
+        <div class="improvement-item" data-num="02">
+          <div class="improvement-title">Логика кнопки «Завершить»</div>
+          <div class="improvement-text">Сейчас кнопка «Завершить» зелёная во всех случаях — и когда заранее закрываешь задачу, и когда выполнил все пункты. Нужно разделить: неактивная / активная после чек-листа, чтобы нельзя было закрыть не выполнив.</div>
+        </div>
+        <div class="improvement-item" data-num="03">
+          <div class="improvement-title">Глубинные интервью с линейным персоналом</div>
+          <div class="improvement-text">Интервью проводились с администрацией. Нужны исследования с самими рабочими: их восприятие GPS-трекинга, ачивок, статистики — чтобы не воспринималось как слежка.</div>
+        </div>
+        <div class="improvement-item" data-num="04">
+          <div class="improvement-title">Геймификация — после теста</div>
+          <div class="improvement-text">Ачивки и личная статистика — ставка без подтверждения. Риск: линейный персонал может воспринять как инфантильность или слежку. Обязателен тест на восприятие перед внедрением.</div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /case-content -->
+
+  <!-- ФУТЕР КЕЙСА -->
+  <footer class="case-footer">
+    <div>
+      <div class="case-footer-title">APAFENOZ — Портфолио</div>
+      <div class="case-footer-sub">Safronov Denis · Продуктовый дизайнер</div>
+    </div><a href="index.html" class="back-home-btn">← Назад на главную</a>
+  </footer>
+
+</body>
+</html>
