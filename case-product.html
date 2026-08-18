@@ -151,6 +151,24 @@
     .card-k { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green-dark); margin-bottom: 10px; }
     .card-t { font-size: 12px; letter-spacing: -0.03em; color: var(--ink); line-height: 1.6; }
 
+        /* ── АНАЛИЗ КОНКУРЕНТОВ ── */
+    .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 28px; }
+    .comp-col { background: var(--bg2); padding: 24px; border-top: 3px solid var(--green); }
+    .comp-head {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 700; letter-spacing: -0.03em;
+      color: var(--ink); margin-bottom: 10px;
+    }
+    .comp-flag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+      background: var(--green); color: #fff; padding: 2px 7px;}
+    .comp-flag.comp-flag-abroad { background: var(--muted); }
+    .comp-names { font-size: 11px; font-style: italic; color: var(--muted); letter-spacing: -0.02em; }
+
+    @media (max-width: 768px) {
+      .comp-grid { grid-template-columns: 1fr; }
+    }
+
     /* ── ТАБЛИЦА ── */
     .tbl { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 12px; letter-spacing: -0.03em; }
     .tbl th { text-align: left; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; border-bottom: 2px solid var(--green); }
@@ -192,11 +210,17 @@
     .screen-row:nth-child(even) { grid-template-columns: 1fr 300px; }
     .screen-row:nth-child(even) .screen-info { order: -1; }
     .screen-ph {
-      aspect-ratio: 9/19.5; background: var(--bg2);
-      border: 1px dashed var(--divider); border-radius: 28px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 12px; text-align: center; padding: 24px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+  aspect-ratio: 9/19.5; background: var(--bg2);
+  border: 1px dashed var(--divider); border-radius: 28px;
+  overflow: hidden;   
+  ...
+}
+.screen-visual {
+  border-radius: 28px;       
+  overflow: hidden;          
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+.screen-img { width: 100%; height: auto; display: block; border-radius: 0; }
     }
     .screen-ph::before { content: '◻'; font-size: 40px; color: var(--divider); }
     .screen-ph span { font-size: 11px; font-style: italic; color: var(--muted); letter-spacing: -0.02em; line-height: 1.5; }
@@ -324,6 +348,47 @@
         <div class="insight">
           <div class="insight-k">Вывод по анализу конкурентов</div>
           <p>На российском рынке нет отраслевой платформы, заточенной под управление парками. Существующие решения слишком общие, слишком дорогие или не подходят по UX для линейных сотрудников.</p>
+        </div>
+      </section>
+            <!-- Анализ конкурентов -->
+      <section class="zone">
+        <div class="zone-tag">Точка 02.5 · анализ конкурентов</div>
+        <h2 class="zone-title">Что уже<br>есть на рынке</h2>
+        <p class="zone-text">
+          После изучения рынка я не обнаружил российских сервисов, которые относились бы именно к управлению парками.Только инструменты для контроля выездных сотрудников или системы управления заявками и сервисными процессами.
+        </p>
+
+        <div class="comp-grid"><div class="comp-col">
+            <div class="comp-head">
+              <span class="comp-flag">РФ</span>
+              Российские сервисы
+            </div>
+            <div class="comp-names">Okdesk, B2Field, Hubex, Экипаж и др.</div>
+            <ul class="blist" style="margin-top: 16px;">
+              <li>Фокус на автоматизации работы сервисных инженеров и выездных сотрудников — не парков</li>
+              <li>Нет специфических фич «под парк»: учёт инфраструктуры, особые режимы работ, сезонность</li>
+              <li>Не рассчитаны на массовое мобильное использование в поле</li>
+              <li>Тарификация и внедрение — под средний и крупный бизнес, часто включаютненужные опции</li>
+            </ul>
+          </div>
+
+          <div class="comp-col">
+            <div class="comp-head">
+              <span class="comp-flag comp-flag-abroad">EN</span>
+              Зарубежные сервисы
+            </div>
+            <div class="comp-names">Productive Parks, Novo Solutions, Throne Baron и др.</div>
+            <ul class="blist" style="margin-top: 16px;">
+              <li>Затачиваются под муниципальные и частные парки США/Европы —ревизии, содержание, безопасность</li>
+              <li>Нет локализации под российский рынок — ни по языку, ни по процессам, ни по законодательству</li>
+              <li>Сложно интегрировать с1С, отечественными CRM/ERP и документооборотом</li>
+              <li>Стоимость — зачастую очень высокая в валюте</li>
+            </ul>
+          </div></div>
+
+        <div class="insight" style="margin-top: 32px;">
+          <div class="insight-k">Итог анализа</div>
+          <p>На российском рынке отсутствует отраслевая платформа, специально решающая задачи управления парками: учёт задач и сотрудников, автоматизация отчётности, поддержка мобильных процессов на улице с фото, геометками и чек-листами. Существующие решения — слишком общие, слишком дорогие или не подходят по архитектуре и UX для линейных сотрудников.</p>
         </div>
       </section>
 
