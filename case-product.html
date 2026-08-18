@@ -9,6 +9,43 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-mono:vf@latest/latin-wght-normal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-mono:vf@latest/latin-wght-italic.css">
+      /* ── КАСТОМНЫЙ КУРСОР ── */
+    /* прячем системный курсор */
+    body { cursor: none; }
+    a, button, .hd-back, .ft-btn { cursor: none; }
+
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      border-radius: 50%;
+      pointer-events: none;   /* курсор не мешает кликам */
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    /* внутренняя залитая точка */
+    .cursor-dot {
+      width: 8px; height: 8px;
+      background: var(--green);
+    }
+    /* внешнее кольцо */
+    .cursor-ring {
+      width: 34px; height: 34px;
+      border: 2px solid var(--green);
+      opacity: 0.6;
+      transition: width 0.25s, height 0.25s, opacity 0.25s, border-color 0.25s;
+    }
+    /* кольцо реагирует на ссылки/кнопки — увеличивается и краснеет в оранжевый */
+    .cursor-ring.hover {
+      width: 52px; height: 52px;
+      border-color: var(--accent);
+      opacity: 1;
+    }
+    /* на тач-устройствах кастомный курсор не нужен */
+    @media (hover: none) {
+      body, a, button { cursor: auto; }
+      .cursor-dot, .cursor-ring { display: none; }
+    }
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
@@ -273,6 +310,8 @@
     }
   </style>
 </head>
+    <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
 <body>
 
   <!-- ЗЕЛЁНЫЕ ЛЕНТЫ-МАЗКИ (signature) -->
@@ -560,6 +599,39 @@
     </div>
     <a href="index.html" class="ft-btn">← Назад на главную</a>
   </footer>
+  <script>
+    (function () {
+      const dot  = document.querySelector('.cursor-dot');
+      const ring = document.querySelector('.cursor-ring');
+      if (!dot || !ring) return;
 
+      let mouseX = 0, mouseY = 0;   // позиция мыши
+      let ringX = 0,  ringY = 0;    // позиция кольца (догоняет с задержкой)
+
+      // точка следует мгновенно
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.left = mouseX + 'px';
+        dot.style.top  = mouseY + 'px';
+      });
+
+      // кольцо догоняет плавно
+      function animate() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        ring.style.left = ringX + 'px';
+        ring.style.top  = ringY + 'px';
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // реакция на кликабельные элементы
+      document.querySelectorAll('a, button, .hd-back, .ft-btn').forEach((el) => {
+        el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+      });
+    })();
+  </script>
 </body>
 </html>
