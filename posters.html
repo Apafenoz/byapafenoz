@@ -123,8 +123,17 @@
     @media (max-width: 900px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
 
-    /* ══════ МОДАЛКА (детали плаката) ══════ */
-       .modal-inner {
+        /* ══════ МОДАЛКА (детали плаката) ══════ */
+    .modal {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(0,0,0,0.82);
+      display: flex; align-items: center; justify-content: center;
+      padding: clamp(20px,5vw,60px);
+      opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
+    }
+    .modal.open { opacity: 1; visibility: visible; }
+
+    .modal-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 40px;
