@@ -45,51 +45,43 @@
       .cursor-dot, .cursor-ring { display: none; }
     }
 
-    /* ══════ ПРЕЛОАДЕР: ДОЖДЬ ИЗ ТУШИ ══════ */
+    /* ══════ ПРЕЛОАДЕР: ВОЛНА ТУШИ СПРАВА ══════ */
     .preloader {
       position: fixed; inset: 0; z-index: 10000;
-      background: #f4f4f4; overflow: hidden;
-      transition: opacity .6s ease, visibility .6s ease;
+      pointer-events: none;
     }
-    .preloader.done { opacity: 0; visibility: hidden; }
-    /* капля */
-    .drop {
-      position: absolute; top: -80px;
-      width: 14px; height: 14px; border-radius: 50%;
+    /* сама волна — чёрное полотно с рваным левым краем (через SVG-маску) */
+    .ink-wave {
+      position: absolute; top: 0; right: 0;
+      width: 130%; height: 100%;
       background: #111;
-      animation: fall var(--dur) cubic-bezier(.5,0,.75,.3) forwards;
-      animation-delay: var(--delay);
+      transform: translateX(0);
+      animation: inkSweep 1.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+      animation-delay: 0.15s;
+      /* рваный левый край в виде потёков туши */
+      -webkit-mask: radial-gradient(circle at left, transparent 0, transparent 8%, #000 9%) left/6% 14% repeat-y,
+                    linear-gradient(#000, #000);
+      -webkit-mask-composite: source-over;
+      mask: radial-gradient(circle at left, transparent 0, transparent 8%, #000 9%) left/6% 14% repeat-y,
+            linear-gradient(#000, #000);
     }
-    /* растекшееся пятно внизу */
-    .drop::after {
-      content: ''; position: absolute; left: 50%; top: 100%;
-      width: 0; height: 0; background: #111; border-radius: 50%;
-      transform: translateX(-50%);
-      animation: splat var(--splat-dur) ease-out forwards;
-      animation-delay: calc(var(--delay) + var(--dur));
+    @keyframes inkSweep {
+      0%   { transform: translateX(0); }        /* закрывает весь экран */
+      100% { transform: translateX(130%); }     /* уходит вправо за экран */
     }
-    @keyframes fall {
-      0%   { transform: translateY(0) scaleY(1); }
-      80%  { transform: translateY(110vh) scaleY(1.6); }
-      100% { transform: translateY(115vh) scaleY(0.2); opacity: 1; }
+    /* капли-брызги, летящие впереди волны */
+    .ink-splash {
+      position: absolute; background: #111; border-radius: 50%;
+      opacity: 0;
+      animation: splashMove 1.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+      animation-delay: 0.15s;
     }
-    @keyframes splat {
-      0%   { width: 0; height: 0; }
-      100% { width: 240px; height: 240px; opacity: 1; }
+    @keyframes splashMove {
+      0%   { transform: translateX(0) scale(1);   opacity: 1; }
+      70%  { opacity: 1; }
+      100% { transform: translateX(-40vw) scale(0.3); opacity: 0; }
     }
-    /* финальная чёрная заливка + подпись */
-    .preloader-fill {
-      position: absolute; inset: 0; background: #111;
-      opacity: 0; display: flex; align-items: center; justify-content: center;
-    }
-    .preloader-fill.show { animation: fillIn .5s ease forwards; }
-    @keyframes fillIn { to { opacity: 1; } }
-    .preloader-text {
-      color: #fff; font-family: var(--mono); font-size: 12px;
-      letter-spacing: 0.3em; text-transform: uppercase;
-      opacity: 0; animation: textIn .4s ease .2s forwards;
-    }
-    @keyframes textIn { to { opacity: 1; } }
+    .preloader.done { display: none; }
 
     /* ══════ ШАПКА ══════ */
     .hd {
@@ -118,20 +110,23 @@
     }
     .hero-count { margin-top: 20px; font-size: 12px; letter-spacing: 0.1em; color: var(--muted); }
 
-    /* ══════ СЕТКА ПЛАКАТОВ ══════ */
+    /* ══════ ХАОТИЧНАЯ СЕТКА (masonry-стиль) ══════ */
     .grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 20px;
-      padding: 20px 0 90px;
+      columns: 5;
+      column-gap: 24px;
+      padding: 30px 0 90px;
     }
     .poster {
-      aspect-ratio: 3/4; background: #ddd; overflow: hidden;
+      break-inside: avoid;
+      margin-bottom: 24px;
+      background: #ddd; overflow: hidden;
       cursor: none; position: relative;
       transition: transform .3s ease, box-shadow .3s ease;
+      opacity: 0; transform: translateY(20px);
     }
-    .poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    /* заглушка когда картинки нет */
+    .poster.in { opacity: 1; transform: translateY(0); transition: opacity .6s ease, transform .6s ease; }
+    .poster img { width: 100%; height: auto; display: block; }
+    /* заглушка когда картинки нет — задаём разную высоту для «хаоса» */
     .poster.ph {
       display: flex; align-items: center; justify-content: center;
       background: #e8e8e8; border: 1px dashed #bbb;
@@ -142,8 +137,9 @@
     }
     .poster:hover { transform: translateY(-6px); box-shadow: 0 14px 34px rgba(0,0,0,0.18); }
 
-    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-    @media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+    @media (max-width: 1200px) { .grid { columns: 4; } }
+    @media (max-width: 900px)  { .grid { columns: 3; } }
+    @media (max-width: 640px)  { .grid { columns: 2; column-gap: 14px; } .poster { margin-bottom: 14px; } }
 
     /* ══════ МОДАЛКА (детали плаката) ══════ */
     .modal {
@@ -162,17 +158,14 @@
       overflow: auto;
     }
     .modal.open .modal-inner { transform: scale(1); }
-    /* большое фото плаката */
     .modal-visual { display: flex; flex-direction: column; gap: 14px; }
     .modal-main { width: 100%; aspect-ratio: 3/4; background: #eee; overflow: hidden; }
     .modal-main img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .modal-main.ph { display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 13px; border: 1px dashed #ccc; }
-    /* детальные кадры */
     .modal-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .modal-detail { aspect-ratio: 1/1; background: #eee; overflow: hidden; }
     .modal-detail img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .modal-detail.ph { display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 10px; border: 1px dashed #ddd; }
-    /* текстовая часть */
     .modal-text { display: flex; flex-direction: column; }
     .modal-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
     .modal-title { font-size: clamp(24px,3vw,38px); font-weight: 700; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; margin-bottom: 8px; }
@@ -203,12 +196,10 @@
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
-  <!-- ПРЕЛОАДЕР: ДОЖДЬ ИЗ ТУШИ -->
+  <!-- ПРЕЛОАДЕР: ВОЛНА ТУШИ СПРАВА -->
   <div class="preloader" id="preloader">
-    <!-- капли добавит JS -->
-    <div class="preloader-fill" id="preFill">
-      <span class="preloader-text">плакаты</span>
-    </div>
+    <div class="ink-wave"></div>
+    <!-- брызги добавит JS -->
   </div>
 
   <!-- ШАПКА -->
@@ -225,7 +216,7 @@
       <div class="hero-count">36 работ · 2023—2025</div>
     </section>
 
-    <!-- СЕТКА ПЛАКАТОВ (36 шт) -->
+    <!-- ХАОТИЧНАЯ СЕТКА (36 шт) -->
     <div class="grid" id="grid"><!-- заполнит JS --></div>
   </div>
 
@@ -240,7 +231,7 @@
     <div class="modal-inner">
       <div class="modal-visual">
         <div class="modal-main ph" id="mMain">плакат</div>
-        <div class="modal-details" id="mDetails"><!-- кадры добавит JS --></div>
+        <div class="modal-details" id="mDetails"></div>
       </div>
       <div class="modal-text">
         <div class="modal-tag" id="mTag">плакат</div>
@@ -259,11 +250,10 @@
       const n = String(i).padStart(2, '0');
       posters.push({
         n: n,
-        img: `assets/images/posters/poster-${n}.webp`,   // основной файл
+        img: `assets/images/posters/poster-${n}.webp`,
         title: `Плакат ${n}`,
         year: '2024',
         desc: 'Описание плаката. Здесь будет текст о концепции, идее и инструментах. Замени на свой.',
-        // 3 детальных кадра (увеличенные фрагменты)
         details: [
           `assets/images/posters/poster-${n}-d1.webp`,
           `assets/images/posters/poster-${n}-d2.webp`,
@@ -272,19 +262,31 @@
       });
     }
 
-    /* ══════ РЕНДЕР СЕТКИ ══════ */
+    /* ══════ РЕНДЕР СЕТКИ (хаотичные высоты для заглушек) ══════ */
     const grid = document.getElementById('grid');
+    // набор высот, чтобы заглушки были разными → «хаос»
+    const phHeights = [280, 340, 240, 400, 300, 360, 260, 320];
     posters.forEach((p, idx) => {
       const cell = document.createElement('div');
       cell.className = 'poster ph';
       cell.dataset.n = p.n;
       cell.dataset.idx = idx;
-      // пробуем загрузить картинку; если её нет — останется заглушка
+      // случайная высота заглушки
+      cell.style.height = phHeights[idx % phHeights.length] + 'px';
+      // пробуем загрузить реальную картинку
       const img = new Image();
       img.src = p.img;
       img.alt = p.title;
-      img.onload = () => { cell.classList.remove('ph'); cell.innerHTML = ''; cell.appendChild(img); };
+      img.onload = () => {
+        cell.classList.remove('ph');
+        cell.style.height = 'auto';
+        cell.innerHTML = '';
+        cell.appendChild(img);
+      };
       grid.appendChild(cell);
+
+      // плавное появление плиток
+      setTimeout(() => cell.classList.add('in'), 1400 + idx * 40);
     });
 
     /* ══════ МОДАЛКА ══════ */
@@ -302,14 +304,12 @@
       mYear.textContent = p.year;
       mDesc.textContent = p.desc;
 
-      // главное фото
       mMain.className = 'modal-main ph';
       mMain.textContent = 'плакат';
       const big = new Image();
       big.src = p.img;
       big.onload = () => { mMain.className = 'modal-main'; mMain.innerHTML=''; mMain.appendChild(big); };
 
-      // детальные кадры (3 шт)
       mDetails.innerHTML = '';
       p.details.forEach((src, i) => {
         const box = document.createElement('div');
@@ -329,35 +329,31 @@
       document.body.style.overflow = '';
     }
 
-    // клик по плакату
     grid.addEventListener('click', (e) => {
       const cell = e.target.closest('.poster');
       if (!cell) return;
       openModal(posters[+cell.dataset.idx]);
     });
-    // закрытие: крестик, клик по фону, Esc
     document.getElementById('modalClose').addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-    /* ══════ ПРЕЛОАДЕР: ДОЖДЬ ИЗ ТУШИ ══════ */
+    /* ══════ ПРЕЛОАДЕР: БРЫЗГИ + УБОРКА ══════ */
     const preloader = document.getElementById('preloader');
-    const preFill   = document.getElementById('preFill');
-    const DROPS = 26;
-    for (let i = 0; i < DROPS; i++) {
-      const d = document.createElement('div');
-      d.className = 'drop';
-      d.style.left = Math.random() * 100 + 'vw';
-      d.style.setProperty('--dur', (0.5 + Math.random() * 0.5) + 's');
-      d.style.setProperty('--delay', (Math.random() * 0.8) + 's');
-      d.style.setProperty('--splat-dur', (0.4 + Math.random() * 0.4) + 's');
-      const scale = 0.6 + Math.random() * 1.2;
-      d.style.transform = `scale(${scale})`;
-      preloader.insertBefore(d, preFill);
+    // добавляем брызги туши перед фронтом волны
+    for (let i = 0; i < 14; i++) {
+      const s = document.createElement('div');
+      s.className = 'ink-splash';
+      const size = 6 + Math.random() * 26;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.right = (Math.random() * 30) + 'vw';
+      s.style.animationDelay = (0.15 + Math.random() * 0.5) + 's';
+      preloader.appendChild(s);
     }
-    // через 1.6с — экран заливается тушью, через 2.3с — уходит
-    setTimeout(() => preFill.classList.add('show'), 1500);
-    setTimeout(() => preloader.classList.add('done'), 2300);
+    // убираем прелоадер после ухода волны
+    setTimeout(() => preloader.classList.add('done'), 2000);
 
     /* ══════ КУРСОР ══════ */
     (function () {
