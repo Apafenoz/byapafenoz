@@ -26,6 +26,7 @@
       overflow-x: hidden;
     }
     a { cursor: none; }
+
     /* ══════ КАСТОМНЫЙ КУРСОР (чёрный) ══════ */
     .cursor-dot, .cursor-ring {
       position: fixed; top: 0; left: 0; border-radius: 50%;
@@ -41,52 +42,21 @@
       body, a { cursor: auto; }
       .cursor-dot, .cursor-ring { display: none; }
     }
-    /* ══════ ПРЕЛОАДЕР: ТУШЬ СЛЕВА НАПРАВО ══════ */
-      .preloader {
+
+    /* ══════ ПРЕЛОАДЕР: CANVAS РАСТЕКАНИЕ ТУШИ ══════ */
+    .preloader {
       position: fixed; inset: 0; z-index: 10000;
-      pointer-events: none; overflow: hidden;
+      background: #f4f4f4;
+      display: flex; align-items: center; justify-content: center;
     }
-     .ink-sheet {
-      position: absolute; left: -40%; top: -10%;
-      width: 150%; height: 120%;
-      background: #111;
-      filter: url(#inkFingers);           
-      transform: translateX(0);           
-      animation: inkSweep 1.8s cubic-bezier(0.7, 0, 0.3, 1) forwards; 
-      animation-delay: 0.2s;
+    #splashCanvas {
+      display: block; width: 100vw; height: 100vh;
     }
-    @keyframes inkSweep {
-      0%   { transform: translateX(0); }       
-      100% { transform: translateX(150%); } 
+    .preloader.done {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
     }
-    /* капли-брызги — КРУГЛЫЕ, летят вправо и растворяются */
-    .ink-drop {
-      position: absolute; background: #111; border-radius: 50%;
-      opacity: 0; will-change: transform, opacity;
-      animation: dropFly var(--dur) cubic-bezier(0.5, 0, 0.5, 1) forwards;
-      animation-delay: var(--delay);
-    }
-    @keyframes dropFly {
-      0%   { transform: translateX(0) scale(1);   opacity: 0; }
-      15%  { opacity: 1; }
-      80%  { opacity: 0.85; }
-      100% { transform: translateX(var(--fly)) scale(0.25); opacity: 0; }
-    }
-    .preloader.done { display: none; }
-    /* капли-брызги, срывающиеся вниз впереди фронта */
-    .ink-drop {
-      position: absolute; background: #111; border-radius: 50% 50% 55% 55%;
-      opacity: 0; will-change: transform, opacity;
-      animation: dropFall var(--dur) cubic-bezier(0.4, 0, 0.6, 1) forwards;
-      animation-delay: var(--delay);
-    }
-    @keyframes dropFall {
-      0%   { transform: translateY(-40px) scaleY(1);   opacity: 0; }
-      15%  { opacity: 1; }
-      80%  { opacity: 0.85; }
-      100% { transform: translateY(var(--fall)) scaleY(2.4); opacity: 0; }
-    }
-    .preloader.done { display: none; }
 
     /* ══════ ШАПКА ══════ */
     .hd {
@@ -131,7 +101,6 @@
     }
     .poster.in { opacity: 1; transform: translateY(0); transition: opacity .6s ease, transform .6s ease; }
     .poster img { width: 100%; height: auto; display: block; }
-    /* заглушка когда картинки нет — задаём разную высоту для «хаоса» */
     .poster.ph {
       display: flex; align-items: center; justify-content: center;
       background: #e8e8e8; border: 1px dashed #bbb;
@@ -200,28 +169,10 @@
   <!-- КУРСОР -->
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
-    <!-- SVG-фильтр: рваный край туши (капиллярные пальцы) -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-      <filter id="inkFingers">
-        <!-- турбулентность = хаотичный шум -->
-        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.045"
-                      numOctaves="4" seed="7" result="noise">
-          <!-- лёгкое «дыхание» края во время падения -->
-          <animate attributeName="baseFrequency"
-                   dur="2s" values="0.012 0.045; 0.02 0.06; 0.012 0.045"
-                   repeatCount="indefinite"/>
-        </feTurbulence>
-        <!-- шум смещает край полотна → образуются пальцы-потёки -->
-        <feDisplacementMap in="SourceGraphic" in2="noise"
-                           scale="90" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-    </defs>
-  </svg>
-  
-   <div class="preloader" id="preloader">
-    <div class="ink-sheet"></div>
-    <!-- капли добавит JS -->
+
+  <!-- ПРЕЛОАДЕР: CANVAS РАСТЕКАНИЕ ТУШИ -->
+  <div class="preloader" id="preloader">
+    <canvas id="splashCanvas"></canvas>
   </div>
 
   <!-- ШАПКА -->
@@ -265,6 +216,108 @@
   </div>
 
   <script>
+    /* ══════ ПРЕЛОАДЕР: РАСТЕКАНИЕ КАПЛИ ТУШИ (Canvas) ══════ */
+    const canvas = document.getElementById('splashCanvas');
+    const ctx = canvas.getContext('2d');
+    const preloader = document.getElementById('preloader');
+
+    // размер canvas = размер окна
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // частицы туши
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 12;        // случайная горизонталь скорость
+        this.vy = (Math.random() - 0.5) * 12;        // случайная вертикальная скорость
+        this.r = Math.random() * 8 + 2;              // радиус 2–10px
+        this.life = 1;                                // альфа
+        this.drag = 0.98;                             // трение
+      }
+
+      update() {
+        // двигаемся
+        this.x += this.vx;
+        this.y += this.vy;
+        // замедляемся (трение)
+        this.vx *= this.drag;
+        this.vy *= this.drag;
+        // гравитация (слабая, для более натурального падения)
+        this.vy += 0.15;
+        // исчезаем
+        this.life -= 0.015;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = '#111';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    const particles = [];
+    let animationFrame = 0;
+    const animationDuration = 1400; // мс, как долго работает анимация
+
+    function createSplash() {
+      // центр экрана
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      // создаём 120–150 частиц, летящих во все стороны
+      const count = 120 + Math.random() * 30;
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle(cx, cy));
+      }
+    }
+
+    function animate(timestamp) {
+      // белый фон (как лист бумаги)
+      ctx.fillStyle = '#f4f4f4';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // обновляем и рисуем частицы
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw(ctx);
+        // удаляем мёртвые частицы
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+
+      animationFrame++;
+      const elapsed = animationFrame * (1000 / 60); // примерная прошедшая время
+
+      // если всё ещё анимируем — продолжаем
+      if (elapsed < animationDuration || particles.length > 0) {
+        requestAnimationFrame(animate);
+      } else {
+        // анимация окончена
+        preloader.classList.add('done');
+        // даём время на fade-out (0.6s) и скрываем
+        setTimeout(() => preloader.style.display = 'none', 600);
+      }
+    }
+
+    // создаём первую взрывную волну
+    createSplash();
+    // вторая волна через 200мс (для эффекта "переброса" туши)
+    setTimeout(() => createSplash(), 200);
+
+    // запускаем анимацию
+    animate(0);
+
     /* ══════ ДАННЫЕ ПЛАКАТОВ (36 шт) ══════ */
     const TOTAL = 36;
     const posters = [];
@@ -286,16 +339,13 @@
 
     /* ══════ РЕНДЕР СЕТКИ (хаотичные высоты для заглушек) ══════ */
     const grid = document.getElementById('grid');
-    // набор высот, чтобы заглушки были разными → «хаос»
     const phHeights = [280, 340, 240, 400, 300, 360, 260, 320];
     posters.forEach((p, idx) => {
       const cell = document.createElement('div');
       cell.className = 'poster ph';
       cell.dataset.n = p.n;
       cell.dataset.idx = idx;
-      // случайная высота заглушки
       cell.style.height = phHeights[idx % phHeights.length] + 'px';
-      // пробуем загрузить реальную картинку
       const img = new Image();
       img.src = p.img;
       img.alt = p.title;
@@ -307,8 +357,8 @@
       };
       grid.appendChild(cell);
 
-      // плавное появление плиток
-            setTimeout(() => cell.classList.add('in'), 900 + idx * 35);
+      // плавное появление плиток (начинается после прелоадера)
+      setTimeout(() => cell.classList.add('in'), 1400 + idx * 35);
     });
 
     /* ══════ МОДАЛКА ══════ */
@@ -359,24 +409,6 @@
     document.getElementById('modalClose').addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-          /* ══════ ПРЕЛОАДЕР: КРУГЛЫЕ КАПЛИ ЛЕТЯТ ВПРАВО ══════ */
-    const preloader = document.getElementById('preloader');
-    const DROPS = 46;
-    for (let i = 0; i < DROPS; i++) {
-      const d = document.createElement('div');
-      d.className = 'ink-drop';
-      const w = 4 + Math.random() * 20;   
-      d.style.width  = w + 'px';
-      d.style.height = w + 'px';
-      d.style.top    = Math.random() * 100 + 'vh';
-      d.style.left   = (Math.random() * 60) + 'vw'; 
-      d.style.setProperty('--fly', (30 + Math.random() * 60) + 'vw');  
-      d.style.setProperty('--dur',  (0.8 + Math.random() * 0.9) + 's');
-      d.style.setProperty('--delay',(Math.random() * 1.0) + 's');
-      preloader.appendChild(d);
-    }
-    setTimeout(() => preloader.classList.add('done'), 2200); 
 
     /* ══════ КУРСОР ══════ */
     (function () {
