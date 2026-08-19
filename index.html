@@ -8,7 +8,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>ARAFENOZ</title>
-  <link rel="icon" href="assets/images/favicon.webp" type="image/webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- Google Fonts (основной источник) -->
@@ -20,8 +19,8 @@
   <style>
         /* ══════ КАСТОМНЫЙ КУРСОР (фиолетовый) ══════ */
     body { cursor: none; }
-    a, .contact-link, .direction-product-wrap, .direction-scan1,
-    .direction-poster-wrap { cursor: none; }
+       a, .contact-link, .direction-product-wrap, .direction-scan1,
+    .direction-poster-wrap, .main-nav__btn { cursor: none; }
 
     .cursor-dot, .cursor-ring {
       position: fixed; top: 0; left: 0; border-radius: 50%;
@@ -46,13 +45,14 @@
     }
 
     /* ← ЕДИНЫЙ вертикальный скролл, горизонтальный прибит */
-    html, body {
+  html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       background: #fff;
       overflow-x: hidden;
       overflow-y: auto;
+      scroll-behavior: smooth;
     }
 
     :root {
@@ -816,6 +816,50 @@
       top: 733.6px;
       text-transform: uppercase;
     }
+        /* ══════ КНОПКИ-ЯКОРЯ (первый экран) ══════ */
+    .main-nav {
+      position: absolute;
+      left: 527.4px;
+      top: 790px;
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      z-index: 20;
+    }
+    .main-nav__btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 22px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 18px;
+      letter-spacing: -0.04em;
+      color: #2A005E;
+      text-decoration: none;
+      border: 1px solid #2A005E;
+      background: transparent;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: color 0.4s var(--ease-out);
+      isolation: isolate;
+    }
+    .main-nav__btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #2A005E;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.4s var(--ease-out);
+      z-index: -1;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .main-nav__btn:hover { color: #FFFFFF; }
+      .main-nav__btn:hover::before { transform: scaleX(1); }
+    }
 
     /* =====================
        ЭКРАН 2 — ABOUT
@@ -1420,10 +1464,16 @@
       <div class="main-label main-name     animate delay-2">SAFRONOV DENIS</div>
       <div class="main-label main-type     animate delay-2">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</div>
       <div class="main-label main-desc     animate delay-4">Продуктовый дизайнер с бэкграундом в графике</div>
+            <!-- КНОПКИ-ЯКОРЯ -->
+      <nav class="main-nav animate delay-5">
+        <a class="main-nav__btn" data-target="screen-about">Обо мне</a>
+        <a class="main-nav__btn" data-target="screen-direction">Направления</a>
+        <a class="main-nav__btn" data-target="screen-contact">Контакты</a>
+      </nav>
     </div>
 
     <!-- ЭКРАН 2 — ABOUT -->
-    <div class="screen-about">
+    <div class="screen-about" id="screen-about">
       <div class="about-bg"></div>
       <div class="about-icone   animate scale-in  delay-1"></div>
       <div class="about-photo1  animate from-left delay-2"></div>
@@ -1483,7 +1533,7 @@
     </div>
 
     <!-- ЭКРАН 5 — DIRECTION -->
-    <div class="screen-direction">
+    <div class="screen-direction" id="screen-direction">
       <div class="direction-bg"></div>
       <div class="direction-label animate scale-in delay-1"></div>
       <div class="direction-title1 animate from-left delay-2">СЕЙЧАС Я СКОНЦЕНТРИРОВАН</div>
@@ -1516,7 +1566,7 @@
     </div>
 
     <!-- ЭКРАН 6 — CONTACT -->
-    <div class="screen-contact">
+    <div class="screen-contact" id="screen-contact">
       <div class="contact-bg"></div>
       <div class="contact-photo animate from-left delay-1"></div>
       <h2 class="contact-title animate from-right delay-2">Контакты</h2>
@@ -1815,7 +1865,20 @@
     mobileResizeObserver = new ResizeObserver(() => scaleMobileCanvases());
     scalers.forEach(s => mobileResizeObserver.observe(s));
   }
-
+  /* ══════ КНОПКИ-ЯКОРЯ: плавный скролл (учитывает scale) ══════ */
+  function initAnchors() {
+    const buttons = document.querySelectorAll('.main-nav__btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        const rect = target.getBoundingClientRect();
+        const top = rect.top + window.scrollY;
+        window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
+      });
+    });
+  }
   // ── Применение нужного режима ──
   function applyLayout() {
     if (!isMobile()) {
@@ -1829,10 +1892,10 @@
     }
   }
 
-  // ── Инициализация ──
-  document.addEventListener('DOMContentLoaded', () => {
+   document.addEventListener('DOMContentLoaded', () => {
     applyLayout();
     initPreloader();
+    initAnchors();
   });
 
   window.addEventListener('load', () => {
