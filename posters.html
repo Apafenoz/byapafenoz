@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
     :root {
       --ink:    #111;
       --muted:  #888;
@@ -17,7 +16,6 @@
       --bg:     #f4f4f4;
       --mono: 'IBM Plex Mono', monospace;
     }
-
     html { scroll-behavior: smooth; }
     body {
       font-family: var(--mono);
@@ -28,7 +26,6 @@
       overflow-x: hidden;
     }
     a { cursor: none; }
-
     /* ══════ КАСТОМНЫЙ КУРСОР (чёрный) ══════ */
     .cursor-dot, .cursor-ring {
       position: fixed; top: 0; left: 0; border-radius: 50%;
@@ -45,41 +42,41 @@
       .cursor-dot, .cursor-ring { display: none; }
     }
 
-    /* ══════ ПРЕЛОАДЕР: ВОЛНА ТУШИ СПРАВА ══════ */
+        /* ══════ ПРЕЛОАДЕР: ВОЛНА ТУШИ СПРАВА ══════ */
     .preloader {
       position: fixed; inset: 0; z-index: 10000;
-      pointer-events: none;
+      pointer-events: none; overflow: hidden;
     }
-    /* сама волна — чёрное полотно с рваным левым краем (через SVG-маску) */
+    /* сама волна: чёрное полотно с волнистым левым краем через SVG-clip */
     .ink-wave {
       position: absolute; top: 0; right: 0;
-      width: 130%; height: 100%;
+      width: 140%; height: 100%;
       background: #111;
       transform: translateX(0);
-      animation: inkSweep 1.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+      animation: inkSweep 1.9s cubic-bezier(0.7, 0, 0.3, 1) forwards;
       animation-delay: 0.15s;
-      /* рваный левый край в виде потёков туши */
-      -webkit-mask: radial-gradient(circle at left, transparent 0, transparent 8%, #000 9%) left/6% 14% repeat-y,
-                    linear-gradient(#000, #000);
-      -webkit-mask-composite: source-over;
-      mask: radial-gradient(circle at left, transparent 0, transparent 8%, #000 9%) left/6% 14% repeat-y,
-            linear-gradient(#000, #000);
+      /* волнистый левый край */
+      -webkit-clip-path: url(#inkClip);
+      clip-path: url(#inkClip);
     }
     @keyframes inkSweep {
-      0%   { transform: translateX(0); }        /* закрывает весь экран */
-      100% { transform: translateX(130%); }     /* уходит вправо за экран */
+      0%   { transform: translateX(0); }        /* закрывает экран */
+      100% { transform: translateX(140%); }     /* уходит вправо */
     }
-    /* капли-брызги, летящие впереди волны */
+    /* капли-брызги — их МНОГО, летят и растворяются, догоняя волну */
     .ink-splash {
       position: absolute; background: #111; border-radius: 50%;
-      opacity: 0;
-      animation: splashMove 1.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
-      animation-delay: 0.15s;
+      opacity: 0; will-change: transform, opacity;
     }
-    @keyframes splashMove {
-      0%   { transform: translateX(0) scale(1);   opacity: 1; }
-      70%  { opacity: 1; }
-      100% { transform: translateX(-40vw) scale(0.3); opacity: 0; }
+    .ink-splash.go {
+      animation: splashFly var(--dur) cubic-bezier(0.6, 0, 0.4, 1) forwards;
+      animation-delay: var(--delay);
+    }
+    @keyframes splashFly {
+      0%   { transform: translateX(0) scale(1);           opacity: 0; }
+      15%  { opacity: 1; }
+      70%  { opacity: 0.9; }
+      100% { transform: translateX(var(--fly)) scale(0.2); opacity: 0; }
     }
     .preloader.done { display: none; }
 
@@ -195,7 +192,22 @@
   <!-- КУРСОР -->
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
-
+  
+  <!-- волнистый край для волны туши -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <clipPath id="inkClip" clipPathUnits="objectBoundingBox">
+        <path d="M0.08,0
+                 C0.05,0.08 0.11,0.14 0.07,0.22
+                 C0.03,0.30 0.10,0.38 0.06,0.46
+                 C0.02,0.54 0.11,0.62 0.05,0.70
+                 C0.01,0.78 0.10,0.86 0.06,0.94
+                 C0.04,0.97 0.07,0.99 0.08,1
+                 L1,1 L1,0 Z"/>
+      </clipPath>
+    </defs>
+  </svg>
+  
   <!-- ПРЕЛОАДЕР: ВОЛНА ТУШИ СПРАВА -->
   <div class="preloader" id="preloader">
     <div class="ink-wave"></div>
@@ -338,22 +350,26 @@
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-    /* ══════ ПРЕЛОАДЕР: БРЫЗГИ + УБОРКА ══════ */
+       /* ══════ ПРЕЛОАДЕР: МНОГО КАПЕЛЬ, ДОГОНЯЮТ ВОЛНУ ══════ */
     const preloader = document.getElementById('preloader');
-    // добавляем брызги туши перед фронтом волны
-    for (let i = 0; i < 14; i++) {
+    const SPLASHES = 40;                 // много капель
+    for (let i = 0; i < SPLASHES; i++) {
       const s = document.createElement('div');
-      s.className = 'ink-splash';
-      const size = 6 + Math.random() * 26;
-      s.style.width = size + 'px';
+      s.className = 'ink-splash go';
+      const size = 4 + Math.random() * 22;
+      s.style.width  = size + 'px';
       s.style.height = size + 'px';
-      s.style.top = Math.random() * 100 + 'vh';
-      s.style.right = (Math.random() * 30) + 'vw';
-      s.style.animationDelay = (0.15 + Math.random() * 0.5) + 's';
+      s.style.top    = Math.random() * 100 + 'vh';
+      // стартуют по всей ширине — впереди фронта волны
+      s.style.right  = (Math.random() * 70) + 'vw';
+      // летят влево на разную дистанцию (догоняют/обгоняют волну)
+      s.style.setProperty('--fly', -(20 + Math.random() * 50) + 'vw');
+      s.style.setProperty('--dur', (0.7 + Math.random() * 0.9) + 's');
+      s.style.setProperty('--delay', (Math.random() * 0.9) + 's');
       preloader.appendChild(s);
     }
     // убираем прелоадер после ухода волны
-    setTimeout(() => preloader.classList.add('done'), 2000);
+    setTimeout(() => preloader.classList.add('done'), 2300);
 
     /* ══════ КУРСОР ══════ */
     (function () {
