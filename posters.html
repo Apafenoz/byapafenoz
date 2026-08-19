@@ -144,6 +144,25 @@
       overflow: hidden;
       border-radius: 8px;
     }
+        .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      font-size: 28px;
+      color: #111;
+      cursor: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    .modal-close:hover {
+      opacity: 0.7;
+    }
     .modal.open .modal-inner { 
       transform: scale(1); 
     }
@@ -154,12 +173,15 @@
       gap: 14px;
       overflow: hidden;
     }
-    .modal-main { 
+        .modal-main { 
       width: 100%; 
       aspect-ratio: 3/4; 
       background: #eee; 
       overflow: hidden;
       border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .modal-main img { 
       width: 100%; 
@@ -167,12 +189,11 @@
       object-fit: contain; 
       display: block; 
     }
-
-    .modal-details { 
-      display: grid; 
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 10px;
-      min-height: 0;
+    .modal-main.ph {
+      background: #e8e8e8;
+      border: 1px dashed #bbb;
+      color: #aaa;
+      font-size: 13px;
     }
     .modal-detail { 
       aspect-ratio: 1/1; 
@@ -180,11 +201,26 @@
       overflow: hidden;
       border-radius: 4px;
     }
+        .modal-detail { 
+      aspect-ratio: 1/1; 
+      background: #eee; 
+      overflow: hidden;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     .modal-detail img { 
       width: 100%; 
       height: 100%; 
       object-fit: cover; 
       display: block; 
+    }
+    .modal-detail.ph {
+      background: #e8e8e8;
+      border: 1px dashed #bbb;
+      color: #999;
+      font-size: 11px;
     }
 
     .modal-text { 
@@ -295,10 +331,10 @@
     <div class="ft-s">APAFENOZ — портфолио · Safronov Denis</div>
   </footer>
 
-  <!-- МОДАЛКА -->
+   <!-- МОДАЛКА -->
   <div class="modal" id="modal">
-    <button class="modal-close" id="modalClose">✕</button>
     <div class="modal-inner">
+      <button class="modal-close" id="modalClose">✕</button>
       <div class="modal-visual">
         <div class="modal-main ph" id="mMain">плакат</div>
         <div class="modal-details" id="mDetails"></div>
