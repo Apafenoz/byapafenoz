@@ -262,8 +262,8 @@
         this.y = cy + Math.sin(angle) * radius;
         // направление мазка (перпендикулярно радиусу)
         this.angle = angle;
-        this.length = 15 + Math.random() * 25;  // длина мазка
-        this.width = 3 + Math.random() * 6;     // толщина
+        this.length = 4 + Math.random() * 25;  // длина мазка
+        this.width = 6 + Math.random() * 6;     // толщина
         this.life = 1;                          // прозрачность
       }
 
@@ -304,13 +304,13 @@
       const cy = canvas.height / 2;
 
       // добавляем новые мазки по спирали (постепенно)
-      const maxStrokes = Math.floor(animationProgress * 80);  // 0–80 мазков
+      const maxStrokes = Math.floor(animationProgress * 100);  // 0–80 мазков
       while (strokes.length < maxStrokes) {
         const strokeIndex = strokes.length;
         // угол спирали (закручивается всё быстрее)
         const angle = (strokeIndex / 80) * Math.PI * 6;  // 3 полных оборота
         // радиус растёт от центра
-        const radius = (strokeIndex / 80) * 120;
+        const radius = (strokeIndex / 80) * 60;
         strokes.push(new BrushStroke(angle, radius));
       }
 
