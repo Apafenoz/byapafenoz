@@ -48,20 +48,18 @@
       pointer-events: none; overflow: hidden;
     }
     /* слой туши — чёрное полотно, наступающее сверху */
-    .ink-sheet {
-      position: absolute; left: -10%; top: 0;
-      width: 120%; height: 140%;
+       .ink-sheet {
+      position: absolute; left: -10%; top: -40%;
+      width: 120%; height: 150%;
       background: #111;
-      /* рваный нижний край через SVG-фильтр (пальцы туши) */
       filter: url(#inkFingers);
-      transform: translateY(-105%);
-      animation: inkDown 2.1s cubic-bezier(0.65, 0.02, 0.35, 1) forwards;
-      animation-delay: 0.1s;
+      transform: translateY(0);           /* СТАРТ: тушь закрывает весь экран */
+      animation: inkDown 1.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+      animation-delay: 0.2s;
     }
     @keyframes inkDown {
-      0%   { transform: translateY(-105%); }  /* тушь над экраном */
-      65%  { transform: translateY(0%); }     /* залила экран */
-      100% { transform: translateY(0%); }     /* держит */
+      0%   { transform: translateY(0); }        /* держит — экран закрыт */
+      100% { transform: translateY(150%); }     /* сползает вниз, открывая контент */
     }
     /* капли-брызги, срывающиеся вниз впереди фронта */
     .ink-drop {
@@ -298,7 +296,7 @@
       grid.appendChild(cell);
 
       // плавное появление плиток
-      setTimeout(() => cell.classList.add('in'), 1400 + idx * 40);
+            setTimeout(() => cell.classList.add('in'), 900 + idx * 35);
     });
 
     /* ══════ МОДАЛКА ══════ */
@@ -366,7 +364,7 @@
       d.style.setProperty('--delay',(Math.random() * 1.0) + 's');
       preloader.appendChild(d);
     }
-    setTimeout(() => preloader.classList.add('done'), 2400);
+    setTimeout(() => preloader.classList.add('done'), 2200);
 
     /* ══════ КУРСОР ══════ */
     (function () {
