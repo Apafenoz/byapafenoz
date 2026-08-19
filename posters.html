@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     :root {
@@ -44,16 +45,28 @@
       .cursor-dot, .cursor-ring { display: none; }
     }
 
-    /* ══════ ПРЕЛОАДЕР: CANVAS РАСТЕКАНИЕ ТУШИ ══════ */
+    /* ══════ ПРЕЛОАДЕР: БУМАГА РАСКАТЫВАЕТСЯ ══════ */
     .preloader {
       position: fixed; inset: 0; z-index: 10000;
       background: #f4f4f4;
-      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
     }
-    #splashCanvas {
-      display: block; width: 100vw; height: 100vh;
+    .paper {
+      position: absolute;
+      width: 200%; height: 200%;
+      background: #f4f4f4;
+      /* стартует в верхнем правом углу */
+      top: -100%;
+      right: -100%;
+      /* раскатывается диагонально влево-вниз */
+      animation: unrollPaper 2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+      animation-delay: 0.1s;
     }
-    .preloader.done {
+    @keyframes unrollPaper {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-220%, 220%) rotate(45deg); }
+    }
+    .preloader.done { 
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.6s ease;
@@ -86,35 +99,56 @@
     }
     .hero-count { margin-top: 20px; font-size: 12px; letter-spacing: 0.1em; color: var(--muted); }
 
-    /* ══════ ХАОТИЧНАЯ СЕТКА (masonry-стиль) ══════ */
+    /* ══════ СЕТКА ПЛАКАТОВ (слева направо, 6 колонок) ══════ */
     .grid {
-      columns: 5;
-      column-gap: 24px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 20px;
       padding: 30px 0 90px;
     }
     .poster {
-      break-inside: avoid;
-      margin-bottom: 24px;
-      background: #ddd; overflow: hidden;
-      cursor: none; position: relative;
+      aspect-ratio: 3/4;
+      background: #ddd; 
+      overflow: hidden;
+      cursor: none; 
+      position: relative;
       transition: transform .3s ease, box-shadow .3s ease;
-      opacity: 0; transform: translateY(20px);
+      opacity: 0; 
+      transform: translateY(20px);
     }
-    .poster.in { opacity: 1; transform: translateY(0); transition: opacity .6s ease, transform .6s ease; }
-    .poster img { width: 100%; height: auto; display: block; }
+    .poster.in { 
+      opacity: 1; 
+      transform: translateY(0); 
+      transition: opacity .6s ease, transform .6s ease; 
+    }
+    .poster img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
+      display: block; 
+    }
+    /* заглушка */
     .poster.ph {
-      display: flex; align-items: center; justify-content: center;
-      background: #e8e8e8; border: 1px dashed #bbb;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      background: #e8e8e8; 
+      border: 1px dashed #bbb;
     }
     .poster.ph::before {
       content: attr(data-n);
-      font-size: 13px; color: #aaa; letter-spacing: 0.1em;
+      font-size: 13px; 
+      color: #aaa; 
+      letter-spacing: 0.1em;
     }
-    .poster:hover { transform: translateY(-6px); box-shadow: 0 14px 34px rgba(0,0,0,0.18); }
+    .poster:hover { 
+      transform: translateY(-6px); 
+      box-shadow: 0 14px 34px rgba(0,0,0,0.18); 
+    }
 
-    @media (max-width: 1200px) { .grid { columns: 4; } }
-    @media (max-width: 900px)  { .grid { columns: 3; } }
-    @media (max-width: 640px)  { .grid { columns: 2; column-gap: 14px; } .poster { margin-bottom: 14px; } }
+    @media (max-width: 1200px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 900px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
 
     /* ══════ МОДАЛКА (детали плаката) ══════ */
     .modal {
@@ -171,9 +205,9 @@
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
-  <!-- ПРЕЛОАДЕР: CANVAS РАСТЕКАНИЕ ТУШИ -->
+  <!-- ПРЕЛОАДЕР: БУМАГА РАСКАТЫВАЕТСЯ -->
   <div class="preloader" id="preloader">
-    <canvas id="splashCanvas"></canvas>
+    <div class="paper"></div>
   </div>
 
   <!-- ШАПКА -->
@@ -190,7 +224,7 @@
       <div class="hero-count">36 работ · 2023—2025</div>
     </section>
 
-    <!-- ХАОТИЧНАЯ СЕТКА (36 шт) -->
+    <!-- СЕТКА ПЛАКАТОВ (слева направо, 6 в ряд) -->
     <div class="grid" id="grid"><!-- заполнит JS --></div>
   </div>
 
@@ -217,107 +251,14 @@
   </div>
 
   <script>
-    /* ══════ ПРЕЛОАДЕР: РАСТЕКАНИЕ КАПЛИ ТУШИ (Canvas) ══════ */
-    const canvas = document.getElementById('splashCanvas');
-    const ctx = canvas.getContext('2d');
+    /* ══════ ПРЕЛОАДЕР: БУМАГА ══════ */
     const preloader = document.getElementById('preloader');
-
-    // размер canvas = размер окна
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // частицы туши
-    class Particle {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.vx = (Math.random() - 0.5) * 12;        // случайная горизонталь скорость
-        this.vy = (Math.random() - 0.5) * 12;        // случайная вертикальная скорость
-        this.r = Math.random() * 8 + 2;              // радиус 2–10px
-        this.life = 1;                                // альфа
-        this.drag = 0.98;                             // трение
-      }
-
-      update() {
-        // двигаемся
-        this.x += this.vx;
-        this.y += this.vy;
-        // замедляемся (трение)
-        this.vx *= this.drag;
-        this.vy *= this.drag;
-        // гравитация (слабая, для более натурального падения)
-        this.vy += 0.15;
-        // исчезаем
-        this.life -= 0.015;
-      }
-
-      draw(ctx) {
-        ctx.save();
-        ctx.globalAlpha = this.life;
-        ctx.fillStyle = '#111';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    const particles = [];
-    let animationFrame = 0;
-    const animationDuration = 1400; // мс, как долго работает анимация
-
-    function createSplash() {
-      // центр экрана
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-      // создаём 120–150 частиц, летящих во все стороны
-      const count = 120 + Math.random() * 30;
-      for (let i = 0; i < count; i++) {
-        particles.push(new Particle(cx, cy));
-      }
-    }
-
-    function animate(timestamp) {
-      // белый фон (как лист бумаги)
-      ctx.fillStyle = '#f4f4f4';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // обновляем и рисуем частицы
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.update();
-        p.draw(ctx);
-        // удаляем мёртвые частицы
-        if (p.life <= 0) {
-          particles.splice(i, 1);
-        }
-      }
-
-      animationFrame++;
-      const elapsed = animationFrame * (1000 / 60); // примерная прошедшая время
-
-      // если всё ещё анимируем — продолжаем
-      if (elapsed < animationDuration || particles.length > 0) {
-        requestAnimationFrame(animate);
-      } else {
-        // анимация окончена
-        preloader.classList.add('done');
-        // даём время на fade-out (0.6s) и скрываем
-        setTimeout(() => preloader.style.display = 'none', 600);
-      }
-    }
-
-    // создаём первую взрывную волну
-    createSplash();
-    // вторая волна через 200мс (для эффекта "переброса" туши)
-    setTimeout(() => createSplash(), 200);
-
-    // запускаем анимацию
-    animate(0);
+    
+    // убираем прелоадер через 2.2 сек (пока бумага уходит)
+    setTimeout(() => {
+      preloader.classList.add('done');
+      setTimeout(() => preloader.style.display = 'none', 600);
+    }, 2200);
 
     /* ══════ ДАННЫЕ ПЛАКАТОВ (36 шт) ══════ */
     const TOTAL = 36;
@@ -338,28 +279,25 @@
       });
     }
 
-    /* ══════ РЕНДЕР СЕТКИ (хаотичные высоты для заглушек) ══════ */
+    /* ══════ РЕНДЕР СЕТКИ (6 в ряд, слева направо) ══════ */
     const grid = document.getElementById('grid');
-    const phHeights = [280, 340, 240, 400, 300, 360, 260, 320];
     posters.forEach((p, idx) => {
       const cell = document.createElement('div');
       cell.className = 'poster ph';
       cell.dataset.n = p.n;
       cell.dataset.idx = idx;
-      cell.style.height = phHeights[idx % phHeights.length] + 'px';
       const img = new Image();
       img.src = p.img;
       img.alt = p.title;
       img.onload = () => {
         cell.classList.remove('ph');
-        cell.style.height = 'auto';
         cell.innerHTML = '';
         cell.appendChild(img);
       };
       grid.appendChild(cell);
 
       // плавное появление плиток (начинается после прелоадера)
-      setTimeout(() => cell.classList.add('in'), 1400 + idx * 35);
+      setTimeout(() => cell.classList.add('in'), 2200 + idx * 25);
     });
 
     /* ══════ МОДАЛКА ══════ */
