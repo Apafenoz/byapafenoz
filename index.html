@@ -1390,9 +1390,6 @@
   <!-- КАСТОМНЫЙ КУРСОР -->
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
-
-  <div id="preloader">
-
   <div id="preloader">
     <div class="preloader-logo"></div>
   </div>
@@ -1679,8 +1676,6 @@
       </div>
     </div>
   </section>
-    
-  <script>
       <script>
   /* ══════ КАСТОМНЫЙ КУРСОР ══════ */
   (function () {
@@ -1705,9 +1700,8 @@
         ring.classList.add('hover');
       else ring.classList.remove('hover');
     });
-  })();
-  const MOBILE_QUERY = window.matchMedia('(max-width: 600px)');
- 
+   })();
+
   const MOBILE_QUERY = window.matchMedia('(max-width: 600px)');
   function isMobile() {
     return MOBILE_QUERY.matches || window.innerWidth <= 600;
