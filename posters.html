@@ -132,39 +132,133 @@
       opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
     }
     .modal.open { opacity: 1; visibility: visible; }
-    .modal-inner {
-      display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px;
-      max-width: 1100px; width: 100%; max-height: 88vh;
-      background: #fff; padding: 32px;
-      transform: scale(0.96); transition: transform .35s ease;
-      overflow: auto;
+        .modal-inner {
+      display: grid; 
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      max-width: 1200px; 
+      width: 95vw; 
+      max-height: 95vh;
+      background: #fff; 
+      padding: 32px;
+      overflow: hidden;
+      border-radius: 8px;
     }
-    .modal.open .modal-inner { transform: scale(1); }
-    .modal-visual { display: flex; flex-direction: column; gap: 14px; }
-    .modal-main { width: 100%; aspect-ratio: 3/4; background: #eee; overflow: hidden; }
-    .modal-main img { width: 100%; height: 100%; object-fit: contain; display: block; }
-    .modal-main.ph { display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 13px; border: 1px dashed #ccc; }
-    .modal-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .modal-detail { aspect-ratio: 1/1; background: #eee; overflow: hidden; }
-    .modal-detail img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .modal-detail.ph { display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 10px; border: 1px dashed #ddd; }
-    .modal-text { display: flex; flex-direction: column; }
-    .modal-tag { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-    .modal-title { font-size: clamp(24px,3vw,38px); font-weight: 700; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; margin-bottom: 8px; }
-    .modal-year { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
-    .modal-desc { font-size: 14px; letter-spacing: -0.02em; line-height: 1.7; color: #333; }
-    .modal-close {
-      position: absolute; top: 24px; right: 24px;
-      width: 44px; height: 44px; border-radius: 50%;
-      border: 2px solid #fff; background: transparent; color: #fff;
-      font-size: 20px; cursor: none;
-      display: flex; align-items: center; justify-content: center;
-      transition: background .2s, color .2s;
+    .modal.open .modal-inner { 
+      transform: scale(1); 
     }
-    .modal-close:hover { background: #fff; color: #111; }
 
-    @media (max-width: 800px) {
-      .modal-inner { grid-template-columns: 1fr; gap: 24px; }
+    .modal-visual { 
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 14px;
+      overflow: hidden;
+    }
+    .modal-main { 
+      width: 100%; 
+      aspect-ratio: 3/4; 
+      background: #eee; 
+      overflow: hidden;
+      border-radius: 4px;
+    }
+    .modal-main img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain; 
+      display: block; 
+    }
+
+    .modal-details { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 10px;
+      min-height: 0;
+    }
+    .modal-detail { 
+      aspect-ratio: 1/1; 
+      background: #eee; 
+      overflow: hidden;
+      border-radius: 4px;
+    }
+    .modal-detail img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      display: block; 
+    }
+
+    .modal-text { 
+      display: flex; 
+      flex-direction: column;
+      overflow-y: auto;
+      gap: 12px;
+    }
+    .modal-text::-webkit-scrollbar {
+      width: 6px;
+    }
+    .modal-text::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+    .modal-text::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    .modal-tag { 
+      font-size: 11px; 
+      letter-spacing: 0.15em; 
+      text-transform: uppercase; 
+      color: #666; 
+      margin-bottom: 0;
+    }
+    .modal-title { 
+      font-size: clamp(24px,3vw,38px); 
+      font-weight: 700; 
+      line-height: 1; 
+      letter-spacing: -0.03em; 
+      text-transform: uppercase; 
+      margin-bottom: 0;
+    }
+    .modal-year { 
+      font-size: 13px; 
+      color: #999; 
+    }
+    .modal-desc { 
+      font-size: 14px; 
+      letter-spacing: -0.02em; 
+      line-height: 1.6; 
+      color: #444;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+      .modal-inner { 
+        grid-template-columns: 1fr; 
+        gap: 24px;
+        max-height: 90vh;
+      }
+      .modal-text {
+        overflow-y: auto;
+        max-height: 250px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .modal {
+        padding: 20px;
+      }
+      .modal-inner { 
+        grid-template-columns: 1fr; 
+        gap: 16px;
+        padding: 20px;
+        max-height: 85vh;
+      }
+      .modal-detail { 
+        aspect-ratio: 1/1;
+      }
+      .modal-text {
+        max-height: 200px;
+      }
     }
 
     /* ══════ ФУТЕР ══════ */
