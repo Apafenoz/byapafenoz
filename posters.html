@@ -270,6 +270,37 @@
       color: #444;
       margin: 0;
     }
+        .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .modal-insta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      color: #111;
+      text-decoration: none;
+      transition: all .3s ease;
+      cursor: none;
+      flex-shrink: 0;
+    }
+    .modal-insta:hover {
+      background: linear-gradient(45deg, #fd5949, #d6249f, #285AEB);
+      color: #fff;
+    }
+    .modal-insta svg {
+      width: 18px;
+      height: 18px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
     @media (max-width: 900px) {
       .modal-inner {
@@ -351,8 +382,18 @@
         <div class="modal-main ph" id="mMain">плакат</div>
         <div class="modal-details" id="mDetails"></div>
       </div>
-      <div class="modal-text">
-        <div class="modal-tag" id="mTag">плакат</div>
+           <div class="modal-text">
+        <div class="modal-header">
+          <div class="modal-tag" id="mTag">плакат</div>
+          <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" class="modal-insta" title="Мой Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <circle cx="17.5" cy="6.5" r="1.5"></circle>
+            </svg>
+          </a>
+        </div>
+        <h2 class="modal-title" id="mTitle">Название</h2>
         <h2 class="modal-title" id="mTitle">Название</h2>
         <div class="modal-year" id="mYear">2024</div>
         <p class="modal-desc" id="mDesc"></p>
