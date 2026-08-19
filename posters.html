@@ -42,41 +42,39 @@
       .cursor-dot, .cursor-ring { display: none; }
     }
 
-        /* ══════ ПРЕЛОАДЕР: ВОЛНА ТУШИ СПРАВА ══════ */
+           /* ══════ ПРЕЛОАДЕР: ТУШЬ СВЕРХУ ВНИЗ (пальцы-потёки) ══════ */
     .preloader {
       position: fixed; inset: 0; z-index: 10000;
       pointer-events: none; overflow: hidden;
     }
-    /* сама волна: чёрное полотно с волнистым левым краем через SVG-clip */
-    .ink-wave {
-      position: absolute; top: 0; right: 0;
-      width: 140%; height: 100%;
+    /* слой туши — чёрное полотно, наступающее сверху */
+    .ink-sheet {
+      position: absolute; left: -10%; top: 0;
+      width: 120%; height: 140%;
       background: #111;
-      transform: translateX(0);
-      animation: inkSweep 1.9s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-      animation-delay: 0.15s;
-      /* волнистый левый край */
-      -webkit-clip-path: url(#inkClip);
-      clip-path: url(#inkClip);
+      /* рваный нижний край через SVG-фильтр (пальцы туши) */
+      filter: url(#inkFingers);
+      transform: translateY(-105%);
+      animation: inkDown 2.1s cubic-bezier(0.65, 0.02, 0.35, 1) forwards;
+      animation-delay: 0.1s;
     }
-    @keyframes inkSweep {
-      0%   { transform: translateX(0); }        /* закрывает экран */
-      100% { transform: translateX(140%); }     /* уходит вправо */
+    @keyframes inkDown {
+      0%   { transform: translateY(-105%); }  /* тушь над экраном */
+      65%  { transform: translateY(0%); }     /* залила экран */
+      100% { transform: translateY(0%); }     /* держит */
     }
-    /* капли-брызги — их МНОГО, летят и растворяются, догоняя волну */
-    .ink-splash {
-      position: absolute; background: #111; border-radius: 50%;
+    /* капли-брызги, срывающиеся вниз впереди фронта */
+    .ink-drop {
+      position: absolute; background: #111; border-radius: 50% 50% 55% 55%;
       opacity: 0; will-change: transform, opacity;
-    }
-    .ink-splash.go {
-      animation: splashFly var(--dur) cubic-bezier(0.6, 0, 0.4, 1) forwards;
+      animation: dropFall var(--dur) cubic-bezier(0.4, 0, 0.6, 1) forwards;
       animation-delay: var(--delay);
     }
-    @keyframes splashFly {
-      0%   { transform: translateX(0) scale(1);           opacity: 0; }
+    @keyframes dropFall {
+      0%   { transform: translateY(-40px) scaleY(1);   opacity: 0; }
       15%  { opacity: 1; }
-      70%  { opacity: 0.9; }
-      100% { transform: translateX(var(--fly)) scale(0.2); opacity: 0; }
+      80%  { opacity: 0.85; }
+      100% { transform: translateY(var(--fall)) scaleY(2.4); opacity: 0; }
     }
     .preloader.done { display: none; }
 
@@ -192,26 +190,28 @@
   <!-- КУРСОР -->
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
-  
-  <!-- волнистый край для волны туши -->
-  <svg width="0" height="0" style="position:absolute">
+    <!-- SVG-фильтр: рваный край туши (капиллярные пальцы) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
-      <clipPath id="inkClip" clipPathUnits="objectBoundingBox">
-        <path d="M0.08,0
-                 C0.05,0.08 0.11,0.14 0.07,0.22
-                 C0.03,0.30 0.10,0.38 0.06,0.46
-                 C0.02,0.54 0.11,0.62 0.05,0.70
-                 C0.01,0.78 0.10,0.86 0.06,0.94
-                 C0.04,0.97 0.07,0.99 0.08,1
-                 L1,1 L1,0 Z"/>
-      </clipPath>
+      <filter id="inkFingers">
+        <!-- турбулентность = хаотичный шум -->
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.045"
+                      numOctaves="4" seed="7" result="noise">
+          <!-- лёгкое «дыхание» края во время падения -->
+          <animate attributeName="baseFrequency"
+                   dur="2s" values="0.012 0.045; 0.02 0.06; 0.012 0.045"
+                   repeatCount="indefinite"/>
+        </feTurbulence>
+        <!-- шум смещает край полотна → образуются пальцы-потёки -->
+        <feDisplacementMap in="SourceGraphic" in2="noise"
+                           scale="90" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
     </defs>
   </svg>
   
-  <!-- ПРЕЛОАДЕР: ВОЛНА ТУШИ СПРАВА -->
-  <div class="preloader" id="preloader">
-    <div class="ink-wave"></div>
-    <!-- брызги добавит JS -->
+   <div class="preloader" id="preloader">
+    <div class="ink-sheet"></div>
+    <!-- капли добавит JS -->
   </div>
 
   <!-- ШАПКА -->
@@ -350,26 +350,23 @@
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-       /* ══════ ПРЕЛОАДЕР: МНОГО КАПЕЛЬ, ДОГОНЯЮТ ВОЛНУ ══════ */
+        /* ══════ ПРЕЛОАДЕР: КАПЛИ ПАДАЮТ ВНИЗ ══════ */
     const preloader = document.getElementById('preloader');
-    const SPLASHES = 40;                 // много капель
-    for (let i = 0; i < SPLASHES; i++) {
-      const s = document.createElement('div');
-      s.className = 'ink-splash go';
-      const size = 4 + Math.random() * 22;
-      s.style.width  = size + 'px';
-      s.style.height = size + 'px';
-      s.style.top    = Math.random() * 100 + 'vh';
-      // стартуют по всей ширине — впереди фронта волны
-      s.style.right  = (Math.random() * 70) + 'vw';
-      // летят влево на разную дистанцию (догоняют/обгоняют волну)
-      s.style.setProperty('--fly', -(20 + Math.random() * 50) + 'vw');
-      s.style.setProperty('--dur', (0.7 + Math.random() * 0.9) + 's');
-      s.style.setProperty('--delay', (Math.random() * 0.9) + 's');
-      preloader.appendChild(s);
+    const DROPS = 46;
+    for (let i = 0; i < DROPS; i++) {
+      const d = document.createElement('div');
+      d.className = 'ink-drop';
+      const w = 3 + Math.random() * 12;
+      d.style.width  = w + 'px';
+      d.style.height = (w * 1.4) + 'px';
+      d.style.left   = Math.random() * 100 + 'vw';
+      d.style.top    = '-40px';
+      d.style.setProperty('--fall', (30 + Math.random() * 70) + 'vh');
+      d.style.setProperty('--dur',  (0.8 + Math.random() * 0.9) + 's');
+      d.style.setProperty('--delay',(Math.random() * 1.0) + 's');
+      preloader.appendChild(d);
     }
-    // убираем прелоадер после ухода волны
-    setTimeout(() => preloader.classList.add('done'), 2300);
+    setTimeout(() => preloader.classList.add('done'), 2400);
 
     /* ══════ КУРСОР ══════ */
     (function () {
