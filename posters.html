@@ -45,21 +45,6 @@
       .cursor-dot, .cursor-ring { display: none; }
     }
 
-    /* ══════ ПРЕЛОАДЕР: СПИРАЛЬ КРАСКИ ══════ */
-    .preloader {
-      position: fixed; inset: 0; z-index: 10000;
-      background: #f4f4f4;
-      display: flex; align-items: center; justify-content: center;
-    }
-    #spiralCanvas {
-      display: block;
-    }
-    .preloader.done {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease;
-    }
-
     /* ══════ ШАПКА ══════ */
     .hd {
       position: sticky; top: 0; z-index: 100;
@@ -193,11 +178,6 @@
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
-  <!-- ПРЕЛОАДЕР: СПИРАЛЬ КРАСКИ -->
-  <div class="preloader" id="preloader">
-    <canvas id="spiralCanvas"></canvas>
-  </div>
-
   <!-- ШАПКА -->
   <header class="hd">
     <a href="index.html" class="hd-back">На главную</a>
@@ -239,99 +219,6 @@
   </div>
 
   <script>
-    /* ══════ ПРЕЛОАДЕР: СПИРАЛЬ КРАСКИ (Canvas) ══════ */
-    const canvas = document.getElementById('spiralCanvas');
-    const ctx = canvas.getContext('2d');
-    const preloader = document.getElementById('preloader');
-
-    // размер canvas = размер окна
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // частицы — мазки краски
-    class BrushStroke {
-      constructor(angle, radius) {
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-        // позиция на окружности
-        this.x = cx + Math.cos(angle) * radius;
-        this.y = cy + Math.sin(angle) * radius;
-        // направление мазка (перпендикулярно радиусу)
-        this.angle = angle;
-        this.length = 4 + Math.random() * 25;  // длина мазка
-        this.width = 6 + Math.random() * 6;     // толщина
-        this.life = 1;                          // прозрачность
-      }
-
-      draw(ctx) {
-        ctx.save();
-        ctx.globalAlpha = this.life * 0.9;
-        ctx.strokeStyle = '#111';
-        ctx.lineWidth = this.width;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        
-        // рисуем мазок по касательной
-        const dx = Math.cos(this.angle + Math.PI / 2) * this.length;
-        const dy = Math.sin(this.angle + Math.PI / 2) * this.length;
-        
-        ctx.beginPath();
-        ctx.moveTo(this.x - dx / 2, this.y - dy / 2);
-        ctx.lineTo(this.x + dx / 2, this.y + dy / 2);
-        ctx.stroke();
-        
-        ctx.restore();
-      }
-    }
-
-    const strokes = [];
-    let animationProgress = 0;  // 0–1
-    const animationDuration = 900; // мс
-
-    function animate(startTime) {
-      const elapsed = performance.now() - startTime;
-      animationProgress = Math.min(elapsed / animationDuration, 1);
-
-      // белый фон
-      ctx.fillStyle = '#f4f4f4';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-
-      // добавляем новые мазки по спирали (постепенно)
-      const maxStrokes = Math.floor(animationProgress * 100);  // 0–80 мазков
-      while (strokes.length < maxStrokes) {
-        const strokeIndex = strokes.length;
-        // угол спирали (закручивается всё быстрее)
-        const angle = (strokeIndex / 80) * Math.PI * 6;  // 3 полных оборота
-        // радиус растёт от центра
-        const radius = (strokeIndex / 80) * 60;
-        strokes.push(new BrushStroke(angle, radius));
-      }
-
-      // рисуем все мазки
-      strokes.forEach(stroke => {
-        stroke.life = Math.max(0, 1 - (animationProgress * 0.3));  // слегка тускнеют
-        stroke.draw(ctx);
-      });
-
-      if (animationProgress < 1) {
-        requestAnimationFrame((t) => animate(startTime));
-      } else {
-        // анимация завершена
-        preloader.classList.add('done');
-        setTimeout(() => preloader.style.display = 'none', 600);
-      }
-    }
-
-    // запускаем
-    requestAnimationFrame((t) => animate(t));
-
     /* ══════ ДАННЫЕ ПЛАКАТОВ (36 шт) ══════ */
     const TOTAL = 36;
     const posters = [];
@@ -368,8 +255,8 @@
       };
       grid.appendChild(cell);
 
-      // плавное появление плиток (начинается после прелоадера)
-      setTimeout(() => cell.classList.add('in'), 2000 + idx * 25);
+      // плавное появление плиток (сразу видно)
+      setTimeout(() => cell.classList.add('in'), idx * 25);
     });
 
     /* ══════ МОДАЛКА ══════ */
