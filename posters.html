@@ -41,26 +41,38 @@
       body, a { cursor: auto; }
       .cursor-dot, .cursor-ring { display: none; }
     }
-
-           /* ══════ ПРЕЛОАДЕР: ТУШЬ СВЕРХУ ВНИЗ (пальцы-потёки) ══════ */
-    .preloader {
+    /* ══════ ПРЕЛОАДЕР: ТУШЬ СЛЕВА НАПРАВО ══════ */
+      .preloader {
       position: fixed; inset: 0; z-index: 10000;
       pointer-events: none; overflow: hidden;
     }
-    /* слой туши — чёрное полотно, наступающее сверху */
-       .ink-sheet {
-      position: absolute; left: -10%; top: -40%;
-      width: 120%; height: 150%;
+     .ink-sheet {
+      position: absolute; left: -40%; top: -10%;
+      width: 150%; height: 120%;
       background: #111;
-      filter: url(#inkFingers);
-      transform: translateY(0);           /* СТАРТ: тушь закрывает весь экран */
-      animation: inkDown 1.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+      filter: url(#inkFingers);           
+      transform: translateX(0);           
+      animation: inkSweep 1.8s cubic-bezier(0.7, 0, 0.3, 1) forwards; 
       animation-delay: 0.2s;
     }
-    @keyframes inkDown {
-      0%   { transform: translateY(0); }        /* держит — экран закрыт */
-      100% { transform: translateY(150%); }     /* сползает вниз, открывая контент */
+    @keyframes inkSweep {
+      0%   { transform: translateX(0); }       
+      100% { transform: translateX(150%); } 
     }
+    /* капли-брызги — КРУГЛЫЕ, летят вправо и растворяются */
+    .ink-drop {
+      position: absolute; background: #111; border-radius: 50%;
+      opacity: 0; will-change: transform, opacity;
+      animation: dropFly var(--dur) cubic-bezier(0.5, 0, 0.5, 1) forwards;
+      animation-delay: var(--delay);
+    }
+    @keyframes dropFly {
+      0%   { transform: translateX(0) scale(1);   opacity: 0; }
+      15%  { opacity: 1; }
+      80%  { opacity: 0.85; }
+      100% { transform: translateX(var(--fly)) scale(0.25); opacity: 0; }
+    }
+    .preloader.done { display: none; }
     /* капли-брызги, срывающиеся вниз впереди фронта */
     .ink-drop {
       position: absolute; background: #111; border-radius: 50% 50% 55% 55%;
@@ -348,23 +360,23 @@
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-        /* ══════ ПРЕЛОАДЕР: КАПЛИ ПАДАЮТ ВНИЗ ══════ */
+          /* ══════ ПРЕЛОАДЕР: КРУГЛЫЕ КАПЛИ ЛЕТЯТ ВПРАВО ══════ */
     const preloader = document.getElementById('preloader');
     const DROPS = 46;
     for (let i = 0; i < DROPS; i++) {
       const d = document.createElement('div');
       d.className = 'ink-drop';
-      const w = 3 + Math.random() * 12;
+      const w = 4 + Math.random() * 20;   
       d.style.width  = w + 'px';
-      d.style.height = (w * 1.4) + 'px';
-      d.style.left   = Math.random() * 100 + 'vw';
-      d.style.top    = '-40px';
-      d.style.setProperty('--fall', (30 + Math.random() * 70) + 'vh');
+      d.style.height = w + 'px';
+      d.style.top    = Math.random() * 100 + 'vh';
+      d.style.left   = (Math.random() * 60) + 'vw'; 
+      d.style.setProperty('--fly', (30 + Math.random() * 60) + 'vw');  
       d.style.setProperty('--dur',  (0.8 + Math.random() * 0.9) + 's');
       d.style.setProperty('--delay',(Math.random() * 1.0) + 's');
       preloader.appendChild(d);
     }
-    setTimeout(() => preloader.classList.add('done'), 2200);
+    setTimeout(() => preloader.classList.add('done'), 2200); 
 
     /* ══════ КУРСОР ══════ */
     (function () {
