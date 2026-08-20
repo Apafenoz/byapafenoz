@@ -72,11 +72,11 @@
     }
     .hero-count { margin-top: 20px; font-size: 12px; letter-spacing: 0.1em; color: var(--muted); }
     
-      .grid {
+         .grid {
       display: grid;
       grid-template-columns: repeat(5, 245px);
       gap: 20px;
-      padding: 30px 0 90px;
+      padding: 30px clamp(15px, 5vw, 40px) 90px;
       justify-content: center;
     }
     .poster {
@@ -119,10 +119,17 @@
       transform: translateY(-6px); 
       box-shadow: 0 14px 34px rgba(0,0,0,0.18); 
     }
-
-    @media (max-width: 1200px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-    @media (max-width: 900px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+        @media (max-width: 1200px) { 
+      .grid { grid-template-columns: repeat(4, 245px); }
+    }
+    @media (max-width: 900px)  { 
+      .grid { grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 30px 16px 90px; }
+      .poster { width: 100%; max-width: 245px; }
+    }
+    @media (max-width: 640px)  { 
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 20px 12px 60px; }
+      .poster { width: 100%; max-width: 200px; height: auto; aspect-ratio: 245/346; }
+    }
 
            /* ══════ МОДАЛКА (детали плаката) ══════ */
     .modal {
@@ -329,11 +336,11 @@
       setTimeout(() => cell.classList.add('in'), idx * 25);
     });
 
-    /* ══════ МОДАЛКА ══════ */
-       const modal   = document.getElementById('modal');
+       /* ══════ МОДАЛКА ══════ */
+    const modal   = document.getElementById('modal');
     const mMain   = document.getElementById('mMain');
 
-        function openModal(p) {
+    function openModal(p) {
       mMain.className = 'modal-main ph';
       mMain.textContent = 'плакат';
       const big = new Image();
@@ -343,6 +350,23 @@
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // ОБРАБОТЧИК КЛИКА НА ПЛАКАТЫ
+    grid.addEventListener('click', (e) => {
+      const cell = e.target.closest('.poster');
+      if (!cell) return;
+      openModal(posters[+cell.dataset.idx]);
+    });
+
+    // ЗАКРЫТИЕ МОДАЛКИ
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
     /* ══════ КУРСОР ══════ */
     (function () {
