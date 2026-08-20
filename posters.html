@@ -124,7 +124,7 @@
     @media (max-width: 900px)  { .grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
 
-        /* ══════ МОДАЛКА (детали плаката) ══════ */
+           /* ══════ МОДАЛКА (детали плаката) ══════ */
     .modal {
       position: fixed; inset: 0; z-index: 9000;
       background: rgba(0,0,0,0.82);
@@ -133,30 +133,27 @@
       opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
     }
     .modal.open { opacity: 1; visibility: visible; }
-        .modal-inner {
-      display: grid;
-      grid-template-columns: 470px 1fr;
-      gap: 40px;
-      max-width: 1200px;
-      width: auto;
-      max-height: 88vh;
-      background: #fff;
-      padding: 32px;
-      border-radius: 8px;
+
+    .modal-inner {
       position: relative;
-      overflow: hidden;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      overflow: visible;
     }
 
     .modal-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: -40px;
+      right: 0;
       width: 40px;
       height: 40px;
       border: none;
       background: transparent;
       font-size: 28px;
-      color: #111;
+      color: #fff;
       cursor: none;
       display: flex;
       align-items: center;
@@ -165,22 +162,24 @@
     }
     .modal-close:hover { opacity: 0.7; }
 
-    /* ЛЕВАЯ КОЛОНКА: основная картинка (470x663) */
+    /* ОСНОВНАЯ КАРТИНКА (центр) */
     .modal-visual {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 0;
-      overflow: hidden;
+      width: 100%;
+      height: 100%;
     }
 
-    /* ОСНОВНАЯ КАРТИНКА (фиксированный размер) */
     .modal-main {
-      width: 470px;
-      height: 663px;
-      background: #eee;
-      overflow: hidden;
-      border-radius: 4px;
+      width: auto;
+      max-width: 80vw;
+      max-height: 85vh;
+      height: auto;
+      background: transparent;
+      overflow: visible;
+      border-radius: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -198,137 +197,43 @@
       font-size: 13px;
     }
 
-    /* ПРАВАЯ КОЛОНКА: текст + детали */
-    .modal-text {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      padding-right: 8px;
-    }
-    .modal-text::-webkit-scrollbar { width: 6px; }
-    .modal-text::-webkit-scrollbar-track { background: transparent; }
-    .modal-text::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
-
-    .modal-tag {
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #666;
-      margin: 0;
-      flex-shrink: 0;
-    }
-    .modal-title {
-      font-size: clamp(24px, 3vw, 38px);
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
-      margin: 0;
-      flex-shrink: 0;
-    }
-    .modal-year {
-      font-size: 13px;
-      color: #999;
-      margin: 0;
-      flex-shrink: 0;
-    }
-    .modal-desc {
-      font-size: 14px;
-      letter-spacing: -0.02em;
-      line-height: 1.6;
-      color: #444;
-      margin: 0;
-    }
-
-    /* 3 ДЕТАЛИ (горизонтально) */
-    .modal-details {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      flex-shrink: 0;
-      height: 120px;
-    }
-    .modal-detail {
-      background: #eee;
-      overflow: hidden;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-detail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .modal-detail.ph {
-      background: #e8e8e8;
-      border: 1px dashed #bbb;
-      color: #999;
-      font-size: 11px;
-    }
-
+    /* ИНСТА В УГЛУ ПЛАКАТА */
     .modal-insta {
+      position: absolute;
+      top: 16px;
+      right: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #f0f0f0;
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.9);
       color: #111;
       text-decoration: none;
       transition: all .3s ease;
       cursor: none;
-      flex-shrink: 0;
-      margin-top: auto;
+      z-index: 11;
     }
     .modal-insta:hover {
       background: linear-gradient(45deg, #fd5949, #d6249f, #285AEB);
       color: #fff;
     }
     .modal-insta svg {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    @media (max-width: 1000px) {
-      .modal-inner {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        max-height: 90vh;
-      }
-      .modal-main {
-        width: 100%;
-        max-width: 400px;
-        height: auto;
-        aspect-ratio: 470 / 663;
-      }
-      .modal-text {
-        max-height: 300px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .modal {
-        padding: 20px;
-      }
-      .modal-inner {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 20px;
-      }
-      .modal-main {
-        width: 100%;
-        max-width: 350px;
-      }
-      .modal-text {
-        max-height: 250px;
-      }
+    /* СКРЫТЬ ВСЁ ОСТАЛЬНОЕ */
+    .modal-text,
+    .modal-details,
+    .modal-tag,
+    .modal-title,
+    .modal-year,
+    .modal-desc {
+      display: none;
     }
 
     /* ══════ ФУТЕР ══════ */
@@ -365,27 +270,14 @@
     <div class="ft-s">APAFENOZ — портфолио · Safronov Denis</div>
   </footer>
 
-    <!-- МОДАЛКА -->
+      <!-- МОДАЛКА -->
   <div class="modal" id="modal">
     <div class="modal-inner">
       <button class="modal-close" id="modalClose">✕</button>
       
-      <!-- ЛЕВАЯ КОЛОНКА: основная картинка -->
       <div class="modal-visual">
         <div class="modal-main ph" id="mMain">плакат</div>
-      </div>
-
-      <!-- ПРАВАЯ КОЛОНКА: текст + детали + инста -->
-      <div class="modal-text">
-        <div class="modal-tag" id="mTag">плакат</div>
-        <h2 class="modal-title" id="mTitle">Название</h2>
-        <div class="modal-year" id="mYear">2024</div>
-        <p class="modal-desc" id="mDesc"></p>
         
-        <!-- 3 ДЕТАЛИ -->
-        <div class="modal-details" id="mDetails"></div>
-        
-        <!-- ИНСТА ВНИЗУ -->
         <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" class="modal-insta" title="Мой Instagram">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
