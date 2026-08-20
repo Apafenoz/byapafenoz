@@ -205,33 +205,43 @@
       font-size: 13px;
     }
 
-    /* ИНСТА В УГЛУ ПЛАКАТА */
+        /* ИНСТА ПОЗАДИ ПЛАКАТА */
     .modal-insta {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: -20px;
+      right: -20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.9);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
       color: #111;
       text-decoration: none;
       transition: all .3s ease;
       cursor: none;
       z-index: 11;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
     .modal-insta:hover {
       background: linear-gradient(45deg, #fd5949, #d6249f, #285AEB);
       color: #fff;
+      transform: scale(1.1);
     }
     .modal-insta svg {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+
+    @media (max-width: 640px) {
+      .modal-insta {
+        top: -20px;
+        right: auto;
+        left: -20px;
+      }
     }
 
     /* СКРЫТЬ ВСЁ ОСТАЛЬНОЕ */
@@ -283,9 +293,8 @@
     <div class="modal-inner">
       <button class="modal-close" id="modalClose">✕</button>
       
-      <div class="modal-visual">
+          <div class="modal-visual">
         <div class="modal-main ph" id="mMain">плакат</div>
-        
         <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" class="modal-insta" title="Мой Instagram">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -294,8 +303,6 @@
           </svg>
         </a>
       </div>
-    </div>
-  </div>
   <script>
     /* ══════ ДАННЫЕ ПЛАКАТОВ (36 шт) ══════ */
     const TOTAL = 18;
