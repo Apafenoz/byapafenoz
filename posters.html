@@ -19,15 +19,17 @@
       --mono: 'IBM Plex Mono', monospace;
     }
     html { scroll-behavior: smooth; }
-    body {
+        body {
       font-family: var(--mono);
       color: var(--ink);
       background: var(--bg);
       line-height: 1.6;
-      cursor: none;
+      cursor: none !important;
       overflow-x: hidden;
     }
-    a { cursor: none; }
+    a { cursor: none !important; }
+    button { cursor: none !important; }
+    * { cursor: none !important; }
 
     /* ══════ КАСТОМНЫЙ КУРСОР (чёрный) ══════ */
     .cursor-dot, .cursor-ring {
