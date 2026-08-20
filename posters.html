@@ -133,11 +133,12 @@
       opacity: 0; visibility: hidden; transition: opacity .35s ease, visibility .35s ease;
     }
     .modal.open { opacity: 1; visibility: visible; }
-    .modal-inner {
-      grid-template-columns: 1fr 1fr;
+        .modal-inner {
+      display: grid;
+      grid-template-columns: 470px 1fr;
       gap: 40px;
       max-width: 1200px;
-      width: 95vw;
+      width: auto;
       max-height: 88vh;
       background: #fff;
       padding: 32px;
@@ -145,6 +146,7 @@
       position: relative;
       overflow: hidden;
     }
+
     .modal-close {
       position: absolute;
       top: 16px;
@@ -162,18 +164,20 @@
       z-index: 10;
     }
     .modal-close:hover { opacity: 0.7; }
-    /* ЛЕВАЯ КОЛОНКА: картинка + детали */
+
+    /* ЛЕВАЯ КОЛОНКА: основная картинка (470x663) */
     .modal-visual {
-      grid-template-rows: 1fr auto;
-      gap: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       min-height: 0;
       overflow: hidden;
     }
-    /* ОСНОВНАЯ КАРТИНКА (занимает оставшееся место) */
+
+    /* ОСНОВНАЯ КАРТИНКА (фиксированный размер) */
     .modal-main {
-      width: 100%;
-      min-height: 300px;
-      max-height: 55vh;
+      width: 470px;
+      height: 663px;
       background: #eee;
       overflow: hidden;
       border-radius: 4px;
@@ -184,7 +188,7 @@
     .modal-main img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
     }
     .modal-main.ph {
@@ -194,36 +198,7 @@
       font-size: 13px;
     }
 
-    /* 3 ДЕТАЛИ ПОД ОСНОВНОЙ (фиксированная высота) */
-    .modal-details {
-     
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      flex-shrink: 0;
-      height: 120px;
-    }
-    .modal-detail {
-      background: #eee;
-      overflow: hidden;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-detail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .modal-detail.ph {
-      background: #e8e8e8;
-      border: 1px dashed #bbb;
-      color: #999;
-      font-size: 11px;
-    }
-
-       /* ПРАВАЯ КОЛОНКА: текст (может скроллиться) */
+    /* ПРАВАЯ КОЛОНКА: текст + детали */
     .modal-text {
       display: flex;
       flex-direction: column;
@@ -266,6 +241,35 @@
       margin: 0;
     }
 
+    /* 3 ДЕТАЛИ (горизонтально) */
+    .modal-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      flex-shrink: 0;
+      height: 120px;
+    }
+    .modal-detail {
+      background: #eee;
+      overflow: hidden;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-detail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .modal-detail.ph {
+      background: #e8e8e8;
+      border: 1px dashed #bbb;
+      color: #999;
+      font-size: 11px;
+    }
+
     .modal-insta {
       display: flex;
       align-items: center;
@@ -292,20 +296,20 @@
       stroke-linejoin: round;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1000px) {
       .modal-inner {
         grid-template-columns: 1fr;
         gap: 24px;
-        max-height: 85vh;
+        max-height: 90vh;
       }
       .modal-main {
-        max-height: 40vh;
-      }
-      .modal-details {
-        height: 100px;
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        aspect-ratio: 470 / 663;
       }
       .modal-text {
-        max-height: 200px;
+        max-height: 300px;
       }
     }
 
@@ -317,16 +321,13 @@
         grid-template-columns: 1fr;
         gap: 16px;
         padding: 20px;
-        max-height: 80vh;
       }
       .modal-main {
-        max-height: 35vh;
-      }
-      .modal-details {
-        height: 90px;
+        width: 100%;
+        max-width: 350px;
       }
       .modal-text {
-        max-height: 150px;
+        max-height: 250px;
       }
     }
 
@@ -364,20 +365,27 @@
     <div class="ft-s">APAFENOZ — портфолио · Safronov Denis</div>
   </footer>
 
-   <!-- МОДАЛКА -->
+    <!-- МОДАЛКА -->
   <div class="modal" id="modal">
     <div class="modal-inner">
       <button class="modal-close" id="modalClose">✕</button>
+      
+      <!-- ЛЕВАЯ КОЛОНКА: основная картинка -->
       <div class="modal-visual">
         <div class="modal-main ph" id="mMain">плакат</div>
-        <div class="modal-details" id="mDetails"></div>
       </div>
-                <div class="modal-text">
+
+      <!-- ПРАВАЯ КОЛОНКА: текст + детали + инста -->
+      <div class="modal-text">
         <div class="modal-tag" id="mTag">плакат</div>
         <h2 class="modal-title" id="mTitle">Название</h2>
         <div class="modal-year" id="mYear">2024</div>
         <p class="modal-desc" id="mDesc"></p>
         
+        <!-- 3 ДЕТАЛИ -->
+        <div class="modal-details" id="mDetails"></div>
+        
+        <!-- ИНСТА ВНИЗУ -->
         <a href="https://instagram.com/apafenoz" target="_blank" rel="noopener noreferrer" class="modal-insta" title="Мой Instagram">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -386,7 +394,8 @@
           </svg>
         </a>
       </div>
-
+    </div>
+  </div>
   <script>
     /* ══════ ДАННЫЕ ПЛАКАТОВ (36 шт) ══════ */
     const TOTAL = 18;
