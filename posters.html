@@ -330,53 +330,19 @@
     });
 
     /* ══════ МОДАЛКА ══════ */
-    const modal   = document.getElementById('modal');
+       const modal   = document.getElementById('modal');
     const mMain   = document.getElementById('mMain');
-    const mDetails= document.getElementById('mDetails');
-    const mTag    = document.getElementById('mTag');
-    const mTitle  = document.getElementById('mTitle');
-    const mYear   = document.getElementById('mYear');
-    const mDesc   = document.getElementById('mDesc');
 
-    function openModal(p) {
-      mTag.textContent = `плакат · ${p.n}`;
-      mTitle.textContent = p.title;
-      mYear.textContent = p.year;
-      mDesc.textContent = p.desc;
-
+        function openModal(p) {
       mMain.className = 'modal-main ph';
       mMain.textContent = 'плакат';
       const big = new Image();
       big.src = p.img;
       big.onload = () => { mMain.className = 'modal-main'; mMain.innerHTML=''; mMain.appendChild(big); };
 
-      mDetails.innerHTML = '';
-      p.details.forEach((src, i) => {
-        const box = document.createElement('div');
-        box.className = 'modal-detail ph';
-        box.textContent = 'кадр ' + (i+1);
-        const di = new Image();
-        di.src = src;
-        di.onload = () => { box.className = 'modal-detail'; box.innerHTML=''; box.appendChild(di); };
-        mDetails.appendChild(box);
-      });
-
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
-    function closeModal() {
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    grid.addEventListener('click', (e) => {
-      const cell = e.target.closest('.poster');
-      if (!cell) return;
-      openModal(posters[+cell.dataset.idx]);
-    });
-    document.getElementById('modalClose').addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
     /* ══════ КУРСОР ══════ */
     (function () {
