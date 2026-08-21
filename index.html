@@ -1471,11 +1471,11 @@
       <div class="main-label main-type     animate delay-2">ГРАФИЧЕСКИЙ/ВЕБ/ПРОДУКТ</div>
       <div class="main-label main-desc     animate delay-4">Продуктовый дизайнер с бэкграундом в графике</div>
                <!-- КНОПКИ-ЯКОРЯ -->
-      <nav class="main-nav animate delay-5">
-        <a class="main-nav__btn" data-target="screen-about">Обо мне</a>
-        <a class="main-nav__btn" data-target="screen-direction">Направления</a>
+           <nav class="main-nav animate delay-5">
+        <a class="main-nav__btn" href="#screen-about" onclick="scrollToSection(this)">Обо мне</a>
+        <a class="main-nav__btn" href="#screen-direction" onclick="scrollToSection(this)">Направления</a>
         <a class="main-nav__btn" href="experience.html">Опыт</a>
-        <a class="main-nav__btn" data-target="screen-contact">Контакты</a>
+        <a class="main-nav__btn" href="#screen-contact" onclick="scrollToSection(this)">Контакты</a>
       </nav>
     </div>
 
@@ -1872,19 +1872,23 @@
     mobileResizeObserver = new ResizeObserver(() => scaleMobileCanvases());
     scalers.forEach(s => mobileResizeObserver.observe(s));
   }
-  /* ══════ КНОПКИ-ЯКОРЯ: плавный скролл (учитывает scale) ══════ */
+    /* ══════ КНОПКИ-ЯКОРЯ: плавный скролл (учитывает scale) ══════ */
+  function scrollToSection(link) {
+    const href = link.getAttribute('href');
+    if (!href.startsWith('#')) return; // если это не якорь, ничего не делаем
+    
+    const targetId = href.substring(1);
+    const target = document.getElementById(targetId);
+    if (!target) return;
+    
+    const rect = target.getBoundingClientRect();
+    const top = rect.top + window.scrollY;
+    window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
+  }
+
   function initAnchors() {
-    const buttons = document.querySelectorAll('.main-nav__btn');
-    buttons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.getElementById(btn.dataset.target);
-        if (!target) return;
-        const rect = target.getBoundingClientRect();
-        const top = rect.top + window.scrollY;
-        window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
-      });
-    });
+    // якоря с onclick уже обработаны выше
+    // а обычные ссылки работают как обычно
   }
   // ── Применение нужного режима ──
   function applyLayout() {
