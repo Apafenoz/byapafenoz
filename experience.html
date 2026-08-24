@@ -7,22 +7,22 @@
   <link rel="icon" href="assets/images/favicon.webp" type="image/webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+
     :root {
-      --ink: #111;
-      --muted: #888;
-      --line: #e4e4e4;
-      --bg: #f4f4f4;
+      --ink: #0e0e0e;
+      --muted: #6f6f6f;
+      --line: #1a1a1a;
+      --line-soft: #cfcac0;
+      --bg: #eceae4;        /* бумажный оттенок */
       --accent: #2A005E;
       --mono: 'IBM Plex Mono', monospace;
     }
 
     html { scroll-behavior: smooth; }
-    
+
     body {
       font-family: var(--mono);
       color: var(--ink);
@@ -30,9 +30,36 @@
       line-height: 1.6;
       cursor: none !important;
       overflow-x: hidden;
+      position: relative;
     }
 
-    a { cursor: none !important; }
+    /* ══════ ГРАНЖ-ТЕКСТУРА ФОНА (зерно + твоя картинка) ══════ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url('assets/images/bg-image.png');
+      background-size: cover;
+      background-attachment: fixed;
+      mix-blend-mode: multiply;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* тонкое зерно поверх (SVG-шум) */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.28'/></svg>");
+      background-size: 180px 180px;
+      mix-blend-mode: multiply;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a { cursor: none !important; text-decoration: none; }
     button { cursor: none !important; }
 
     /* ══════ КАСТОМНЫЙ КУРСОР ══════ */
@@ -40,514 +67,696 @@
       position: fixed; top: 0; left: 0; border-radius: 50%;
       pointer-events: none; z-index: 10001; transform: translate(-50%, -50%);
     }
-    .cursor-dot { width: 6px; height: 6px; background: var(--accent); }
+    .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
     .cursor-ring {
-      width: 24px; height: 24px; border: 2px solid var(--accent); opacity: 0.6;
+      width: 24px; height: 24px; border: 1.5px solid var(--accent); opacity: 0.6;
       transition: width .25s, height .25s, opacity .25s;
     }
-    .cursor-ring.hover { width: 34px; height: 34px; opacity: 1; }
-
+    .cursor-ring.hover { width: 40px; height: 40px; opacity: 1; }
     @media (hover: none) {
       body, a { cursor: auto; }
       .cursor-dot, .cursor-ring { display: none; }
     }
 
+    /* ══════ РЕГИСТРАЦИОННЫЕ МЕТКИ ПО УГЛАМ (как в полиграфии) ══════ */
+    .reg-mark {
+      position: fixed;
+      width: 22px; height: 22px;
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    .reg-mark::before, .reg-mark::after {
+      content: ''; position: absolute; background: var(--ink);
+    }
+    .reg-mark::before { left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%); }
+    .reg-mark::after  { top: 50%; left: 0; height: 1px; width: 100%; transform: translateY(-50%); }
+    .reg-tl { top: 14px; left: 14px; }
+    .reg-tr { top: 14px; right: 14px; }
+    .reg-bl { bottom: 14px; left: 14px; }
+    .reg-br { bottom: 14px; right: 14px; }
+    @media (max-width: 768px) { .reg-mark { display: none; } }
+
     /* ══════ ШАПКА ══════ */
     .hd {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(244,244,244,0.95); backdrop-filter: blur(8px);
+      background: rgba(236,234,228,0.9); backdrop-filter: blur(6px);
       border-bottom: 1px solid var(--line);
-      padding: 0 clamp(20px,5vw,60px); height: 56px;
+      padding: 0 clamp(20px,5vw,60px); height: 52px;
       display: flex; align-items: center; justify-content: space-between;
     }
     .hd-back {
       display: flex; align-items: center; gap: 10px;
-      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--ink); text-decoration: none; transition: gap .2s;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink); transition: gap .2s; font-weight: 500;
     }
-    .hd-back::before { content: '←'; font-size: 16px; }
+    .hd-back::before { content: '←'; font-size: 15px; }
     .hd-back:hover { gap: 16px; }
-    .hd-meta { font-size: 11px; font-style: italic; color: var(--muted); }
+    .hd-meta {
+      font-size: 10px; letter-spacing: 0.1em; color: var(--muted);
+      text-transform: uppercase;
+    }
 
     /* ══════ КОНТЕНТ ══════ */
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px,5vw,60px); }
-    
-    .hero { padding: clamp(50px,8vw,90px) 0 clamp(30px,4vw,50px); }
-    .hero-title {
-      font-size: clamp(40px,9vw,120px); font-weight: 700; line-height: 0.9;
-      letter-spacing: -0.04em; text-transform: uppercase;
-    }
-    .hero-sub { font-size: 12px; letter-spacing: 0.2em; text-transform: lowercase; 
-      color: var(--muted); margin-bottom: 10px; }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px,5vw,70px); position: relative; z-index: 1; }
 
-    /* ══════ ТАЙМЛАЙН ══════ */
-    .timeline {
-      position: relative;
-      padding: 60px 0;
+    /* Служебная микро-подпись секции */
+    .sec-tag {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 14px;
     }
+    .sec-tag .dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+    }
+    .sec-tag .num { color: var(--accent); font-weight: 700; }
+    .sec-tag .rule { flex: 1; height: 1px; background: var(--line-soft); }
 
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, #d4d4d8 0%, var(--accent) 50%, #d4d4d8 100%);
-      transform: translateX(-50%);
+    /* ══════ HERO ══════ */
+    .hero {
+      padding: clamp(40px,7vw,80px) 0 clamp(30px,4vw,50px);
     }
 
-    .timeline-items {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 60px;
-    }
+    .hero-image { margin-bottom: 26px; display: flex; justify-content: center; }
+    .hero-image img { max-width: 500px; width: 100%; height: auto; display: block; }
 
-    .timeline-item {
-      position: relative;
-      display: flex;
-      gap: 40px;
-      align-items: flex-start;
-      opacity: 0;
-      animation: slideIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .timeline-item:nth-child(odd) {
-      flex-direction: row-reverse;
-    }
-
-    .timeline-item:nth-child(1) { animation-delay: 0.1s; }
-    .timeline-item:nth-child(2) { animation-delay: 0.2s; }
-    .timeline-item:nth-child(3) { animation-delay: 0.3s; }
-    .timeline-item:nth-child(4) { animation-delay: 0.4s; }
-    .timeline-item:nth-child(5) { animation-delay: 0.5s; }
-
-    .timeline-marker {
-      position: relative;
-      width: 60px;
-      height: 60px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .timeline-marker::before {
-      content: '';
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background: var(--bg);
-      border: 3px solid var(--accent);
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-    }
-
-    .timeline-marker i {
-      position: relative;
-      z-index: 2;
-      font-size: 24px;
-      color: var(--accent);
-    }
-
-    .timeline-content {
-      flex: 1;
-      max-width: 500px;
-      background: #fff;
-      padding: 28px;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      transition: all 0.3s ease;
-    }
-
-    .timeline-content:hover {
-      border-color: var(--accent);
-      box-shadow: 0 8px 32px rgba(42, 0, 94, 0.1);
-    }
-
-    .timeline-date {
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .timeline-company {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-
-    .timeline-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: -0.03em;
-    }
-
-    .timeline-subtitle {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 12px;
+    .hero-text p {
+      font-size: 13px; line-height: 1.8; color: #333;
+      text-align: center; margin: 0 auto; max-width: 620px;
       font-style: italic;
     }
 
-    .timeline-description {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #555;
-      margin-bottom: 12px;
+    /* ══════ ЛИСТ ПЕРСОНАЖА — ПОСТЕР ══════ */
+    .character-sheet {
+      position: relative;
+      background: rgba(236,234,228,0.35);
+      border: 1px solid var(--line);
+      padding: clamp(24px,3vw,44px);
+      display: grid;
+      grid-template-columns: 1fr 340px 1fr;
+      gap: clamp(24px,3vw,44px);
+      align-items: flex-start;
+      width: 100%;
+    }
+    /* уголки-«скобки» вокруг постера */
+    .character-sheet::before,
+    .character-sheet::after {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      border: 1px solid var(--accent);
+    }
+    .character-sheet::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+    .character-sheet::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+    /* угловой штамп-бейдж на постере */
+    .sheet-badge {
+      position: absolute;
+      top: -13px; right: 28px;
+      background: var(--accent); color: #fff;
+      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 5px 12px; font-weight: 500;
+      transform: rotate(-2deg);
+      z-index: 3;
     }
 
-    .timeline-points {
-      font-size: 13px;
-      line-height: 1.6;
-      color: #666;
-      margin: 12px 0;
+    .char-left, .char-right {
+      display: flex; flex-direction: column; gap: 28px;
+    }
+    .char-center {
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .timeline-points li {
-      margin-left: 20px;
-      margin-bottom: 6px;
+    /* портрет в «рамке плаката» */
+    .hero-visual {
+      position: relative;
+      width: 300px;
+      min-height: 440px;
+      align-self: stretch;
+      background: transparent;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      filter: grayscale(0.15) contrast(1.05);
+    }
+    .hero-visual img, .hero-visual video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    /* технический ярлык под портретом */
+    .hero-visual::after {
+      content: 'FIG. 01 — SUBJECT / SAFRONOV D.';
+      position: absolute;
+      left: 8px; bottom: 8px;
+      font-size: 8px; letter-spacing: 0.12em;
+      color: #fff; mix-blend-mode: difference;
+      z-index: 2;
+    }
+    .portrait-cross {
+      position: absolute; z-index: 2; width: 12px; height: 12px;
+      mix-blend-mode: difference; pointer-events: none;
+    }
+    .portrait-cross::before, .portrait-cross::after { content:''; position:absolute; background:#fff; }
+    .portrait-cross::before { left:50%; top:0; width:1px; height:100%; transform:translateX(-50%); }
+    .portrait-cross::after  { top:50%; left:0; height:1px; width:100%; transform:translateY(-50%); }
+    .pc-tl { top:8px; left:8px; } .pc-br { bottom:22px; right:8px; }
+
+    /* блоки характеристик */
+    .stats-block { display: flex; flex-direction: column; gap: 14px; }
+    .stats-title {
+      display: flex; align-items: baseline; gap: 8px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--ink);
+      padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    }
+    .stats-title .idx { font-size: 9px; color: var(--accent); font-weight: 700; }
+
+    .stats-list, .tools-list, .languages { display: flex; flex-direction: column; gap: 12px; }
+
+    .stat-item, .tool-item, .language-item { display: flex; flex-direction: column; gap: 5px; }
+
+    .stat-label, .tool-label, .lang-name {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-size: 11px; color: var(--ink); letter-spacing: 0.02em;
+    }
+    .stat-label .val, .lang-name .val {
+      font-size: 9px; color: var(--muted); font-weight: 700;
     }
 
-    .timeline-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
+    /* СЕГМЕНТНЫЕ бары (как деления шкалы, а не гладкие) */
+    .bar {
+      height: 8px;
+      background:
+        repeating-linear-gradient(90deg,
+          transparent 0, transparent 6px,
+          var(--line-soft) 6px, var(--line-soft) 7px);
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+    .bar .fill {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: var(--accent);
+      mix-blend-mode: multiply;
+    }
+    .tool-level {
+      font-size: 8px; color: var(--muted); font-weight: 700;
+      letter-spacing: 0.1em; align-self: flex-end;
     }
 
+    /* ══════ ОБРАЗОВАНИЕ (без баров) ══════ */
+    .edu-list { display: flex; flex-direction: column; gap: 16px; }
+    .edu-item {
+      position: relative;
+      padding-left: 16px;
+      border-left: 1px solid var(--line);
+    }
+    .edu-item::before {
+      content: '';
+      position: absolute;
+      left: -3px; top: 6px;
+      width: 5px; height: 5px;
+      background: var(--accent);
+    }
+    .edu-year {
+      font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 4px;
+    }
+    .edu-place {
+      font-size: 12px; font-weight: 700; color: var(--ink);
+      line-height: 1.3; margin-bottom: 3px;
+    }
+    .edu-spec {
+      font-size: 10px; color: var(--accent); line-height: 1.4;
+    }
+
+    /* ══════ ХРОНОЛОГИЯ ══════ */
+    .timeline-section { padding: clamp(50px,8vw,90px) 0; position: relative; }
+
+    .timeline-controls {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 22px; gap: 16px;
+    }
+    .timeline-arrows { display: flex; gap: 8px; }
+    .scroll-btn {
+      width: 40px; height: 40px;
+      border: 1px solid var(--line); background: transparent;
+      font-size: 16px; color: var(--accent); cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex; align-items: center; justify-content: center; font-weight: 700;
+    }
+    .scroll-btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .scroll-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+    .scroll-btn:disabled:hover { background: transparent; color: var(--accent); }
+
+    .timeline-horizontal { overflow-x: auto; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+    .timeline-horizontal::-webkit-scrollbar { height: 2px; }
+    .timeline-horizontal::-webkit-scrollbar-track { background: var(--line-soft); }
+    .timeline-horizontal::-webkit-scrollbar-thumb { background: var(--accent); }
+
+    .timeline-track { display: flex; gap: clamp(24px,4vw,44px); min-width: min-content; padding-bottom: 20px; }
+
+    .timeline-item {
+      flex: 0 0 clamp(300px, 28vw, 420px);
+      position: relative; scroll-snap-align: start;
+    }
+    .timeline-year {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .timeline-year::before {
+      content: ''; width: 22px; height: 1px; background: var(--accent);
+    }
+    .timeline-title {
+      font-size: clamp(20px, 4vw, 30px); font-weight: 700; line-height: 1.0;
+      letter-spacing: -0.03em; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .timeline-company {
+      font-size: 12px; font-weight: 500; color: var(--accent);
+      margin-bottom: 16px; letter-spacing: 0.02em;
+    }
+    .timeline-content {
+      background: rgba(236,234,228,0.4);
+      padding: 22px;
+      border: 1px solid var(--line);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .timeline-content::before {
+      content: attr(data-n);
+      position: absolute; top: 10px; right: 12px;
+      font-size: 9px; color: var(--muted); letter-spacing: 0.15em;
+    }
+    .timeline-content:hover {
+      border-color: var(--accent);
+      box-shadow: 6px 6px 0 rgba(42,0,94,0.12);
+      transform: translate(-2px,-2px);
+    }
+    .timeline-description { font-size: 12px; line-height: 1.7; color: #333; margin-bottom: 14px; }
+    .timeline-points { font-size: 11px; line-height: 1.6; color: #444; list-style: none; }
+    .timeline-points li { margin-bottom: 8px; padding-left: 16px; position: relative; }
+    .timeline-points li::before { content: '→'; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+    .timeline-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
     .timeline-tag {
-      display: inline-block;
-      font-size: 11px;
-      padding: 6px 12px;
-      background: #f0f0f0;
-      color: var(--ink);
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-size: 9px; padding: 4px 9px;
+      border: 1px solid var(--line); color: var(--ink);
+      text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500;
     }
+
+    /* ══════ КОНТАКТЫ ══════ */
+    .footer-section {
+      padding: clamp(60px, 12vw, 110px) 0;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 8vw, 100px); align-items: center;
+    }
+    .footer-text h2 {
+      font-size: clamp(40px, 10vw, 130px); font-weight: 700; line-height: 0.9;
+      letter-spacing: -0.05em; text-transform: uppercase;
+    }
+    .footer-contacts { display: flex; flex-direction: column; gap: 14px; }
+    .footer-contacts a {
+      position: relative; font-size: 14px; color: var(--ink);
+      border-bottom: 1px solid var(--line); padding: 6px 4px;
+      transition: all 0.3s ease; isolation: isolate;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-contacts a .arw { font-size: 12px; color: var(--accent); }
+    .footer-contacts a::before {
+      content: ''; position: absolute; inset: 0; background: var(--accent);
+      transform: scaleX(0); transform-origin: left center;
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: -1;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .footer-contacts a:hover { color: #fff; padding-left: 12px; }
+      .footer-contacts a:hover .arw { color: #fff; }
+      .footer-contacts a:hover::before { transform: scaleX(1); }
+    }
+    @media (max-width: 900px) { .footer-section { grid-template-columns: 1fr; } }
+
+    /* ══════ ОБЩИЙ ФУТЕР ══════ */
+    .ft {
+      padding: 34px clamp(20px,5vw,60px); border-top: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px; position: relative; z-index: 1;
+    }
+    .ft-s { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .ft-info { display: flex; gap: 24px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 
     /* ══════ АДАПТИВ ══════ */
-    @media (max-width: 900px) {
-      .timeline::before {
-        left: 30px;
-      }
-
-      .timeline-item {
-        flex-direction: column !important;
-        gap: 20px;
-      }
-
-      .timeline-item:nth-child(odd) {
-        flex-direction: column !important;
-      }
-
-      .timeline-marker {
-        width: 50px;
-        height: 50px;
-      }
-
-      .timeline-marker::before {
-        width: 50px;
-        height: 50px;
-      }
-
-      .timeline-marker i {
-        font-size: 20px;
-      }
-
-      .timeline-content {
-        margin-left: 40px;
-      }
+    @media (max-width: 1200px) {
+      .character-sheet { grid-template-columns: 1fr; gap: 28px; }
+      .char-left, .char-right { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .char-center { order: -1; }
+      .hero-visual { width: 300px; margin: 0 auto; }
     }
-
+    @media (max-width: 768px) {
+      .character-sheet { padding: 22px; }
+      .char-left, .char-right { grid-template-columns: 1fr; }
+      .hero-visual { width: 100%; min-height: 360px; }
+    }
     @media (max-width: 600px) {
-      .timeline::before {
-        left: 20px;
-      }
-
-      .timeline-items {
-        gap: 40px;
-      }
-
-      .timeline-content {
-        padding: 20px;
-        margin-left: 30px;
-      }
-
-      .timeline-title {
-        font-size: 16px;
-      }
-
-      .timeline-marker {
-        width: 44px;
-        height: 44px;
-      }
-
-      .timeline-marker::before {
-        width: 44px;
-        height: 44px;
-        border-width: 2px;
-      }
-
-      .timeline-marker i {
-        font-size: 18px;
-      }
-    }
-
-    /* ══════ ФУТЕР ══════ */
-    .ft { 
-      padding: 40px clamp(20px,5vw,60px); 
-      border-top: 1px solid var(--line); 
-      text-align: center; 
-    }
-    .ft-s { 
-      font-size: 11px; 
-      color: var(--muted); 
-      letter-spacing: 0.05em; 
+      .ft { flex-direction: column; align-items: flex-start; }
+      .sheet-badge { right: 12px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- КАСТОМНЫЙ КУРСОР -->
+  <!-- КУРСОР -->
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
+
+  <!-- РЕГИСТРАЦИОННЫЕ МЕТКИ -->
+  <span class="reg-mark reg-tl"></span>
+  <span class="reg-mark reg-tr"></span>
+  <span class="reg-mark reg-bl"></span>
+  <span class="reg-mark reg-br"></span>
 
   <!-- ШАПКА -->
   <header class="hd">
     <a href="index.html" class="hd-back">На главную</a>
-    <span class="hd-meta">опыт работы · 2019—2025</span>
+    <span class="hd-meta">EXP. FILE · 2019—2025 · N°∞</span>
   </header>
 
-  <!-- ОСНОВНОЙ КОНТЕНТ -->
   <div class="wrap">
+
+    <!-- ══════ HERO ══════ -->
     <section class="hero">
-      <div class="hero-sub">профессиональный путь</div>
-      <h1 class="hero-title">Опыт</h1>
-    </section>
-    
-    <!-- ══════ НАВЫКИ ══════ -->
-    <section style="padding: 60px 0; border-top: 1px solid var(--line); margin-top: 60px;">
-      <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: -0.03em;">Навыки</h2>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
-        
-        <!-- Хард скилы -->
-        <div style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid var(--line);">
-          <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; color: var(--accent);">Hard Skills</h3>
-          <ul style="list-style: none; line-height: 1.8; font-size: 14px;">
-            <li>• Исследования (качественные и количественные)</li>
-            <li>• JTBD, CJM, гипотезы, интервью</li>
-            <li>• Юзабилити-тестирование</li>
-            <li>• Конкурентный и функциональный анализ</li>
-            <li>• Информационная архитектура</li>
-            <li>• Интерактивное прототипирование</li>
-            <li>• Figma (components, variants, constraints)</li>
-            <li>• XMind, диаграммы</li>
-            <li>• AI (ChatGPT, Midjourney)</li>
-          </ul>
-        </div>
+      <div class="sec-tag">
+        <span class="dot"></span>
+        <span class="num">N°00</span>
+        <span>experience / character sheet</span>
+        <span class="rule"></span>
+        <span>апрель 2025</span>
+      </div>
 
-        <!-- Софт скилы -->
-        <div style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid var(--line);">
-          <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; color: var(--accent);">Soft Skills</h3>
-          <ul style="list-style: none; line-height: 1.8; font-size: 14px;">
-            <li>• Эмпатия (к пользователю и бизнесу)</li>
-            <li>• Коммуникация и презентация</li>
-            <li>• Критическое мышление</li>
-            <li>• Helicopter view (стратегический взгляд)</li>
-            <li>• Lifelong learning</li>
-            <li>• Позитивное отношение к критике</li>
-            <li>• Понимание бизнес-процессов</li>
-            <li>• Управление временем и дедлайнами</li>
-            <li>• Уверенность в презентации идей</li>
-          </ul>
+      <div class="hero-text">
+        <div class="hero-image">
+          <img src="assets/images/experience/title.png" alt="My Type B auditable">
         </div>
-
+        <p>
+          С 2019 года в дизайне. Начинал с графики: брендинг, афиши, полиграфия.
+          Научился работать с сетками, типографикой и деталями.
+          Теперь фокусируюсь на UX/UI и продуктовом дизайне.
+        </p>
       </div>
     </section>
 
-    <!-- ══════ ОБРАЗОВАНИЕ ══════ -->
-    <section style="padding: 60px 0; border-top: 1px solid var(--line); margin-top: 60px;">
-      <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 40px; text-transform: uppercase; letter-spacing: -0.03em;">Образование</h2>
-      
-      <div style="display: flex; flex-direction: column; gap: 24px;">
-        
-        <div style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid var(--line); border-left: 4px solid var(--accent);">
-          <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px;">2024</div>
-          <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">UX/UI Дизайнер</h3>
-          <p style="font-size: 14px; color: var(--accent); margin-bottom: 8px;">Нетология</p>
-          <p style="font-size: 14px; color: #666; line-height: 1.6;">Полный курс по UX/UI дизайну: исследования, прототипирование, работа в Figma, анализ конкурентов.</p>
+    <!-- ══════ ЛИСТ ПЕРСОНАЖА ══════ -->
+    <div class="character-sheet">
+      <span class="sheet-badge">character sheet / v.2025</span>
+
+      <!-- ЛЕВАЯ КОЛОНКА -->
+      <div class="char-left">
+        <div class="stats-block">
+          <h3 class="stats-title">Hard Skills <span class="idx">/ 01</span></h3>
+          <div class="stats-list">
+            <div class="stat-item">
+              <span class="stat-label">Исследования <span class="val">80</span></span>
+              <div class="bar"><div class="fill" style="width:80%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">JTBD, CJM <span class="val">80</span></span>
+              <div class="bar"><div class="fill" style="width:80%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Юзабилити тесты <span class="val">80</span></span>
+              <div class="bar"><div class="fill" style="width:80%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Конкурент. анализ <span class="val">85</span></span>
+              <div class="bar"><div class="fill" style="width:85%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Информационная архитектура <span class="val">85</span></span>
+              <div class="bar"><div class="fill" style="width:85%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Прототипирование <span class="val">85</span></span>
+              <div class="bar"><div class="fill" style="width:85%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Design Systems <span class="val">88</span></span>
+              <div class="bar"><div class="fill" style="width:88%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">AI <span class="val">82</span></span>
+              <div class="bar"><div class="fill" style="width:82%"></div></div>
+            </div>
+          </div>
         </div>
 
-        <div style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid var(--line); border-left: 4px solid var(--accent);">
-          <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px;">2021</div>
-          <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Веб-дизайнер</h3>
-          <p style="font-size: 14px; color: var(--accent); margin-bottom: 8px;">Ноосфера</p>
-          <p style="font-size: 14px; color: #666; line-height: 1.6;">Основы веб-дизайна, типографика, работа с сеткой, верстка и адаптивный дизайн.</p>
+        <div class="stats-block">
+          <h3 class="stats-title">Образование <span class="idx">/ 02</span></h3>
+          <div class="edu-list">
+            <div class="edu-item">
+              <div class="edu-year">2016 — 2020</div>
+              <div class="edu-place">КГИК — бакалавр</div>
+              <div class="edu-spec">Графический дизайн</div>
+            </div>
+            <div class="edu-item">
+              <div class="edu-year">2022</div>
+              <div class="edu-place">Ноосфера</div>
+              <div class="edu-spec">Веб-дизайнер</div>
+            </div>
+            <div class="edu-item">
+              <div class="edu-year">2023</div>
+              <div class="edu-place">Нетология — Расширенный курс</div>
+              <div class="edu-spec">Продуктовый дизайн</div>
+            </div>
+          </div>
         </div>
-
-        <div style="background: #fff; padding: 24px; border-radius: 8px; border: 1px solid var(--line); border-left: 4px solid var(--accent);">
-          <div style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px;">2020</div>
-          <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Бакалавр</h3>
-          <p style="font-size: 14px; color: var(--accent); margin-bottom: 8px;">Краснодарский государственный университет культуры и искусств</p>
-          <p style="font-size: 14px; color: #666; line-height: 1.6;">Специальность: Изобразительное искусство (графика, живопись, скульптура)</p>
-        </div>
-
       </div>
-    </section>    
-    <!-- ТАЙМЛАЙН -->
-    <section class="timeline">
-      <div class="timeline-items">
 
-        <!-- Главный дизайнер —  РПК «Развитие» -->
-        <div class="timeline-item">
-          <div class="timeline-marker">
-            <i class="fas fa-briefcase"></i>
-          </div>
-          <div class="timeline-content">
-            <div class="timeline-date">Октябрь 2025 — настоящее время</div>
-            <div class="timeline-company">РПК «Развитие»</div>
-            <h3 class="timeline-title">Главный дизайнер</h3>
-            <div class="timeline-description">
-              Разработка и внедрение дизайн-решений для производства. Управление процессами от концепции до реализации.
+      <!-- ЦЕНТР: ПОРТРЕТ -->
+      <div class="char-center">
+        <div class="hero-visual">
+          <span class="portrait-cross pc-tl"></span>
+          <span class="portrait-cross pc-br"></span>
+          <img src="assets/images/experience/hero.png" alt="Портрет">
+        </div>
+      </div>
+
+      <!-- ПРАВАЯ КОЛОНКА -->
+      <div class="char-right">
+        <div class="stats-block">
+          <h3 class="stats-title">Soft Skills <span class="idx">/ 03</span></h3>
+          <div class="stats-list">
+            <div class="stat-item">
+              <span class="stat-label">Эмпатия <span class="val">92</span></span>
+              <div class="bar"><div class="fill" style="width:92%"></div></div>
             </div>
-            <ul class="timeline-points">
-              <li>Разрабатываю прототипы и дизайн-концепции, довожу их до производства</li>
-              <li>Создаю и поддерживаю дизайн-систему продукта</li>
-              <li>Анализирую дизайнерские решения конкурентов и технические требования</li>
-              <li>Обучаю и развиваю команду на производстве</li>
-            </ul>
-            <div class="timeline-tags">
-              <span class="timeline-tag">Figma</span>
-              <span class="timeline-tag">Design Systems</span>
-              <span class="timeline-tag">Prototyping</span>
+            <div class="stat-item">
+              <span class="stat-label">Коммуникация <span class="val">92</span></span>
+              <div class="bar"><div class="fill" style="width:92%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Критическое мышление <span class="val">88</span></span>
+              <div class="bar"><div class="fill" style="width:88%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Стратегический взгляд <span class="val">80</span></span>
+              <div class="bar"><div class="fill" style="width:80%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Позитив к критике <span class="val">92</span></span>
+              <div class="bar"><div class="fill" style="width:92%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Бизнес-процессы <span class="val">88</span></span>
+              <div class="bar"><div class="fill" style="width:88%"></div></div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Лидерство <span class="val">75</span></span>
+              <div class="bar"><div class="fill" style="width:75%"></div></div>
             </div>
           </div>
         </div>
 
-        <!-- UX/UI Designer — 101GROUP -->
-        <div class="timeline-item">
-          <div class="timeline-marker">
-            <i class="fas fa-pencil-ruler"></i>
-          </div>
-          <div class="timeline-content">
-            <div class="timeline-date">Май 2023 — Ноябрь 2024</div>
-            <div class="timeline-company">101GROUP, Сочи</div>
-            <h3 class="timeline-title">UX/UI Designer</h3>
-            <div class="timeline-description">
-              Проектирование интерфейсов веб-платформы и мобильного приложения. Разработка айдентики для партнёрских компаний.
+        <div class="stats-block">
+          <h3 class="stats-title">Инструменты <span class="idx">/ 04</span></h3>
+          <div class="tools-list">
+            <div class="tool-item">
+              <span class="tool-label">Figma <span class="val">95</span></span>
+              <div class="bar"><div class="fill" style="width:95%"></div></div>
             </div>
-            <ul class="timeline-points">
-              <li>Разрабатывал интерфейсы: от user flow и вайрфреймов до финального UI</li>
-              <li>Спроектировал логику оформления виртуальных договоров</li>
-              <li>Разрабатывал логотипы и айдентику для партнёров</li>
-            </ul>
-            <div class="timeline-tags">
-              <span class="timeline-tag">Figma</span>
-              <span class="timeline-tag">Miro</span>
-              <span class="timeline-tag">UI/UX</span>
-              <span class="timeline-tag">B2B</span>
+            <div class="tool-item">
+              <span class="tool-label">Claude <span class="val">80</span></span>
+              <div class="bar"><div class="fill" style="width:80%"></div></div>
             </div>
-          </div>
-        </div>
-
-        <!-- Product/UX Designer — Проектная деятельность -->
-        <div class="timeline-item">
-          <div class="timeline-marker">
-            <i class="fas fa-lightbulb"></i>
-          </div>
-          <div class="timeline-content">
-            <div class="timeline-date">2022 — 2023</div>
-            <div class="timeline-company">Проектная деятельность, Краснодар</div>
-            <h3 class="timeline-title">Product / UX Designer</h3>
-            <div class="timeline-subtitle">Полный цикл: от брифинга до handoff</div>
-            <ul class="timeline-points">
-              <li>Работал с клиентами: от brифинга до передачи макетов в разработку</li>
-              <li>Проводил discovery-сессии, формировал user stories и CJM</li>
-              <li>Разрабатывал дизайн-системы и UI-киты</li>
-              <li>Координировал коммуникацию между заказчиком и разработкой</li>
-            </ul>
-            <div class="timeline-tags">
-              <span class="timeline-tag">Discovery</span>
-              <span class="timeline-tag">CJM</span>
-              <span class="timeline-tag">Design Systems</span>
-              <span class="timeline-tag">Branding</span>
+            <div class="tool-item">
+              <span class="tool-label">After Effects <span class="val">70</span></span>
+              <div class="bar"><div class="fill" style="width:70%"></div></div>
+            </div>
+            <div class="tool-item">
+              <span class="tool-label">Photoshop <span class="val">92</span></span>
+              <div class="bar"><div class="fill" style="width:92%"></div></div>
+            </div>
+            <div class="tool-item">
+              <span class="tool-label">Illustrator <span class="val">90</span></span>
+              <div class="bar"><div class="fill" style="width:90%"></div></div>
+            </div>
+            <div class="tool-item">
+              <span class="tool-label">Ручная графика <span class="val">100</span></span>
+              <div class="bar"><div class="fill" style="width:100%"></div></div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- UX/UI Designer — 5D Hub -->
-        <div class="timeline-item">
-          <div class="timeline-marker">
-            <i class="fas fa-palette"></i>
+    <!-- ══════ ХРОНОЛОГИЯ ══════ -->
+    <section class="timeline-section">
+      <div class="sec-tag">
+        <span class="dot"></span>
+        <span class="num">N°05</span>
+        <span>timeline / карьера</span>
+        <span class="rule"></span>
+        <span>2020 → сейчас</span>
+      </div>
+
+      <div class="timeline-controls">
+        <div></div>
+        <div class="timeline-arrows">
+          <button class="scroll-btn" id="scrollLeft" title="Влево">←</button>
+          <button class="scroll-btn" id="scrollRight" title="Вправо">→</button>
+        </div>
+      </div>
+
+      <div class="timeline-horizontal" id="timelineScroll">
+        <div class="timeline-track">
+
+          <div class="timeline-item">
+            <div class="timeline-year">2020 — 2022</div>
+            <div class="timeline-title">PrePress<br>Specialist</div>
+            <div class="timeline-company">ООО «Плехановец»</div>
+            <div class="timeline-content" data-n="01/05">
+              <div class="timeline-description">Подготовка макетов к печати. Развил внимание к деталям и качеству.</div>
+              <ul class="timeline-points">
+                <li>Подготовил 600+ макетов к печати</li>
+                <li>Внедрил чек-лист, сократив брак на 15%</li>
+                <li>Обучил новых сотрудников</li>
+              </ul>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Print</span>
+                <span class="timeline-tag">QA</span>
+                <span class="timeline-tag">Adobe</span>
+              </div>
+            </div>
           </div>
-          <div class="timeline-content">
-            <div class="timeline-date">Июнь 2022 — Июнь 2023</div>
+
+          <div class="timeline-item">
+            <div class="timeline-year">2022 — 2023</div>
+            <div class="timeline-title">UX/UI<br>Designer</div>
             <div class="timeline-company">5D Hub</div>
-            <h3 class="timeline-title">UX/UI Designer</h3>
-            <div class="timeline-description">
-              Разработка интерфейсов для веб-сайтов и приложений. Создание и поддержка дизайн-систем.
-            </div>
-            <div class="timeline-tags">
-              <span class="timeline-tag">Web Design</span>
-              <span class="timeline-tag">Prototyping</span>
-              <span class="timeline-tag">Design Systems</span>
+            <div class="timeline-content" data-n="02/05">
+              <div class="timeline-description">Разработка интерфейсов для веб и мобильных приложений.</div>
+              <ul class="timeline-points">
+                <li>Проектировал user flows и вайрфреймы</li>
+                <li>Создавал дизайн-системы</li>
+                <li>Работал с мобильным UI/UX</li>
+              </ul>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Figma</span>
+                <span class="timeline-tag">UI/UX</span>
+                <span class="timeline-tag">Web</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- PrePress — Типография -->
-        <div class="timeline-item">
-          <div class="timeline-marker">
-            <i class="fas fa-print"></i>
-          </div>
-          <div class="timeline-content">
-            <div class="timeline-date">2020 — 2022</div>
-            <div class="timeline-company">ООО «Плехановец», Краснодар</div>
-            <h3 class="timeline-title">PrePress Specialist</h3>
-            <div class="timeline-subtitle">Подготовка макетов к печати</div>
-            <ul class="timeline-points">
-              <li>Подготовил 600+ макетов к печати, развил внимание к деталям</li>
-              <li>Внедрил чек-лист предпечатной проверки, сократив брак на 15%</li>
-              <li>Обучил новых сотрудников, получив опыт менторства</li>
-              <li>Освоил работу с производственными ограничениями</li>
-            </ul>
-            <div class="timeline-tags">
-              <span class="timeline-tag">Print Design</span>
-              <span class="timeline-tag">Quality Assurance</span>
-              <span class="timeline-tag">Process Optimization</span>
+          <div class="timeline-item">
+            <div class="timeline-year">2022 — 2023</div>
+            <div class="timeline-title">Product<br>Designer</div>
+            <div class="timeline-company">Проектная деятельность</div>
+            <div class="timeline-content" data-n="03/05">
+              <div class="timeline-description">Полный цикл разработки: от исследований до handoff разработке.</div>
+              <ul class="timeline-points">
+                <li>Проводил discovery и интервью</li>
+                <li>Создавал CJM и user stories</li>
+                <li>Разрабатывал дизайн-системы</li>
+              </ul>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Discovery</span>
+                <span class="timeline-tag">CJM</span>
+                <span class="timeline-tag">Design Systems</span>
+              </div>
             </div>
           </div>
-        </div>
 
+          <div class="timeline-item">
+            <div class="timeline-year">2023 — 2024</div>
+            <div class="timeline-title">UX/UI<br>Designer</div>
+            <div class="timeline-company">101GROUP</div>
+            <div class="timeline-content" data-n="04/05">
+              <div class="timeline-description">Проектирование интерфейсов веб-платформы и мобильных приложений.</div>
+              <ul class="timeline-points">
+                <li>Разрабатывал интерфейсы B2B платформ</li>
+                <li>Создавал логотипы и айдентику</li>
+                <li>Работал с контрактами и договорами</li>
+              </ul>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Figma</span>
+                <span class="timeline-tag">B2B</span>
+                <span class="timeline-tag">Branding</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-year">2025 — Настоящее</div>
+            <div class="timeline-title">Lead<br>Designer</div>
+            <div class="timeline-company">РПК «Развитие»</div>
+            <div class="timeline-content" data-n="05/05">
+              <div class="timeline-description">Разработка и внедрение дизайн-решений для производства.</div>
+              <ul class="timeline-points">
+                <li>Разрабатываю дизайн-концепции</li>
+                <li>Создаю и поддерживаю дизайн-системы</li>
+                <li>Обучаю команду на производстве</li>
+              </ul>
+              <div class="timeline-tags">
+                <span class="timeline-tag">Design Systems</span>
+                <span class="timeline-tag">Prototyping</span>
+                <span class="timeline-tag">Leadership</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
+
+    <!-- ══════ КОНТАКТЫ ══════ -->
+    <section class="footer-section">
+      <div class="footer-text">
+        <div class="sec-tag">
+          <span class="dot"></span>
+          <span class="num">N°06</span>
+          <span>contact / связь</span>
+        </div>
+        <h2>Контакты</h2>
+      </div>
+      <div class="footer-contacts">
+        <a href="https://instagram.com/apafenoz" target="_blank">Instagram <span class="arw">↗</span></a>
+        <a href="https://t.me/apafenoz" target="_blank">Telegram <span class="arw">↗</span></a>
+        <a href="https://vk.com/apafenoz" target="_blank">VK <span class="arw">↗</span></a>
+        <a href="mailto:apafenoz@yandex.ru">Email <span class="arw">↗</span></a>
+      </div>
+    </section>
+
   </div>
 
-  <!-- ФУТЕР -->
+  <!-- ОБЩИЙ ФУТЕР -->
   <footer class="ft">
-    <div class="ft-s">APAFENOZ — портфолио · Safronov Denis</div>
+    <div class="ft-s">APAFENOZ — портфолио</div>
+    <div class="ft-info">
+      <span>SAFRONOV DENIS</span>
+      <span>ГРАФИЧЕСКИЙ / ВЕБ / ПРОДУКТ</span>
+    </div>
   </footer>
 
   <script>
-    /* ══════ КАСТОМНЫЙ КУРСОР ══════ */
+    /* ══════ КУРСОР ══════ */
     (function () {
       if (window.matchMedia('(hover: none)').matches || window.innerWidth <= 600) return;
       const dot  = document.querySelector('.cursor-dot');
@@ -564,11 +773,42 @@
         requestAnimationFrame(anim);
       })();
       document.addEventListener('mouseover', e => {
-        if (e.target.closest('a, button, .timeline-content'))
+        if (e.target.closest('a, .timeline-content, .footer-contacts a, .scroll-btn'))
           ring.classList.add('hover');
         else ring.classList.remove('hover');
       });
     })();
+
+    /* ══════ ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ ══════ */
+    const timelineScroll = document.getElementById('timelineScroll');
+    const scrollLeftBtn = document.getElementById('scrollLeft');
+    const scrollRightBtn = document.getElementById('scrollRight');
+    const scrollAmount = 400;
+
+    function updateScrollButtons() {
+      scrollLeftBtn.disabled = timelineScroll.scrollLeft <= 0;
+      scrollRightBtn.disabled =
+        timelineScroll.scrollLeft >= timelineScroll.scrollWidth - timelineScroll.clientWidth - 10;
+    }
+    scrollLeftBtn.addEventListener('click', () => {
+      timelineScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      setTimeout(updateScrollButtons, 300);
+    });
+    scrollRightBtn.addEventListener('click', () => {
+      timelineScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      setTimeout(updateScrollButtons, 300);
+    });
+    timelineScroll.addEventListener('scroll', updateScrollButtons);
+    window.addEventListener('resize', updateScrollButtons);
+    updateScrollButtons();
+
+    timelineScroll.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        timelineScroll.scrollBy({ left: e.deltaY, behavior: 'smooth' });
+        updateScrollButtons();
+      }
+    }, { passive: false });
   </script>
 
 </body>
