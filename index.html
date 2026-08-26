@@ -1195,7 +1195,15 @@
       top: 777px;
       z-index: 2;
       overflow: hidden;
-      cursor: pointer; 
+      cursor: pointer;
+      transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+      box-shadow: 0 0 0 rgba(42,0,94,0);
+    }
+    @media (hover: hover){
+      .direction-poster-wrap:hover {
+        transform: scale(1.04);
+        box-shadow: 8px 8px 0 rgba(42,0,94,0.18);
+      }
     }
     .direction-poster-img {
       position: absolute;
@@ -1210,7 +1218,7 @@
       background: #2A005E;
       mix-blend-mode: hue;
     }
-    .direction-product-wrap {
+       .direction-product-wrap {
       position: absolute;
       width: 815px;
       height: 410px;
@@ -1219,13 +1227,13 @@
       z-index: 2;
       overflow: hidden;
       cursor: pointer;
+      transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+      box-shadow: 0 0 0 rgba(42,0,94,0);
     }
-        @media (hover: hover) {
-      .direction-product-wrap {
-        transition: transform 0.4s var(--ease-out);
-      }
+    @media (hover: hover){
       .direction-product-wrap:hover {
-        transform: scale(1.02);
+        transform: scale(1.04);
+        box-shadow: 8px 8px 0 rgba(42,0,94,0.18);
       }
     }
     .direction-product-img {
@@ -1548,7 +1556,7 @@
       <div class="direction-title2 animate from-right delay-3">НА ДВУХ НАПРАВЛЕНИЯХ</div>
 
       <div class="direction-product-wrap animate from-left delay-2"
-           onclick="window.location.href='case-product.html'">
+           onclick="window.location.href='cases.html'">
         <div class="direction-product-img"></div>
         <div class="direction-product-overlay"></div>
       </div>
@@ -1562,7 +1570,7 @@
             <div class="direction-scan1 animate scale-in delay-4"
            onclick="window.location.href='posters.html'"></div>
       <div class="direction-scan2 animate scale-in delay-4"
-        onclick="window.location.href='case-product.html'"></div>
+        onclick="window.location.href='cases.html'"></div>
 
       <div class="direction-caption1 animate delay-3">как самовыражение и творчество</div>
       <div class="direction-caption2 animate delay-4">структура и основная деятельность</div>
@@ -1699,10 +1707,10 @@
         <img class="d-top-cluster" src="assets/images/mobile/icone-5-direction-Mobile.webp" alt="2026 п.к.д. 100% органики">
         <div class="d-headline-1">я<br>сконцентрирован</div>
         <div class="d-headline-2">в двух<br>направлениях</div>
-                <a href="case-product.html">
+                     <a href="cases.html">
           <img class="d-keyword d-keyword-1" src="assets/images/mobile/image-2-direction-Mobile.webp" alt="ПРОДУКТ">
         </a>
-                <a href="posters.html">
+           <a href="posters.html">
           <img class="d-keyword d-keyword-2" src="assets/images/mobile/image-1-direction-Mobile.webp" alt="ПЛАКАТЫ">
         </a>
         <img class="d-icon-row" src="assets/images/mobile/icone-4-direction-Mobile.webp" alt="">
