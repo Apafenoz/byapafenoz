@@ -17,7 +17,11 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-mono:vf@latest/latin-wght-normal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-mono:vf@latest/latin-wght-italic.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/ibm-plex-sans:vf@latest/latin-wght-italic.css">
-  <style>
+  <noscript>
+  <style> .animate { opacity: 1 !important; transform: none !important; } </style>
+</noscript>
+<style>
+
          /* ══════ КАСТОМНЫЙ КУРСОР (фиолетовый) ══════ */
     * { cursor: none !important; }
     body { cursor: none !important; }
@@ -1127,6 +1131,12 @@
       top: 355px;
       z-index: 3;
     }
+    .inset2-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
 
     /* =====================
        ЭКРАН 5 — DIRECTION
@@ -1489,10 +1499,10 @@
       <div class="main-label main-desc     animate delay-4">Продуктовый дизайнер с бэкграундом в графике</div>
                <!-- КНОПКИ-ЯКОРЯ -->
            <nav class="main-nav animate delay-5">
-        <a class="main-nav__btn" href="#screen-about" onclick="scrollToSection(this)">Обо мне</a>
-        <a class="main-nav__btn" href="#screen-direction" onclick="scrollToSection(this)">Направления</a>
+                <a class="main-nav__btn" href="#screen-about" onclick="scrollToSection(event, this)">Обо мне</a>
+        <a class="main-nav__btn" href="#screen-direction" onclick="scrollToSection(event, this)">Направления</a>
         <a class="main-nav__btn" href="experience.html">Опыт</a>
-        <a class="main-nav__btn" href="#screen-contact" onclick="scrollToSection(this)">Контакты</a>
+        <a class="main-nav__btn" href="#screen-contact" onclick="scrollToSection(event, this)">Контакты</a>
       </nav>
     </div>
 
@@ -1890,23 +1900,18 @@
     scalers.forEach(s => mobileResizeObserver.observe(s));
   }
     /* ══════ КНОПКИ-ЯКОРЯ: плавный скролл (учитывает scale) ══════ */
-  function scrollToSection(link) {
+    function scrollToSection(e, link) {
     const href = link.getAttribute('href');
-    if (!href.startsWith('#')) return; // если это не якорь, ничего не делаем
-    
-    const targetId = href.substring(1);
-    const target = document.getElementById(targetId);
+    if (!href.startsWith('#')) return;      
+    e.preventDefault();                     
+
+    const target = document.getElementById(href.substring(1));
     if (!target) return;
-    
-    const rect = target.getBoundingClientRect();
-    const top = rect.top + window.scrollY;
+
+    const top = target.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
   }
 
-  function initAnchors() {
-    // якоря с onclick уже обработаны выше
-    // а обычные ссылки работают как обычно
-  }
   // ── Применение нужного режима ──
   function applyLayout() {
     if (!isMobile()) {
@@ -1954,10 +1959,15 @@
     });
   }, { passive: true });
 
-  MOBILE_QUERY.addEventListener('change', () => {
+    function onMediaChange() {
     applyLayout();
     if (!isMobile()) scalePage();
-  });
+  }
+  if (MOBILE_QUERY.addEventListener) {
+    MOBILE_QUERY.addEventListener('change', onMediaChange);
+  } else if (MOBILE_QUERY.addListener) {
+    MOBILE_QUERY.addListener(onMediaChange);
+  }
   </script>
 
 </body>
