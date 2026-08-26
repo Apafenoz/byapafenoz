@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кейс — сервис подбора психологов | APAFENOZ</title>
+  <meta name="description" content="Продуктовый кейс: мобильный сервис подбора психологов. Исследование, ЦА, персонажи, JTBD, user flow и дизайн-система.">
+  <link rel="icon" href="assets/images/favicon.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #0e0e0e;
+      --muted: #6f6f6f;
+      --line: #1a1a1a;
+      --line-soft: #cfcac0;
+      --bg: #e9e6ee;
+      --accent: #2A005E;
+      --mono: 'IBM Plex Mono', monospace;
+      /* палитра проекта (для секции дизайн-системы) */
+      --p-1: #5FC9C9;
+      --p-2: #4E9A9A;
+      --p-3: #2E6B6B;
+      --p-4: #14312E;
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--mono);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      cursor: none !important;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url('assets/images/bg-image.png');
+      background-size: cover; background-attachment: fixed;
+      mix-blend-mode: multiply; opacity: 0.5;
+      pointer-events: none; z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.28'/></svg>");
+      background-size: 180px 180px; mix-blend-mode: multiply; opacity: 0.5;
+      pointer-events: none; z-index: 0;
+    }
+
+    a { cursor: none !important; text-decoration: none; color: inherit; }
+    button { cursor: none !important; }
+
+    /* курсор */
+    .cursor-dot, .cursor-ring {
+      position: fixed; top: 0; left: 0; border-radius: 50%;
+      pointer-events: none; z-index: 10001; transform: translate(-50%, -50%);
+    }
+    .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
+    .cursor-ring {
+      width: 24px; height: 24px; border: 1.5px solid var(--accent); opacity: 0.6;
+      transition: width .25s, height .25s, opacity .25s;
+    }
+    .cursor-ring.hover { width: 40px; height: 40px; opacity: 1; }
+    @media (hover: none) {
+      body, a { cursor: auto; }
+      .cursor-dot, .cursor-ring { display: none; }
+    }
+
+    /* метки по углам */
+    .reg-mark { position: fixed; width: 22px; height: 22px; z-index: 50; pointer-events: none; opacity: 0.6; }
+    .reg-mark::before, .reg-mark::after { content: ''; position: absolute; background: var(--ink); }
+    .reg-mark::before { left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%); }
+    .reg-mark::after  { top: 50%; left: 0; height: 1px; width: 100%; transform: translateY(-50%); }
+    .reg-tl { top: 14px; left: 14px; } .reg-tr { top: 14px; right: 14px; }
+    .reg-bl { bottom: 14px; left: 14px; } .reg-br { bottom: 14px; right: 14px; }
+    @media (max-width: 768px) { .reg-mark { display: none; } }
+
+    /* шапка */
+    .hd {
+      position: sticky; top: 0; z-index: 100;
+      background: #e9e6ee; backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--line);
+      padding: 0 clamp(20px,5vw,60px); height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .hd-back {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink); transition: gap .2s; font-weight: 500;
+    }
+    .hd-back::before { content: '←'; font-size: 15px; }
+    .hd-back:hover { gap: 16px; }
+    .hd-meta { font-size: 10px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px,5vw,70px); position: relative; z-index: 1; }
+
+    /* микро-подпись секции */
+    .sec-tag {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 18px;
+    }
+    .sec-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .sec-tag .num { color: var(--accent); font-weight: 700; }
+    .sec-tag .rule { flex: 1; height: 1px; background: var(--line-soft); }
+
+    section { padding: clamp(40px,7vw,80px) 0; border-bottom: 1px dashed var(--line-soft); }
+    section:last-of-type { border-bottom: none; }
+
+    h2.title {
+      font-size: clamp(26px,5vw,48px); font-weight: 700; line-height: 1.05;
+      letter-spacing: -0.03em; text-transform: uppercase; margin-bottom: 24px;
+    }
+    h3.sub {
+      font-size: 13px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 12px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+    p.lead { font-size: 14px; line-height: 1.8; color: #333; max-width: 720px; }
+    p.body { font-size: 13px; line-height: 1.8; color: #444; max-width: 720px; }
+
+    /* HERO */
+    .hero { padding: clamp(70px,10vw,120px) 0 clamp(40px,6vw,70px); border-bottom: 1px dashed var(--line-soft); }
+    .hero h1 {
+      font-size: clamp(34px,8vw,84px); font-weight: 700; line-height: 0.95;
+      letter-spacing: -0.05em; text-transform: uppercase; margin-bottom: 22px;
+    }
+    .hero .tagline { font-size: 15px; line-height: 1.7; color: #333; max-width: 620px; font-style: italic; margin-bottom: 36px; }
+    .hero-meta {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 18px; border-top: 1px solid var(--line); padding-top: 22px;
+    }
+    .hero-meta .k { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .hero-meta .v { font-size: 13px; font-weight: 700; }
+    @media (max-width: 700px){ .hero-meta { grid-template-columns: 1fr 1fr; gap: 22px; } }
+
+    /* плейсхолдеры под картинки */
+    .ph {
+      border: 1px dashed var(--line);
+      background:
+        #e9e6ee;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 20px; position: relative;
+    }
+    .ph::before {
+      content: 'IMG'; position: absolute; top: 8px; left: 10px;
+      font-size: 8px; color: var(--accent); letter-spacing: 0.15em;
+    }
+    .ph.wide { aspect-ratio: 16 / 9; width: 100%; }
+    .ph.flow { aspect-ratio: 21 / 9; width: 100%; }
+
+    /* галерея телефонных экранов */
+       .screens {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 8px;
+    }
+    .screens-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 800px){ .screens-3 { grid-template-columns: 1fr 1fr; } }
+
+    /* компактная сетка экранов */
+    .screens-sm {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      max-width: 760px;
+    }
+    @media (max-width: 800px){ .screens-sm { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 500px){ .screens-sm { grid-template-columns: repeat(2, 1fr); } }
+        /* экраны телефона */
+        .screen-ph {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    /* картинка user flow */
+      .flow-img {
+      width: 100%;
+      display: block;
+    }
+    /* двухколоночная сетка */
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px,4vw,50px); align-items: start; }
+    @media (max-width: 800px){ .cols { grid-template-columns: 1fr; } }
+
+    /* список-факты */
+    .facts { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .facts li { font-size: 13px; line-height: 1.6; color: #333; padding-left: 18px; position: relative; }
+    .facts li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+    /* карточки персонажей */
+    .personas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    @media (max-width: 800px){ .personas { grid-template-columns: 1fr; } }
+    .persona {
+      border: 1px solid var(--line); background: #e9e6ee;
+      padding: 22px; position: relative;
+    }
+    .persona::before {
+      content: attr(data-n); position: absolute; top: 10px; right: 12px;
+      font-size: 9px; color: var(--muted); letter-spacing: 0.15em;
+    }
+    .persona .name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .persona .age { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 12px; }
+    .persona .desc { font-size: 12px; line-height: 1.7; color: #444; }
+
+    /* JTBD карточки */
+    .jtbd { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 800px){ .jtbd { grid-template-columns: 1fr; } }
+    .jtbd-card { border: 1px solid var(--line); padding: 20px; background: #e9e6ee; }
+    .jtbd-card .q { font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 10px; }
+    .jtbd-card .t { font-size: 13px; line-height: 1.6; color: #222; }
+
+      /* результаты / метрики */
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 12px; }
+    @media (max-width: 700px){ .metrics { grid-template-columns: 1fr; } }
+    .metric { border: 1px solid var(--line); padding: 22px; background: #e9e6ee; }
+    .metric .big { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+    .metric .lbl { font-size: 11px; color: #444; line-height: 1.5; }
+    
+/* примечание от автора */
+    .note {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      background: rgba(42,0,94,0.04);
+      padding: clamp(22px,3vw,34px);
+    }
+    .note-label {
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); font-weight: 700; margin-bottom: 14px;
+    }
+    .note p {
+      font-size: 13px; line-height: 1.9; color: #333; font-style: italic;
+      max-width: 760px;
+    }
+    .note-learn {
+      margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .note-learn-label {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+
+     .ft {
+      padding: 34px clamp(20px,5vw,60px); border-top: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px; position: relative; z-index: 1;
+    }
+    .ft-s { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .ft-info { display: flex; gap: 24px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+
+  <span class="reg-mark reg-tl"></span>
+  <span class="reg-mark reg-tr"></span>
+  <span class="reg-mark reg-bl"></span>
+  <span class="reg-mark reg-br"></span>
+
+  <header class="hd">
+    <a href="index.html" class="hd-back">На главную</a>
+    <span class="hd-meta">CASE · PRODUCT · MOBILE APP</span>
+  </header>
+
+  <div class="wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="sec-tag">
+        <span class="dot"></span><span class="num">N°00</span>
+        <span>product case / mobile</span>
+        <span class="rule"></span>
+        <span>2024</span>
+      </div>
+      <h1>Сервис<br>подбора<br>психологов</h1>
+      <p class="tagline">
+        Мобильное приложение, которое помогает подобрать психолога под запрос
+        и цену за несколько шагов — без долгого поиска и стеснения.
+      </p>
+      <div class="hero-meta">
+        <div><div class="k">Роль</div><div class="v">Product / UX-UI</div></div>
+        <div><div class="k">Платформа</div><div class="v">iOS / Android</div></div>
+        <div><div class="k">Год</div><div class="v">2024</div></div>
+        <div><div class="k">Этап</div><div class="v">Concept → UI</div></div>
+      </div>
+    </section>
+
+    <!-- ОБЗОР -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°01</span><span>overview / о проекте</span><span class="rule"></span></div>
+      <div class="cols">
+        <div>
+          <h2 class="title">О продукте</h2>
+          <p class="lead">
+            Люди откладывают обращение к психологу: непонятно, к кому идти,
+            сколько это стоит и с чего начать. Задача продукта — снять этот барьер
+            и довести человека от первого запроса до подобранного специалиста
+            за минимальное число шагов.
+          </p>
+        </div>
+        <div>
+          <h3 class="sub">Что я сделал</h3>
+          <ul class="facts">
+            <li>Определил ЦА и собрал персонажи</li>
+            <li>Сформулировал гипотезы и JTBD</li>
+            <li>Спроектировал user flow и информационную архитектуру</li>
+            <li>Разработал ключевые экраны и дизайн-систему</li>
+            <li>Упаковал решение в презентацию для стейкхолдеров</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПРОБЛЕМА + ЦА -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°02</span><span>problem / аудитория</span><span class="rule"></span></div>
+      <div class="cols">
+        <div>
+          <h3 class="sub">Проблема</h3>
+          <p class="body">
+            Барьер входа в терапию высокий: непрозрачные цены, страх «не того»
+            специалиста, отсутствие понятного первого шага. Из-за этого люди
+            с неостро выраженными проблемами не доходят до помощи.
+          </p>
+        </div>
+        <div>
+          <h3 class="sub">Целевая аудитория</h3>
+          <ul class="facts">
+            <li>Люди 20–50 лет, мужчины и женщины</li>
+            <li>География не имеет значения (онлайн)</li>
+            <li>Доход средний / выше среднего</li>
+            <li>Неостро выраженные психологические проблемы</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПЕРСОНАЖИ -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°03</span><span>personas / персонажи</span><span class="rule"></span></div>
+      <h2 class="title">Персонажи</h2>
+      <div class="personas">
+        <div class="persona" data-n="01">
+          <div class="name">Анна</div>
+          <div class="age">25 лет · маркетинг</div>
+          <div class="desc">Активна, часто в стрессе от конкуренции, недосыпа и напряжения. Ищет поддержку, чтобы научиться управлять эмоциями и стрессом.</div>
+        </div>
+        <div class="persona" data-n="02">
+          <div class="name">Дмитрий</div>
+          <div class="age">35 лет · предприниматель</div>
+          <div class="desc">Столкнулся с финансовыми проблемами в бизнесе. Ищет психолога, чтобы справиться с подавленностью и выстроить стратегию управления стрессом.</div>
+        </div>
+        <div class="persona" data-n="03">
+          <div class="name">Елена</div>
+          <div class="age">30 лет · мама двойняшек</div>
+          <div class="desc">Чувствует себя изнурённой и перегруженной уходом за детьми. Ищет помощь с чувством вины, стрессом и повышением самооценки.</div>
+        </div>
+        <div class="persona" data-n="04">
+          <div class="name">Алексей</div>
+          <div class="age">40 лет</div>
+          <div class="desc">Сталкивается с тревожностью и паническими атаками. Ищет поддержку и рабочие стратегии управления эмоциями и тревогой.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ИССЛЕДОВАНИЕ -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°04</span><span>research / гипотезы</span><span class="rule"></span></div>
+      <div class="cols">
+        <div>
+          <h2 class="title">Гипотезы</h2>
+          <p class="lead">
+            На основе персонажей я сформулировал продуктовые гипотезы —
+            что снизит барьер входа и доведёт человека до сессии.
+          </p>
+        </div>
+        <div>
+          <ul class="facts">
+            <li>Подбор по запросу и цене снижает страх «выбрать не того»</li>
+            <li>Прозрачные ценовые категории повышают конверсию в оплату</li>
+            <li>Короткий онбординг с подбором проблем ускоряет первый шаг</li>
+            <li>Возможность выбрать пол психолога повышает доверие</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- JTBD -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°05</span><span>jtbd / работа продукта</span><span class="rule"></span></div>
+      <h2 class="title">Jobs To Be Done</h2>
+      <div class="jtbd">
+        <div class="jtbd-card">
+          <div class="q">Когда…</div>
+          <div class="t">я чувствую стресс и не справляюсь сам</div>
+        </div>
+        <div class="jtbd-card">
+          <div class="q">Я хочу…</div>
+          <div class="t">быстро найти подходящего психолога под мой запрос и бюджет</div>
+        </div>
+        <div class="jtbd-card">
+          <div class="q">Чтобы…</div>
+          <div class="t">начать работу над собой без долгого поиска и стеснения</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USER FLOW -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°06</span><span>user flow / сценарий</span><span class="rule"></span></div>
+      <h2 class="title">User Flow</h2>
+      <p class="body" style="margin-bottom:24px">
+        От экрана загрузки — через онбординг и регистрацию — к подбору проблем,
+        предпочтениям и ценовой категории, и далее в главный экран и личный кабинет.
+      </p>
+      <!-- ЗАМЕНИ src на схему флоу -->
+            <img class="flow-img" src="assets/images/cases/psychology/flow.webp" alt="User Flow">
+    </section>
+
+        <!-- РЕШЕНИЕ / ЭКРАНЫ -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°07</span><span>solution / экраны</span><span class="rule"></span></div>
+      <h2 class="title">Решение</h2>
+
+      <p class="body" style="margin-bottom:8px">Онбординг и подбор</p>
+      <div class="screens">
+        <img class="screen-ph" src="assets/images/cases/psychology/onboarding.webp" alt="Онбординг">
+        <img class="screen-ph" src="assets/images/cases/psychology/problems.webp" alt="Подбор проблем">
+        <img class="screen-ph" src="assets/images/cases/psychology/preferences.webp" alt="Предпочтения">
+        <img class="screen-ph" src="assets/images/cases/psychology/price.webp" alt="Ценовая категория">
+      </div>
+
+      <p class="body" style="margin:34px 0 8px">Главный экран и кабинет</p>
+      <div class="screens">
+        <img class="screen-ph" src="assets/images/cases/psychology/main.webp" alt="Главный экран">
+        <img class="screen-ph" src="assets/images/cases/psychology/psychologist.webp" alt="Анкета психолога">
+        <img class="screen-ph" src="assets/images/cases/psychology/profile.webp" alt="Личный кабинет">
+        <img class="screen-ph" src="assets/images/cases/psychology/calendar.webp" alt="Календарь">
+      </div>
+    </section>
+
+       <!-- ДОПОЛНИТЕЛЬНЫЕ ЭКРАНЫ -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°08</span><span>screens / дополнительно</span><span class="rule"></span></div>
+      <h2 class="title">Другие экраны</h2>
+      <p class="body" style="margin-bottom:24px">
+        Остальные состояния и экраны продукта: вход, оплата, поддержка
+        и сопутствующие сценарии.
+      </p>
+      <div class="screens screens-sm">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-1.webp" alt="Экран 1">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-2.webp" alt="Экран 2">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-3.webp" alt="Экран 3">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-4.webp" alt="Экран 4">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-5.webp" alt="Экран 5">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-6.webp" alt="Экран 6">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-7.webp" alt="Экран 7">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-8.webp" alt="Экран 8">
+        <img class="screen-ph" src="assets/images/cases/psychology/screen-9.webp" alt="Экран 9">
+      </div>
+    </section>
+
+     <!-- ИТОГИ -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°09</span><span>outcome / итоги</span><span class="rule"></span></div>
+      <div class="cols">
+        <div>
+          <h2 class="title">Итоги</h2>
+          <p class="lead">
+            Собрал целостный концепт продукта: от аудитории и гипотез
+            до экранов и дизайн-системы, готовый к передаче в разработку
+            и проверке гипотез на пользователях.
+          </p>
+        </div>
+        <div>
+          <h3 class="sub">Что дальше</h3>
+          <ul class="facts">
+            <li>Юзабилити-тесты онбординга и подбора</li>
+            <li>Проверка конверсии в оплату по ценовым категориям</li>
+            <li>Расширение личного кабинета и календаря</li>
+          </ul>
+        </div>
+      </div>
+           <div class="metrics">
+        <div class="metric"><div class="big">5</div><div class="lbl">шагов онбординга до подбора психолога</div></div>
+        <div class="metric"><div class="big">4</div><div class="lbl">персонажа в основе продуктовых решений</div></div>
+        <div class="metric"><div class="big">1</div><div class="lbl">целостная дизайн-система на Work Sans</div></div>
+      </div>
+    </section>
+
+    <!-- ПРИМЕЧАНИЕ ОТ АВТОРА -->
+    <section>
+      <div class="sec-tag"><span class="dot"></span><span class="num">N°10</span><span>note / от автора</span><span class="rule"></span></div>
+      <div class="note">
+        <div class="note-label">от автора</div>
+        <p>
+          Я понимаю, что сервис подбора психологов — не самый сильный выбор для
+          продуктового кейса: ниша перегружена, а часть решений здесь скорее
+          учебные. Этот проект я делал прежде всего как тренировку — чтобы
+          разобрать методики UX-исследования, отработать построение user flow
+          и логику онбординга, проверить продуктовые гипотезы на практике.
+          Мне было важно не «изобрести рынок», а прокачать сам процесс
+          проектирования: от задачи до готовых экранов.
+        </p>
+        <div class="note-learn">
+          <div class="note-learn-label">Что забрал из проекта</div>
+          <ul class="facts">
+            <li>Построение user flow и информационной архитектуры с нуля</li>
+            <li>Формулирование гипотез и работа с JTBD</li>
+            <li>Сбор персонажей и связка решений с их задачами</li>
+            <li>Сборка единой дизайн-системы и переиспользуемых компонентов</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  
+  </div>
+
+  <footer class="ft">
+    <div class="ft-s">APAFENOZ — портфолио</div>
+    <div class="ft-info">
+      <span>SAFRONOV DENIS</span>
+      <span>ГРАФИЧЕСКИЙ / ВЕБ / ПРОДУКТ</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      if (window.matchMedia('(hover: none)').matches || window.innerWidth <= 600) return;
+      const dot  = document.querySelector('.cursor-dot');
+      const ring = document.querySelector('.cursor-ring');
+      if (!dot || !ring) return;
+      let mx=0, my=0, rx=0, ry=0;
+      window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+      (function anim(){ rx += (mx-rx)*0.18; ry += (my-ry)*0.18; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(anim); })();
+      document.addEventListener('mouseover', e => {
+        if (e.target.closest('a, .persona, .metric, .jtbd-card')) ring.classList.add('hover');
+        else ring.classList.remove('hover');
+      });
+    })();
+  </script>
+
+</body>
+</html>

@@ -96,6 +96,39 @@
     /* весь контент над лентой */
     .hd, .wrap, .ft { position: relative; z-index: 2; }
 
+    /* метки по углам */
+    .reg-mark { position: fixed; width: 22px; height: 22px; z-index: 50; pointer-events: none; opacity: 0.5; }
+    .reg-mark::before, .reg-mark::after { content: ''; position: absolute; background: var(--ink); }
+    .reg-mark::before { left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%); }
+    .reg-mark::after  { top: 50%; left: 0; height: 1px; width: 100%; transform: translateY(-50%); }
+    .reg-tl { top: 11px; left: 11px; } .reg-tr { top: 11px; right: 11px; }
+    .reg-bl { bottom: 11px; left: 11px; } .reg-br { bottom: 11px; right: 11px; }
+    @media (max-width: 768px) { .reg-mark { display: none; } }
+
+    /* рамка по периметру */
+    .frame {
+      position: fixed; inset: 22px; z-index: 40; pointer-events: none;
+      border: 1px solid var(--line);
+    }
+    @media (max-width: 768px){ .frame { display: none; } }
+
+    /* боковые вертикальные подписи */
+    .side-label {
+      position: fixed; z-index: 50; pointer-events: none;
+      font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--muted); opacity: 0.7;
+      writing-mode: vertical-rl;
+    }
+    .side-left  { left: 25px;  top: 50%; transform: translateY(-50%) rotate(180deg); }
+    .side-right { right: 25px; top: 50%; transform: translateY(-50%); color: var(--green-dark); }
+    @media (max-width: 900px){ .side-label { display: none; } }
+
+    /* серийный номер в шапке */
+    .hd-doc {
+      font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green-dark); font-weight: 700;
+    }
+
     /* ── ШАПКА ── */
     .hd {
       position: sticky; top: 0; z-index: 100;
@@ -113,6 +146,7 @@
     }
     .hd-back::before { content: '←'; font-size: 16px; }
     .hd-back:hover { gap: 16px; }
+    .hd-right { display: flex; align-items: center; gap: 16px; }
     .hd-meta { font-size: 11px; font-style: italic; color: var(--muted); letter-spacing: -0.02em; }
 
     /* ── ОБЁРТКА ── */
@@ -305,12 +339,25 @@
       .screen-ph { max-width: 280px; margin: 0 auto; }
       .screen-img { max-width: 280px; margin: 0 auto; }
       .ribbon { display: none; } /* на мобилке ленту прячем — чтобы не мешала */
+      .hd-doc { display: none; }
     }
   </style>
 </head>
-    <div class="cursor-dot"></div>
+
+  <body>
+
+  <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
-<body>
+
+  <span class="reg-mark reg-tl"></span>
+  <span class="reg-mark reg-tr"></span>
+  <span class="reg-mark reg-bl"></span>
+  <span class="reg-mark reg-br"></span>
+
+  <div class="frame"></div>
+
+  <span class="side-label side-left">APAFENOZ · CASE FILE</span>
+  <span class="side-label side-right">PRODUCT DESIGN · 2024</span>
 
   <!-- ЗЕЛЁНЫЕ ЛЕНТЫ-МАЗКИ (signature) -->
   <div class="ribbon ribbon-1"></div>
@@ -321,7 +368,10 @@
   <!-- ШАПКА -->
   <header class="hd">
     <a href="index.html" class="hd-back">На главную</a>
-    <span class="hd-meta">продуктовый дизайн · парк · 2024–2025</span>
+    <span class="hd-right">
+      <span class="hd-doc">DOC N°01 · REV.1</span>
+      <span class="hd-meta">продуктовый дизайн · парк · 2024–2025</span>
+    </span>
   </header>
 
   <div class="wrap">
