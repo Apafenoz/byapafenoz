@@ -1,214 +1,240 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Продуктовые кейсы | APAFENOZ</title>
-  <meta name="description" content="Продуктовые кейсы: UX/UI и продуктовый дизайн мобильных приложений и веб-сервисов.">
-  <link rel="icon" href="assets/images/favicon.webp" type="image/webp">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Продуктовые кейсы | APAFENOZ</title>
+<meta name="description" content="Продуктовые кейсы: UX/UI и продуктовый дизайн мобильных приложений и веб-сервисов.">
+<link rel="icon" href="assets/images/favicon.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    :root {
-      --ink: #0e0e0e;
-      --muted: #6f6f6f;
-      --line: #1a1a1a;
-      --line-soft: #cfcac0;
-     --bg: #e9e6ee;
-      --accent: #2A005E;
-      --mono: 'IBM Plex Mono', monospace;
-    }
+:root {
+  --ink: #0e0e0e;
+  --muted: #6f6f6f;
+  --line: #1a1a1a;
+  --line-soft: #cfcac0;
+  --bg: #e9e6ee;
+  --accent: #2A005E;
+  --mono: 'IBM Plex Mono', monospace;
+}
 
-    html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-    body {
-      font-family: var(--mono);
-      color: var(--ink);
-      background: var(--bg);
-      line-height: 1.6;
-      cursor: none !important;
-      overflow-x: hidden;
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+body {
+  font-family: var(--mono);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.6;
+  cursor: none !important;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url('assets/images/bg-image.png');
-      background-size: cover; background-attachment: fixed;
-      mix-blend-mode: multiply; opacity: 0.5;
-      pointer-events: none; z-index: 0;
-    }
- 
-    body::after {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.28'/></svg>");
-      background-size: 180px 180px; mix-blend-mode: multiply; opacity: 0.5;
-      pointer-events: none; z-index: 0;
-    }
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url('assets/images/bg-image.png');
+  background-size: cover; background-attachment: fixed;
+  mix-blend-mode: multiply; opacity: 0.5;
+  pointer-events: none; z-index: 0;
+}
 
-    a { cursor: none !important; text-decoration: none; color: inherit; }
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.28'/></svg>");
+  background-size: 180px 180px; mix-blend-mode: multiply; opacity: 0.5;
+  pointer-events: none; z-index: 0;
+}
 
-    /* курсор */
-    .cursor-dot, .cursor-ring {
-      position: fixed; top: 0; left: 0; border-radius: 50%;
-      pointer-events: none; z-index: 10001; transform: translate(-50%, -50%);
-    }
-    .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
-    .cursor-ring {
-      width: 24px; height: 24px; border: 1.5px solid var(--accent); opacity: 0.6;
-      transition: width .25s, height .25s, opacity .25s;
-    }
-    .cursor-ring.hover { width: 40px; height: 40px; opacity: 1; }
-    @media (hover: none) { body, a { cursor: auto; } .cursor-dot, .cursor-ring { display: none; } }
+a { cursor: none !important; text-decoration: none; color: inherit; }
 
-    /* метки по углам */
-    .reg-mark { position: fixed; width: 22px; height: 22px; z-index: 50; pointer-events: none; opacity: 0.6; }
-    .reg-mark::before, .reg-mark::after { content: ''; position: absolute; background: var(--ink); }
-    .reg-mark::before { left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%); }
-    .reg-mark::after  { top: 50%; left: 0; height: 1px; width: 100%; transform: translateY(-50%); }
-    .reg-tl { top: 14px; left: 14px; } .reg-tr { top: 14px; right: 14px; }
-    .reg-bl { bottom: 14px; left: 14px; } .reg-br { bottom: 14px; right: 14px; }
-    @media (max-width: 768px) { .reg-mark { display: none; } }
+/* курсор */
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0; border-radius: 50%;
+  pointer-events: none; z-index: 10001; transform: translate(-50%, -50%);
+}
+.cursor-dot { width: 8px; height: 8px; background: var(--accent); }
+.cursor-ring {
+  width: 24px; height: 24px; border: 1.5px solid var(--accent); opacity: 0.6;
+  transition: width .25s, height .25s, opacity .25s;
+}
+.cursor-ring.hover { width: 40px; height: 40px; opacity: 1; }
+@media (hover: none) { body, a { cursor: auto; } .cursor-dot, .cursor-ring { display: none; } }
 
-    /* шапка */
-    .hd {
-      position: sticky; top: 0; z-index: 100;
-      background: #e9e6ee; backdrop-filter: blur(6px);
-      border-bottom: 1px solid var(--line);
-      padding: 0 clamp(20px,5vw,60px); height: 52px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .hd-back {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--ink); transition: gap .2s; font-weight: 500;
-    }
-    .hd-back::before { content: '←'; font-size: 15px; }
-    .hd-back:hover { gap: 16px; }
-    .hd-meta { font-size: 10px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+/* метки по углам */
+.reg-mark { position: fixed; width: 22px; height: 22px; z-index: 50; pointer-events: none; opacity: 0.6; }
+.reg-mark::before, .reg-mark::after { content: ''; position: absolute; background: var(--ink); }
+.reg-mark::before { left: 50%; top: 0; width: 1px; height: 100%; transform: translateX(-50%); }
+.reg-mark::after  { top: 50%; left: 0; height: 1px; width: 100%; transform: translateY(-50%); }
+.reg-tl { top: 14px; left: 14px; } .reg-tr { top: 14px; right: 14px; }
+.reg-bl { bottom: 14px; left: 14px; } .reg-br { bottom: 14px; right: 14px; }
+@media (max-width: 768px) { .reg-mark { display: none; } }
 
-    .wrap { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 0 clamp(20px,5vw,70px); position: relative; z-index: 1; }
+/* шапка */
+.hd {
+  position: sticky; top: 0; z-index: 100;
+  background: #e9e6ee; backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 clamp(20px,5vw,60px); height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hd-back {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink); transition: gap .2s; font-weight: 500;
+}
+.hd-back::before { content: '←'; font-size: 15px; }
+.hd-back:hover { gap: 16px; }
+.hd-meta { font-size: 10px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
 
-    /* заголовок раздела */
-    .head { padding: clamp(50px,8vw,90px) 0 clamp(30px,4vw,50px); }
-    .sec-tag {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 18px;
-    }
-    .sec-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-    .sec-tag .num { color: var(--accent); font-weight: 700; }
-    .sec-tag .rule { flex: 1; height: 1px; background: var(--line-soft); }
-    .head h1 {
-      font-size: clamp(34px,8vw,80px); font-weight: 700; line-height: 0.95;
-      letter-spacing: -0.05em; text-transform: uppercase; margin-bottom: 18px;
-    }
-    .head p { font-size: 14px; line-height: 1.8; color: #333; max-width: 620px; font-style: italic; }
+.wrap { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 0 clamp(20px,5vw,70px); position: relative; z-index: 1; }
 
-    /* сетка кейсов */
-    .cases {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: clamp(20px,3vw,32px);
-      padding-bottom: clamp(50px,8vw,90px);
-    }
-    @media (max-width: 800px){ .cases { grid-template-columns: 1fr; } }
+/* заголовок раздела */
+.head { padding: clamp(50px,8vw,90px) 0 clamp(30px,4vw,50px); }
+.sec-tag {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 18px;
+}
+.sec-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.sec-tag .num { color: var(--accent); font-weight: 700; }
+.sec-tag .rule { flex: 1; height: 1px; background: var(--line-soft); }
+.head h1 {
+  font-size: clamp(34px,8vw,80px); font-weight: 700; line-height: 0.95;
+  letter-spacing: -0.05em; text-transform: uppercase; margin-bottom: 18px;
+}
+.head p { font-size: 14px; line-height: 1.8; color: #333; max-width: 620px; font-style: italic; }
 
-    .case {
-      position: relative;
-      border: 1px solid var(--line);
-      background: #ffffff;
-      overflow: hidden;
-      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
-      display: flex; flex-direction: column;
-    }
-    @media (hover: hover){
-      .case:hover { transform: translate(-3px,-3px); box-shadow: 7px 7px 0 rgba(42,0,94,0.12); border-color: var(--accent); }
-    }
-    .case-cover {
-      position: relative;
-      aspect-ratio: 16 / 10;
-      border-bottom: 1px solid var(--line);
-      background: #ffffff;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
-      overflow: hidden;
-    }
-    .case-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .case-num {
-      position: absolute; top: 10px; left: 12px;
-      font-size: 9px; color: var(--accent); letter-spacing: 0.15em; z-index: 2;
-    }
-    .case-body { padding: 22px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
-    .case-year { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
-    .case-title {
-      font-size: clamp(20px,3vw,26px); font-weight: 700; line-height: 1.05;
-      letter-spacing: -0.03em; text-transform: uppercase;
-    }
-    .case-desc { font-size: 12px; line-height: 1.7; color: #444; }
-    .case-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; padding-top: 6px; }
-    .case-tag {
-      font-size: 9px; padding: 4px 9px; border: 1px solid var(--line);
-      text-transform: uppercase; letter-spacing: 0.08em;
-    }
-    .case-cta {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--accent); font-weight: 700; margin-top: 4px;
-    }
-    .case-cta .arw { font-size: 14px; }
+/* сетка кейсов — горизонтальные карточки */
+.cases {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px,2.5vw,24px);
+  padding-bottom: clamp(50px,8vw,90px);
+}
 
-    /* карточка «скоро» */
-    .case.soon { opacity: 0.6; pointer-events: none; }
-    .case.soon .case-cta { color: var(--muted); }
+.case {
+  position: relative;
+  border: 1px solid var(--line);
+  background: #ffffff;
+  overflow: hidden;
+  transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  display: flex;
+  flex-direction: row; /* горизонтально */
+}
+@media (hover: hover){
+  .case:hover { transform: translate(-3px,-3px); box-shadow: 7px 7px 0 rgba(42,0,94,0.12); border-color: var(--accent); }
+}
 
-    .ft {
-      padding: 34px clamp(20px,5vw,60px); border-top: 1px solid var(--line);
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 20px; position: relative; z-index: 1;
-    }
-    .ft-s { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-    .ft-info { display: flex; gap: 24px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
-  </style>
+/* обложка — фиксированная ширина слева */
+.case-cover {
+  position: relative;
+  width: 360px;
+  flex: 0 0 360px;
+  border-right: 1px solid var(--line);
+  border-bottom: none; /* убираем нижнюю границу из вертикального варианта */
+  background: #ffffff;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  overflow: hidden;
+}
+.case-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.case-num {
+  position: absolute; top: 10px; left: 12px;
+  font-size: 9px; color: var(--accent); letter-spacing: 0.15em; z-index: 2;
+}
+
+/* контент — растягивается */
+.case-body {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+.case-year { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.case-title {
+  font-size: clamp(22px,2.5vw,30px); font-weight: 700; line-height: 1.0;
+  letter-spacing: -0.03em; text-transform: uppercase;
+}
+.case-desc { font-size: 12px; line-height: 1.7; color: #444; max-width: 540px; }
+.case-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+.case-tag {
+  font-size: 9px; padding: 4px 9px; border: 1px solid var(--line);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.case-cta {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); font-weight: 700; margin-top: 8px;
+}
+.case-cta .arw { font-size: 14px; transition: transform .2s; }
+.case:hover .case-cta .arw { transform: translateX(4px); }
+
+/* карточка «скоро» */
+.case.soon { opacity: 0.6; pointer-events: none; }
+.case.soon .case-cta { color: var(--muted); }
+
+/* адаптив: на узких экранах возвращаемся к вертикали */
+@media (max-width: 720px) {
+  .case { flex-direction: column; }
+  .case-cover {
+    width: 100%;
+    flex: none;
+    aspect-ratio: 16 / 9;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .case-body { padding: 20px; }
+}
+
+.ft {
+  padding: 34px clamp(20px,5vw,60px); border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px; position: relative; z-index: 1;
+}
+.ft-s { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.ft-info { display: flex; gap: 24px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+</style>
 </head>
 <body>
 
-  <div class="cursor-dot"></div>
-  <div class="cursor-ring"></div>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
 
-  <span class="reg-mark reg-tl"></span>
-  <span class="reg-mark reg-tr"></span>
-  <span class="reg-mark reg-bl"></span>
-  <span class="reg-mark reg-br"></span>
+<span class="reg-mark reg-tl"></span>
+<span class="reg-mark reg-tr"></span>
+<span class="reg-mark reg-bl"></span>
+<span class="reg-mark reg-br"></span>
 
-  <header class="hd">
-    <a href="index.html" class="hd-back">На главную</a>
-    <span class="hd-meta">CASES · PRODUCT / UX-UI</span>
-  </header>
+<header class="hd">
+<a href="index.html" class="hd-back">На главную</a>
+<span class="hd-meta">CASES · PRODUCT / UX-UI</span>
+</header>
 
-  <div class="wrap">
+<div class="wrap">
 
-    <div class="head">
-      <div class="sec-tag">
-        <span class="dot"></span><span class="num">N°00</span>
-        <span>cases / продуктовые кейсы</span>
-        <span class="rule"></span>
-        <span>2024 — 2025</span>
-      </div>
-      <h1>Продукт<br>и интерфейсы</h1>
-      <p>Проекты в UX/UI и продуктовом дизайне: от исследования и гипотез до экранов и дизайн-систем.</p>
-    </div>
+<div class="head">
+  <div class="sec-tag">
+    <span class="dot"></span><span class="num">N°00</span>
+    <span>cases / продуктовые кейсы</span>
+    <span class="rule"></span>
+    <span>2024 — 2025</span>
+  </div>
+  <h1>Продукт<br>и интерфейсы</h1>
+  <p>Проекты в UX/UI и продуктовом дизайне: от исследования и гипотез до экранов и дизайн-систем.</p>
+</div>
 
     <div class="cases">
-
-             <div class="cases">
 
       <!-- КЕЙС 1 — ПАРК -->
       <a class="case" href="case-product.html">
@@ -248,35 +274,71 @@
         </div>
       </a>
 
-    </div>
+      <!-- КЕЙС 3 — КАЛЕВАЛА (В РАЗРАБОТКЕ) -->
+      <div class="case soon">
+        <div class="case-cover">
+          <span class="case-num">03</span>
+          <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #6B3020 0%, #C4612F 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;">Скоро</div>
+        </div>
+        <div class="case-body">
+          <div class="case-year">2024</div>
+          <div class="case-title">Калевала — фестиваль карельского эпоса</div>
+          <div class="case-desc">Мобильное приложение для фестиваля, где нет сцены, касс и программы. Офлайн-карта, персонализация и единый визуальный язык из карельских орнаментов.</div>
+          <div class="case-tags">
+            <span class="case-tag">Mobile</span>
+            <span class="case-tag">UX/UI</span>
+            <span class="case-tag">Branding</span>
+            <span class="case-tag">Design System</span>
+          </div>
+          <div class="case-cta">В разработке <span class="arw">→</span></div>
+        </div>
+      </div>
+
+      <!-- КЕЙС 4 — HOTEL REVENUE MANAGEMENT (В РАЗРАБОТКЕ) -->
+      <div class="case soon">
+        <div class="case-cover">
+          <span class="case-num">04</span>
+          <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a1a 0%, #2A005E 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;">Скоро</div>
+        </div>
+        <div class="case-body">
+          <div class="case-year">2024 — 2025</div>
+          <div class="case-title">Hotel Revenue Management</div>
+          <div class="case-desc">B2B-платформа для управления доходами отеля: автоматизация ценообразования, прогнозы загрузки и аналитика конкурентов в одном дашборде.</div>
+          <div class="case-tags">
+            <span class="case-tag">Web</span>
+            <span class="case-tag">B2B</span>
+            <span class="case-tag">Dashboard</span>
+            <span class="case-tag">Product</span>
+          </div>
+          <div class="case-cta">В разработке <span class="arw">→</span></div>
+        </div>
+      </div>
 
     </div>
 
-  </div>
+<footer class="ft">
+<div class="ft-s">APAFENOZ — портфолио</div>
+<div class="ft-info">
+<span>SAFRONOV DENIS</span>
+<span>ГРАФИЧЕСКИЙ / ВЕБ / ПРОДУКТ</span>
+</div>
+</footer>
 
-  <footer class="ft">
-    <div class="ft-s">APAFENOZ — портфолио</div>
-    <div class="ft-info">
-      <span>SAFRONOV DENIS</span>
-      <span>ГРАФИЧЕСКИЙ / ВЕБ / ПРОДУКТ</span>
-    </div>
-  </footer>
-
-  <script>
-    (function () {
-      if (window.matchMedia('(hover: none)').matches || window.innerWidth <= 600) return;
-      const dot  = document.querySelector('.cursor-dot');
-      const ring = document.querySelector('.cursor-ring');
-      if (!dot || !ring) return;
-      let mx=0, my=0, rx=0, ry=0;
-      window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
-      (function anim(){ rx += (mx-rx)*0.18; ry += (my-ry)*0.18; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(anim); })();
-      document.addEventListener('mouseover', e => {
-        if (e.target.closest('a, .case')) ring.classList.add('hover');
-        else ring.classList.remove('hover');
-      });
-    })();
-  </script>
+<script>
+(function () {
+if (window.matchMedia('(hover: none)').matches || window.innerWidth <= 600) return;
+const dot  = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+if (!dot || !ring) return;
+let mx=0, my=0, rx=0, ry=0;
+window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+(function anim(){ rx += (mx-rx)*0.18; ry += (my-ry)*0.18; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(anim); })();
+document.addEventListener('mouseover', e => {
+if (e.target.closest('a, .case')) ring.classList.add('hover');
+else ring.classList.remove('hover');
+});
+})();
+</script>
 
 </body>
 </html>
