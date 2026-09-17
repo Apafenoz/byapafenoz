@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D лента</title>
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { overflow: hidden; background: #000; }
+
+  #ribbon-stage {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+  #ribbon-stage canvas { display: block; }
+</style>
+</head>
+<body>
+
+<div id="ribbon-stage"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* ══════════════════════════════════════════════════════════
+   1. СЦЕНА
+   ══════════════════════════════════════════════════════════ */
+const stage = document.getElementById('ribbon-stage');
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+scene.fog = new THREE.Fog(0x000000, 34, 110);
+
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 400);
+camera.position.set(0, 0.5, 16);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+stage.appendChild(renderer.domElement);
+
+/* ══════════════════════════════════════════════════════════
+   2. СВЕТ — ровный со всех сторон
+   ══════════════════════════════════════════════════════════ */
+scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+
+const lightFront = new THREE.DirectionalLight(0xffffff, 0.45);
+lightFront.position.set(0, 0, 12);
+scene.add(lightFront);
+
+const lightLeft = new THREE.DirectionalLight(0xffffff, 0.35);
+lightLeft.position.set(-10, 3, 4);
+scene.add(lightLeft);
+
+const lightRight = new THREE.DirectionalLight(0xffffff, 0.35);
+lightRight.position.set(10, -3, 4);
+scene.add(lightRight);
+
+const lightTop = new THREE.DirectionalLight(0xffffff, 0.30);
+lightTop.position.set(0, 10, 0);
+scene.add(lightTop);
+
+const lightBottom = new THREE.DirectionalLight(0xffffff, 0.25);
+lightBottom.position.set(0, -10, 0);
+scene.add(lightBottom);
+
+/* ══════════════════════════════════════════════════════════
+   3. ТЕКСТУРА — картинка-паттерн на ленте
+   ══════════════════════════════════════════════════════════ */
+
+/* Путь относительно wave.html. НА GITHUB ВАЖЕН РЕГИСТР! */
+const RIBBON_IMAGE_URL = 'assets/images/cases/kalevala/patternwave.webp';
+
+/* Сколько раз паттерн повторяется по длине ленты */
+const PATTERN_REPEAT = 5;
+
+/* Разрешение текстуры по высоте. 512 = хорошо, 1024 = резче */
+const TEX_HEIGHT = 512;
+
+let ribbonTex = null;
+let glowTex   = null;
+
+function makeRibbonTexture() {
+  const cvs = document.createElement('canvas');
+  cvs.width  = TEX_HEIGHT;
+  cvs.height = TEX_HEIGHT;
+  const ctx = cvs.getContext('2d');
+
+  // светлая подложка, чтобы лента не была чёрной до загрузки картинки
+  ctx.fillStyle = '#f2f2f2';
+  ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+  const tex = new THREE.CanvasTexture(cvs);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  tex.repeat.set(PATTERN_REPEAT, 1);
+
+  const img = new Image();
+  img.crossOrigin = 'anonymous';   // для GitHub Pages — правильно и безопасно
+
+  img.onload = () => {
+    // канвас по пропорциям картинки
+    const ratio = img.height / img.width;
+    const h = TEX_HEIGHT;
+    const w = Math.round(h / ratio);
+
+    cvs.width  = w;
+    cvs.height = h;
+    ctx.clearRect(0, 0, w, h);
+
+    // растягиваем картинку на весь канвас
+    ctx.drawImage(img, 0, 0, w, h);
+
+    tex.image = cvs;
+    tex.needsUpdate = true;
+  };
+
+  img.onerror = () => {
+    console.error('Не загрузилась картинка:', RIBBON_IMAGE_URL);
+  };
+
+  img.src = RIBBON_IMAGE_URL;
+
+  return tex;
+}
+
+/* Свечение — сейчас пустое. Если нужен ореол вокруг паттерна,
+   рисуй его сюда тем же способом. */
+function makeGlowTexture() {
+  const size = TEX_HEIGHT;
+  const cvs = document.createElement('canvas');
+  cvs.width = size; cvs.height = size;
+  const ctx = cvs.getContext('2d');
+
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, size, size);
+
+  const tex = new THREE.CanvasTexture(cvs);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.repeat.set(PATTERN_REPEAT, 1);
+  return tex;
+}
+
+ribbonTex = makeRibbonTexture();
+glowTex   = makeGlowTexture();
+/* ══════════════════════════════════════════════════════════
+   4. МАТЕРИАЛ
+   ══════════════════════════════════════════════════════════ */
+const ribbonMat = new THREE.MeshStandardMaterial({
+  map: ribbonTex,
+  emissiveMap: glowTex,
+  emissive: new THREE.Color(0xffffff),
+  emissiveIntensity: 0.30,
+  metalness: 0.0,
+  roughness: 0.92,
+  side: THREE.DoubleSide,
+});
+
+const edgeMat = new THREE.MeshStandardMaterial({
+  color: 0xdadada,
+  metalness: 0.0,
+  roughness: 0.95,
+  side: THREE.DoubleSide,
+});
+
+/* ══════════════════════════════════════════════════════════
+   5. ФОРМА ЛЕНТЫ
+   ══════════════════════════════════════════════════════════ */
+const WIDTH     = 1.1;
+const THICKNESS = 0.08;
+const SEGMENTS  = 1600;
+const CROWN     = 0.35;
+
+function ribbonCurve(t) {
+  const u = t * Math.PI * 2;
+
+  const x = (t - 0.5) * 30
+          + Math.sin(u * 1.0) * 6.0
+          + Math.sin(u * 2.3 + 0.8) * 2.2;
+
+  const y = Math.sin(u * 1.6 - 0.5) * 4.5
+          + Math.cos(u * 0.7) * 2.0;
+
+  const z = Math.cos(u * 1.15) * 7.5
+          - Math.sin(u * 0.6) * 3.0;
+
+  return new THREE.Vector3(x, y, z);
+}
+
+/* ══════════════════════════════════════════════════════════
+   6. СБОРКА
+   ══════════════════════════════════════════════════════════ */
+function buildRibbon() {
+  const EPS = 1e-6;
+
+  const pts = [];
+  for (let i = 0; i <= SEGMENTS; i++) pts.push(ribbonCurve(i / SEGMENTS));
+
+  const tangents = [];
+  for (let i = 0; i <= SEGMENTS; i++) {
+    const a = pts[Math.max(0, i - 1)];
+    const b = pts[Math.min(SEGMENTS, i + 1)];
+    const t = new THREE.Vector3().subVectors(b, a);
+    if (t.lengthSq() < EPS) t.set(1, 0, 0);
+    tangents.push(t.normalize());
+  }
+
+  const normals = [];
+  let n0 = new THREE.Vector3(0, 1, 0);
+  if (Math.abs(n0.dot(tangents[0])) > 0.9) n0.set(1, 0, 0);
+  n0.sub(tangents[0].clone().multiplyScalar(n0.dot(tangents[0]))).normalize();
+  normals.push(n0);
+
+  for (let i = 1; i <= SEGMENTS; i++) {
+    const tPrev = tangents[i - 1];
+    const tCurr = tangents[i];
+    const nPrev = normals[i - 1].clone();
+
+    const axis = new THREE.Vector3().crossVectors(tPrev, tCurr);
+    const sin = axis.length();
+    const cos = THREE.MathUtils.clamp(tPrev.dot(tCurr), -1, 1);
+
+    if (sin > EPS) {
+      const angle = Math.atan2(sin, cos);
+      axis.divideScalar(sin);
+      nPrev.applyAxisAngle(axis, angle);
+    }
+
+    nPrev.sub(tCurr.clone().multiplyScalar(nPrev.dot(tCurr))).normalize();
+    normals.push(nPrev);
+  }
+
+  const arc = new Float32Array(SEGMENTS + 1);
+  let total = 0;
+  for (let i = 1; i <= SEGMENTS; i++) {
+    total += pts[i].distanceTo(pts[i - 1]);
+    arc[i] = total;
+  }
+
+  const frontPos = [], frontNor = [], frontUv = [];
+  const backPos  = [], backNor  = [], backUv  = [];
+  const edgePos  = [], edgeNor  = [], edgeUv  = [];
+  const frontIdx = [], backIdx  = [], edgeIdx  = [];
+
+  for (let i = 0; i <= SEGMENTS; i++) {
+    const p    = pts[i];
+    const tan  = tangents[i];
+    const baseNor = normals[i];
+    const bin  = new THREE.Vector3().crossVectors(tan, baseNor).normalize();
+
+    const s = arc[i] / total;
+
+    const twist = s * Math.PI * 2 * 0.35;
+
+    const cs = Math.cos(twist);
+    const sn = Math.sin(twist);
+
+    const nx = baseNor.x * cs + bin.x * sn;
+    const ny = baseNor.y * cs + bin.y * sn;
+    const nz = baseNor.z * cs + bin.z * sn;
+
+    const edgeFactor = 1 - Math.abs(cs);
+    const widthBoost = 1 + edgeFactor * edgeFactor * 0.35;
+    const hw = WIDTH * 0.5 * widthBoost;
+
+    const bx = bin.x * cs - baseNor.x * sn;
+    const by = bin.y * cs - baseNor.y * sn;
+    const bz = bin.z * cs - baseNor.z * sn;
+
+    const ht = THICKNESS * 0.5;
+
+    const lx = p.x - nx * hw, ly = p.y - ny * hw, lz = p.z - nz * hw;
+    const rx = p.x + nx * hw, ry = p.y + ny * hw, rz = p.z + nz * hw;
+
+    frontPos.push(lx + bx*ht, ly + by*ht, lz + bz*ht);
+    frontPos.push(rx + bx*ht, ry + by*ht, rz + bz*ht);
+
+    backPos.push(lx - bx*ht, ly - by*ht, lz - bz*ht);
+    backPos.push(rx - bx*ht, ry - by*ht, rz - bz*ht);
+
+    edgePos.push(lx + bx*ht, ly + by*ht, lz + bz*ht);
+    edgePos.push(lx - bx*ht, ly - by*ht, lz - bz*ht);
+    edgePos.push(rx + bx*ht, ry + by*ht, rz + bz*ht);
+    edgePos.push(rx - bx*ht, ry - by*ht, rz - bz*ht);
+
+    const lNorm = new THREE.Vector3(-nx, -ny, -nz);
+    const rNorm = new THREE.Vector3( nx,  ny,  nz);
+    const bVec  = new THREE.Vector3( bx,  by,  bz);
+
+    const lf = lNorm.clone().multiplyScalar(0.72)
+                     .add(bVec.clone().multiplyScalar(CROWN)).normalize();
+    const rf = rNorm.clone().multiplyScalar(0.72)
+                     .add(bVec.clone().multiplyScalar(CROWN)).normalize();
+    const lb = lNorm.clone().multiplyScalar(0.72)
+                     .add(bVec.clone().multiplyScalar(-CROWN)).normalize();
+    const rb = rNorm.clone().multiplyScalar(0.72)
+                     .add(bVec.clone().multiplyScalar(-CROWN)).normalize();
+
+    frontNor.push(lf.x, lf.y, lf.z,  rf.x, rf.y, rf.z);
+    backNor.push( lb.x, lb.y, lb.z,  rb.x, rb.y, rb.z);
+
+    edgeNor.push(
+      lNorm.x, lNorm.y, lNorm.z,  lNorm.x, lNorm.y, lNorm.z,
+       rNorm.x, rNorm.y, rNorm.z,  rNorm.x, rNorm.y, rNorm.z
+    );
+
+    frontUv.push(s, 0, s, 1);
+    backUv.push(s, 0, s, 1);
+    edgeUv.push(s, 1, s, 0, s, 1, s, 0);
+
+    if (i < SEGMENTS) {
+      const a = i * 2, b = i * 2 + 1;
+      const c = (i + 1) * 2, d = (i + 1) * 2 + 1;
+
+      frontIdx.push(a, c, b, b, c, d);
+      backIdx.push(a, b, c, b, d, c);
+
+      const e0 = i * 4, e1 = i * 4 + 1, e2 = i * 4 + 2, e3 = i * 4 + 3;
+      const f0 = (i + 1) * 4, f1 = (i + 1) * 4 + 1, f2 = (i + 1) * 4 + 2, f3 = (i + 1) * 4 + 3;
+
+      edgeIdx.push(e0, f0, e1, e1, f0, f1);
+      edgeIdx.push(e2, e3, f2, e3, f3, f2);
+    }
+  }
+
+  const group = new THREE.Group();
+
+  const frontGeo = new THREE.BufferGeometry();
+  frontGeo.setAttribute('position', new THREE.Float32BufferAttribute(frontPos, 3));
+  frontGeo.setAttribute('normal',   new THREE.Float32BufferAttribute(frontNor, 3));
+  frontGeo.setAttribute('uv',       new THREE.Float32BufferAttribute(frontUv, 2));
+  frontGeo.setIndex(frontIdx);
+  group.add(new THREE.Mesh(frontGeo, ribbonMat));
+
+  const backGeo = new THREE.BufferGeometry();
+  backGeo.setAttribute('position', new THREE.Float32BufferAttribute(backPos, 3));
+  backGeo.setAttribute('normal',   new THREE.Float32BufferAttribute(backNor, 3));
+  backGeo.setAttribute('uv',       new THREE.Float32BufferAttribute(backUv, 2));
+  backGeo.setIndex(backIdx);
+  group.add(new THREE.Mesh(backGeo, ribbonMat));
+
+  const edgeGeo = new THREE.BufferGeometry();
+  edgeGeo.setAttribute('position', new THREE.Float32BufferAttribute(edgePos, 3));
+  edgeGeo.setAttribute('normal',   new THREE.Float32BufferAttribute(edgeNor, 3));
+  edgeGeo.setAttribute('uv',       new THREE.Float32BufferAttribute(edgeUv, 2));
+  edgeGeo.setIndex(edgeIdx);
+  group.add(new THREE.Mesh(edgeGeo, edgeMat));
+
+  return group;
+}
+
+const ribbon = buildRibbon();
+scene.add(ribbon);
+
+/* ══════════════════════════════════════════════════════════
+   6b. МЯГКАЯ ТЕНЬ ПОД ЛЕНТОЙ
+   ══════════════════════════════════════════════════════════ */
+function makeShadowTexture() {
+  const size = 512;
+  const cvs = document.createElement('canvas');
+  cvs.width = size;
+  cvs.height = size;
+  const ctx = cvs.getContext('2d');
+
+  ctx.filter = 'blur(100px)';
+
+  const g = ctx.createRadialGradient(
+    size / 2, size / 2, 0,
+    size / 2, size / 2, size / 2
+  );
+  g.addColorStop(0.00, 'rgba(0, 0, 0, 0.22)');
+  g.addColorStop(0.55, 'rgba(0, 0, 0, 0.12)');
+  g.addColorStop(0.85, 'rgba(0, 0, 0, 0.04)');
+  g.addColorStop(1.00, 'rgba(0, 0, 0, 0.00)');
+
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, size, size);
+
+  const tex = new THREE.CanvasTexture(cvs);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+const shadowPlane = new THREE.Mesh(
+  new THREE.PlaneGeometry(110, 60),
+  new THREE.MeshBasicMaterial({
+    map: makeShadowTexture(),
+    transparent: true,
+    opacity: 0.85,
+    depthWrite: false,
+  })
+);
+shadowPlane.rotation.x = -Math.PI / 2;
+shadowPlane.position.set(0, -6.5, -2);
+shadowPlane.renderOrder = -1;
+scene.add(shadowPlane);
+
+/* ══════════════════════════════════════════════════════════
+   7. РЕСАЙЗ
+   ══════════════════════════════════════════════════════════ */
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* ══════════════════════════════════════════════════════════
+   8. АНИМАЦИЯ
+   ══════════════════════════════════════════════════════════ */
+const clock = new THREE.Clock();
+const TEXT_SPEED = 0.06;
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const t = clock.getElapsedTime();
+
+  // паттерн едет по ленте
+ribbonTex.offset.x = (t * TEXT_SPEED) % 1;
+
+  ribbon.rotation.z = Math.sin(t * 0.28) * 0.018;
+  ribbon.rotation.x = Math.sin(t * 0.21) * 0.012;
+
+  ribbonMat.emissiveIntensity = 0.30 + Math.sin(t * 0.7) * 0.05;
+
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
+</body>
+</html>
