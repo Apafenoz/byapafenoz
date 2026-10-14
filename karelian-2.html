@@ -23,8 +23,8 @@
   --muted:  #6B5B45;
   --bg:     #FAFAF8;
   --bg2:    #F0EDE8;
-  --red:    #FE221F;
-  --blue:   #2A4A8C;
+  --red:    #2A4A8C;
+  --blue:   #FE221F;
   --yellow: #D4900A;
   --brown:  #6B3020;
   --line:   #DDD4C4;
@@ -114,8 +114,7 @@ body {
 .branch-bg { position: fixed; top: -20%; left: 0; right: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.08; object-fit: cover; }
 body > section, body > div.divider, body > footer, body > .merch-section, body > .generator-section, body > .norman-section, body > .final-note, body > .ribbon-ps, body > .rune-reward-banner { position: relative; z-index: 1; }
 
-.section { padding: clamp(80px, 10vw, 140px) clamp(24px, 6vw, 80px); max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
-.reveal { opacity: 0; transform: translateY(36px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.section { padding: clamp(80px, 10vw, 140px) clamp(24px, 6vw, 80px); max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }.reveal { opacity: 0; transform: translateY(24px); transition: opacity .45s var(--ease), transform .45s var(--ease); }
 .reveal.is-visible { opacity: 1; transform: translateY(0); }
 .reveal.delay-1 { transition-delay: .1s; }
 .reveal.delay-2 { transition-delay: .2s; }
@@ -129,6 +128,17 @@ body > section, body > div.divider, body > footer, body > .merch-section, body >
 .section-head .line { flex: 1; height: 1px; background: var(--line); }
 .section-title { font-family: var(--mono); font-size: clamp(32px, 6vw, 64px); font-weight: 700; letter-spacing: -0.04em; text-transform: uppercase; line-height: 0.95; margin-bottom: 32px; }
 .section-title .accent { color: var(--red); }
+
+.section-body { font-size: 16px; line-height: 1.7; color: var(--muted); max-width: 680px; }
+
+/* текст слева + плашка справа (тёмная секция N°04) */
+.merch-split { display: grid; grid-template-columns: minmax(0, 640px) auto; gap: clamp(32px, 5vw, 80px); align-items: center; margin-top: 64px; }
+.merch-split h3 { margin: 0 0 16px; }
+.merch-split .plaque { margin: 0; max-width: 420px; }
+@media (max-width: 900px) {
+  .merch-split { grid-template-columns: 1fr; }
+  .merch-split .plaque { margin-top: 32px; }
+}
 
 .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 80px); margin-top: 40px; }
 @media (max-width: 900px) { .two-columns { grid-template-columns: 1fr; gap: 40px; } }
@@ -147,7 +157,8 @@ body > section, body > div.divider, body > footer, body > .merch-section, body >
 .case-passport { display: flex; flex-wrap: wrap; gap: 12px 32px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
 .case-passport strong { color: var(--red); font-weight: 700; margin-right: 6px; }
 
-.plaque { display: inline-block; margin: 40px 0 0; padding: 20px 24px; max-width: 500px; background: var(--bg); border: 2px solid var(--ink); border-radius: 4px; box-shadow: 6px 6px 0 var(--red); font-family: var(--text); font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--ink); rotate: -1.5deg; position: relative; }
+.plaque { display: inline-block; margin: 40px 72px 36px 0; padding: 20px 24px; max-width: 500px; background: var(--bg); border: 2px solid var(--ink); border-radius: 4px; box-shadow: 6px 6px 0 var(--red); font-family: var(--text); font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--ink); rotate: -1.5deg; position: relative; }
+@media (max-width: 900px) { .plaque { margin-right: 0; } }
 .plaque::before { content: '❋'; position: absolute; top: -14px; left: -14px; width: 28px; height: 28px; background: var(--red); color: var(--bg); border-radius: 50%; display: grid; place-items: center; font-size: 14px; }
 .plaque.alt { rotate: 1.2deg; box-shadow: 6px 6px 0 var(--yellow); }
 .plaque.alt::before { background: var(--yellow); color: var(--ink); }
@@ -262,9 +273,8 @@ body > section, body > div.divider, body > footer, body > .merch-section, body >
 .merch-item:nth-child(4) { grid-column: span 2; grid-row: span 2; }
 .merch-item:nth-child(7), .merch-item:nth-child(8), .merch-item:nth-child(12) { grid-column: span 2; grid-row: span 1; }
 .merch-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease); transform: perspective(800px) rotateY(-3deg) rotateX(2deg); }
-.merch-item:hover img { transform: perspective(800px) rotateY(0deg) rotateX(0deg) scale(1.03); }
-.merch-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; justify-content: flex-start; padding: 24px; opacity: 0; transition: opacity .4s var(--ease); }
-.merch-item:hover .merch-overlay { opacity: 1; }
+.merch-item:hover img { transform: perspective(800px) rotateY(0deg) rotateX(0deg) scale(1.06); }
+.merch-overlay { display: none; }
 .merch-overlay-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(250,250,248,0.95); font-weight: 500; }
 @media (max-width: 1200px) {
   .merch-grid { grid-template-columns: repeat(3, 1fr); }
@@ -315,14 +325,9 @@ body > section, body > div.divider, body > footer, body > .merch-section, body >
 .norman-card.level-behavioral .norman-example { border-left-color: var(--yellow); }
 .norman-card.level-reflective .norman-example { border-left-color: var(--blue); }
 
-.final-note { margin-top: 80px; padding: 48px clamp(24px, 6vw, 80px); background: var(--bg2); border-left: 4px solid var(--red); }
-.final-note-inner { max-width: 1400px; margin: 0 auto; }
-.final-note p { font-size: clamp(18px, 2.5vw, 24px); line-height: 1.5; color: var(--ink); font-weight: 600; }
-.final-note::before { content: 'Главный вывод'; display: block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); font-style: normal; font-weight: 700; margin-bottom: 16px; }
-
 .ribbon-ps { max-width: 1400px; margin: 40px auto 0; text-align: center; font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.7; padding: 0 24px; }
 
-.site-footer { padding: clamp(40px, 5vw, 60px) clamp(24px, 6vw, 80px); padding-bottom: 120px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 32px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); position: relative; z-index: 1; background: var(--bg) !important; max-width: 1400px; margin: 0 auto; box-sizing: border-box; }
+.site-footer { padding: clamp(40px, 5vw, 60px) clamp(24px, 6vw, 80px); padding-bottom: 120px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 32px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); position: relative; z-index: 1; }
 .site-footer > * { white-space: nowrap; }
 @media (max-width: 700px) { .site-footer { gap: 16px; padding-bottom: 100px; } }
 
@@ -390,7 +395,7 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
   <div class="hero-sup" id="hsup">Фестиваль карельского эпоса</div>
   <img id="htitle" src="assets/images/cases/kalevala/logo-main.svg" alt="Калевала" class="hero-logo-img">
   <div class="hero-line" id="hline"></div>
-  <p class="hero-sub" id="hsub"></p>
+  <p class="hero-sub" id="hsub">Навигационная система для фестиваля, где телефон — последнее средство</p>
   <div class="hero-cta" id="hcta">
     <a href="cases.html" class="magnetic secondary"><span class="mag-inner">Назад</span></a>
   </div>
@@ -404,42 +409,23 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 <span class="line"></span>
 </div>
 
-<div class="case-passport reveal">
-<span><strong>Проект</strong> Фестиваль карельского эпоса в лесу</span>
-<span><strong>Роль</strong> Графический и продуктовый дизайнер</span>
-<span><strong>Срок</strong> 6 месяцев</span>
-<span><strong>Результат</strong> 8 экранов офлайн-приложения, 28 элементов мерча, один язык от иконки до баннера</span>
-</div>
 
-<h2 class="section-title reveal">Лес есть, а <span class="accent">инструкции к нему нет</span></h2>
+<h2 class="section-title reveal">Лес есть, а <span class="accent">телефон в нём не работает</span></h2>
 
 <div class="two-columns">
   <div class="col-block reveal delay-1">
-    <p>Представь: три дня в карельском лесу. Две тысячи человек. Костры, сказители, музыка. Свобода — это круто.</p>
-    <p>Пока ты не стоишь посреди леса с лицом человека, который случайно вышел не туда.</p>
+    <p>Три дня в карельском лесу. Две тысячи человек приехали сюда специально, чтобы выключить голову и забыть про экран.</p>
+    <p>Последнее, что им нужно — это ещё одно приложение, которое тянет их обратно в телефон.</p>
   </div>
   <div class="col-block reveal delay-2">
-    <p>Афиши живут своей жизнью. Указатели рисуются маркером. Официальное сообщение легко перепутать с творчеством человека, которому просто дали фломастер.</p>
-    <p>И тут появляется финальный уровень сложности: <strong>мобильного интернета нет вообще.</strong> Не «ловит через раз». Просто нет.</p>
+    <p>Навигация на фестивале — разрозненная. Афиши живут своей жизнью, указатели рисуются маркером, волонтёры отвечают на один и тот же вопрос 47 раз в день.</p>
+    <p>А интернета нет совсем. Не «плохо ловит» — <strong>его здесь физически нет.</strong></p>
   </div>
 </div>
 
-<div class="plaque reveal delay-2">Карты не грузятся. QR-коды грустят. Онлайн-гиды отправились в отпуск.</div>
+<div class="plaque reveal delay-2">QR-коды на указателях ведут в никуда. Любая «дешёвая» цифровая альтернатива в лесу ломается.</div>
 
-<div class="facts-grid" style="margin-top: 48px;">
-<div class="fact-item reveal delay-1">
-<div class="fact-num">3 дня</div>
-<p class="fact-text">В лесной зоне Карелии<em>Без цивилизации и связи</em></p>
-</div>
-<div class="fact-item reveal delay-2">
-<div class="fact-num">~2000</div>
-<p class="fact-text">Человек в год<em>И все спрашивают «где что?»</em></p>
-</div>
-<div class="fact-item reveal delay-3">
-<div class="fact-num">0%</div>
-<p class="fact-text">Мобильного интернета<em>Не «плохой ловит» — нет совсем</em></p>
-</div>
-</div>
+
 
 <p class="section-body reveal delay-2" style="margin-top: 48px; max-width: 800px; font-size: 18px;">
 Нужно было сделать систему, которая помогает ориентироваться, но не превращает фестиваль свободы в экскурсию с табличкой «группа номер три, идём за мной».
@@ -465,21 +451,14 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
   </div>
 </div>
 
-<div class="plaque alt reveal delay-2">Орнамент 2.0. Changelog: перенесли в цифру, пофиксили баги с навигацией.</div>
+<div class="plaque alt reveal delay-1" style="max-width: 560px;">
+  <strong>Почему не app-first.</strong> Если фестиваль идет не неделю, LTV нулевой, гости приехали выключить телефон. Делать полноценное приложение экономический не выгодно. Поэтому главный канал навигации - физический: указатели с орнаментами, браслеты и тд. Приложение — опциональный компаньон для тех 15–20%, кто скачал его заранее, дома, на Wi-Fi.
+</div>
 
-<h3 style="font-family: var(--mono); font-size: 14px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 64px;" class="reveal delay-1">Как это шло, если коротко</h3>
-<ul class="about-list reveal delay-2">
-<li><strong>Исследование.</strong> Смотрел вышивку, резьбу, роспись. Палитру забрал из леса: мох, камень, кора, вода.</li>
-<li><strong>Подсмотрел у соседей.</strong> Glastonbury и Lollapalooza показали масштаб. Но у них интернет работает — а у нас нет.</li>
-<li><strong>Перевёл орнамент в цифру.</strong> Паттерны стали иконками, ритм — сетками и иерархией.</li>
-<li><strong>Проверил масштабом.</strong> Работает в 16 пикселей и в три метра — система. Только на мониторе — макет.</li>
-<li><strong>Собрал приложение.</strong> 8 экранов, 14 МБ, всё офлайн.</li>
-<li><strong>Связал всё воедино.</strong> Приложение, указатели, браслеты, мерч — один язык.</li>
-</ul>
 
 <div class="has-rune" style="margin-top: 80px; position: relative;">
 <div class="rune" data-rune="2" onclick="findRune(this)" style="top: 12px; right: 12px;">ᚦ</div>
-<h3 style="font-family: var(--mono); font-size: 16px; font-weight: 700; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.1em;" class="reveal">Визуальный язык из фольклора</h3>
+<h3 style="font-family: var(--mono); font-size: 16px; font-weight: 700; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.1em;" class="reveal">Визуальный язык</h3>
 <div class="patterns-grid reveal delay-1">
 <div class="pattern-item"><img src="assets/images/cases/kalevala/pattern-3d-blue.webp" alt=""></div>
 <div class="pattern-item"><img src="assets/images/cases/kalevala/pattern-3d-yellow.webp" alt=""></div>
@@ -529,8 +508,7 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 </div>
 <h2 class="section-title reveal">Твой <span class="accent">карельский орнамент</span></h2>
 <p class="section-body reveal delay-1">
-Тест из пяти дурацких вопросов. Система собирает тебе личный узор и объясняет, кто ты: Костровой, Сказитель, Тихий Грибник или Тот, Кто Заблудился, Но Доволен.<br><br>
-<em style="color: rgba(250,250,248,0.45);">Зачем это здесь? Потому что человек делится не афишей фестиваля, а своей карточкой. «О, это же я» — и друг узнаёт про Калевалу. Механизм работает без бюджета: на чистом узнавании.</em>
+Тест из пяти вопросов. Система собирает тебе личный узор и объясняет, кто ты: Костровой, Сказитель, Тихий Грибник или Тот, Кто Заблудился.<br><br>
 </p>
 
 <div class="generator-wrap reveal delay-2">
@@ -562,7 +540,7 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 <span class="tag"><strong>N°03</strong> · Что придумал</span>
 <span class="line"></span>
 </div>
-<h2 class="section-title reveal">Что получилось: <span class="accent">орнамент 2.0</span></h2>
+<h2 class="section-title reveal">Что получилось: <span class="accent">орнамент</span></h2>
 
 <div class="two-columns">
   <div class="col-block reveal delay-1">
@@ -571,60 +549,62 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
   </div>
   <div class="col-block reveal delay-2">
     <p><strong>Палитра пришла из леса.</strong> Никаких цветов «главного тренда сезона». Карелия сама сделала нам мудборд: мох. камень. кора. вода.</p>
-    <p>Получился визуальный язык, который не устареет после следующего обновления Pinterest.</p>
-  </div>
+     </div>
 </div>
 
-<div class="plaque reveal delay-2" style="margin-top: 40px;">Да, это правда работает офлайн. Проверено в лесу, где даже мобильный оператор сдался.</div>
+<div class="plaque reveal delay-2" style="margin-top: 40px;">Получился визуальный язык, который не устареет после следующего обновления Pinterest.</div>
 
-<h3 style="font-family: var(--mono); font-size: 16px; font-weight: 700; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 60px;" class="reveal">Восемь экранов, которые работают без сети</h3>
+<h3 style="font-family: var(--mono); font-size: 16px; font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 60px;" class="reveal">Офлайн-компаньон для подготовленных</h3>
+<p class="section-body reveal delay-1" style="max-width: 720px; font-size: 15px; margin-bottom: 24px;">
+   Всё, что нужно, скачивается один раз — и дальше работает полностью автономно. Это не замена физической навигации, а её цифровой двойник для тех, кто предпочитает экран бумаге.
+</p>
 
 <div class="screens-grid" style="margin-top: 24px;">
   <div class="screen-card has-rune reveal delay-1" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-01-entry.webp" alt="Вход">
+    <img src="assets/images/cases/kalevala/screen-01.webp" alt="Вход">
     <div class="rune" data-rune="4" onclick="findRune(this)" style="top: 15%; right: 10%;">ᚲ</div>
     <div class="screen-card-label">01 · Вход</div>
   </div>
   <div class="screen-card reveal delay-2" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-02-offline.webp" alt="Офлайн">
+    <img src="assets/images/cases/kalevala/screen-02.webp" alt="Офлайн">
     <div class="screen-card-label">02 · Офлайн-пакет</div>
   </div>
   <div class="screen-card reveal delay-3" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-03-map.webp" alt="Карта">
+    <img src="assets/images/cases/kalevala/screen-03.webp" alt="Карта">
     <div class="screen-card-label">03 · Карта</div>
   </div>
   <div class="screen-card reveal delay-4" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-04-feed.webp" alt="Сейчас">
+    <img src="assets/images/cases/kalevala/screen-04.webp" alt="Сейчас">
     <div class="screen-card-label">04 · Сейчас</div>
   </div>
   <div class="screen-card has-rune reveal delay-1" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-05-event.webp" alt="Событие">
+    <img src="assets/images/cases/kalevala/screen-05.webp" alt="Событие">
     <div class="rune" data-rune="5" onclick="findRune(this)" style="bottom: 30%; left: 10%;">ᚷ</div>
     <div class="screen-card-label">05 · Событие</div>
   </div>
   <div class="screen-card reveal delay-2" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-06-route.webp" alt="Маршрут">
+    <img src="assets/images/cases/kalevala/screen-06.webp" alt="Маршрут">
     <div class="screen-card-label">06 · Маршрут</div>
   </div>
   <div class="screen-card reveal delay-3" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-07-legend.webp" alt="Легенда">
+    <img src="assets/images/cases/kalevala/screen-07.webp" alt="Легенда">
     <div class="screen-card-label">07 · Легенда</div>
   </div>
   <div class="screen-card reveal delay-4" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-08-memory.webp" alt="Память">
+    <img src="assets/images/cases/kalevala/screen-08.webp" alt="Память">
     <div class="screen-card-label">08 · На память</div>
   </div>
 </div>
 
 <div class="screens-captions reveal delay-2">
-  <div class="screen-caption"><strong>01 · Вход</strong>Один вопрос вместо анкеты. Человек ещё не привык к лесу — зачем его допрашивать</div>
-  <div class="screen-caption"><strong>02 · Офлайн-пакет</strong>Скачали карту и маршруты один раз — 14 МБ. Дальше приложение работает без интернета</div>
-  <div class="screen-caption"><strong>03 · Карта</strong>Живые точки: костёр горит, мастер-класс идёт. Без времени — чтобы сказка не стала сеансом</div>
-  <div class="screen-caption"><strong>04 · Сейчас</strong>Что происходит прямо сейчас: где, сколько мест, как дойти. Три секунды — и ты уже идёшь</div>
-  <div class="screen-caption"><strong>05 · Событие</strong>Где, сколько свободных мест, что взять с собой. Время — «сколько продлится, столько и продлится»</div>
-  <div class="screen-caption"><strong>06 · Маршрут</strong>Три события, два часа, один костёр в конце. Как открытка самому себе</div>
-  <div class="screen-caption"><strong>07 · Легенда</strong>Какой орнамент что значит. Те же знаки на указателях, браслетах и карте — привыкнешь ко второму дню</div>
-  <div class="screen-caption"><strong>08 · На память</strong>Открытка с твоим маршрутом и собранные орнаменты. Останется, даже когда лес закончится</div>
+  <div class="screen-caption"><strong>01 · Вход</strong></div>
+  <div class="screen-caption"><strong>02 · Офлайн-пакет</strong></div>
+  <div class="screen-caption"><strong>03 · Карта</strong></div>
+  <div class="screen-caption"><strong>04 · Сейчас</strong></div>
+  <div class="screen-caption"><strong>05 · Событие</strong></div>
+  <div class="screen-caption"><strong>06 · Маршрут</strong></div>
+  <div class="screen-caption"><strong>07 · Легенда</strong></div>
+  <div class="screen-caption"><strong>08 · На память</strong></div>
 </div>
 </section>
 
@@ -635,38 +615,30 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 <span class="tag" style="color: rgba(250,250,248,0.4);"><strong style="color: var(--red);">N°04</strong> · Стало</span>
 <span class="line" style="background: rgba(250,250,248,0.12);"></span>
 </div>
-<h2 class="section-title reveal">Результат: меньше поиска, <span class="accent">больше приключения</span></h2>
+<h2 class="section-title reveal">Главный канал — <span class="accent">дерево и краска</span></h2>
 
 <div class="two-columns">
   <div class="col-block reveal delay-1">
-    <p>После внедрения визуальная система связала цифровой и физический мир.</p>
-    <p>Человек увидел знак в приложении → встретил его на площадке → понял, куда идти. Без лишних вопросов. Без постоянного поиска.</p>
+    <p><strong>В лесу работает только физический канал.</strong> Орнаменты на указателях, бумажная карта.</p>
   </div>
   <div class="col-block reveal delay-2">
-    <p><strong>Гипотеза подтвердилась:</strong> совпадение знаков в цифре и в лесу реально снижает когнитивную нагрузку.</p>
-    <p>Люди не читают инструкции — они просто идут.</p>
+    <p><strong>Телефон не нужен вообще.</strong> Гость смотрит вокруг, а не в экран — и это ровно то, зачем он приехал.</p>
   </div>
 </div>
 
-<div class="plaque reveal delay-2" style="margin-top: 40px; border-color: rgba(250,250,248,0.2); background: rgba(255,255,255,0.03); color: rgba(250,250,248,0.9);">Волонтёр с маркером: наконец-то отдыхает. 47-е объяснение дороги до костра — отменяется.</div>
+<div class="plaque reveal delay-2" style="margin-top: 40px; border-color: rgba(250,250,248,0.2); background: rgba(255,255,255,0.03); color: rgba(250,250,248,0.9);">Волонтёр с маркером наконец-то отдыхает. 47-е объяснение дороги до костра — отменяется.</div>
 
-<h3 style="font-family: var(--mono); font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bg); margin-top: 64px; margin-bottom: 16px;" class="reveal">Мерч, который не хочет жить в шкафу</h3>
-<p class="section-body reveal delay-1">
-Свитшот или браслет стали не просто сувениром. Это кусочек истории, который уезжает домой. Кто-то увидел необычный орнамент и спросил: «А это что?» И вот уже появился новый человек, который узнал про фестиваль и Карелию. Без рекламы. Просто через любопытство.
-</p>
-
-<div class="plaque alt reveal delay-2">Свитшот уже три раза спросили в метро. Мерч работает.</div>
-
-<div style="margin-top: 64px;">
-<h3 style="font-family: var(--mono); font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bg); margin-bottom: 8px;" class="reveal">Цифры</h3>
-<div class="nums-grid reveal delay-1">
-  <div class="num-item"><span class="num-emoji">🌲</span><div class="num-value">8</div><div class="num-label">экранов офлайн-приложения</div></div>
-  <div class="num-item"><span class="num-emoji">📱</span><div class="num-value">14 МБ</div><div class="num-label">работает без интернета</div></div>
-  <div class="num-item"><span class="num-emoji">🧵</span><div class="num-value">28</div><div class="num-label">элементов мерча</div></div>
-  <div class="num-item"><span class="num-emoji">🎨</span><div class="num-value">1</div><div class="num-label">система — от иконки до баннера 3 метра</div></div>
+<div class="merch-split reveal">
+  <div>
+    <h3 style="font-family: var(--mono); font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bg);">Мерч, который не хочет жить в шкафу</h3>
+    <p class="section-body">
+      Свитшот или браслет стали не просто сувениром. Это кусочек истории, который уезжает домой. Кто-то увидел необычный орнамент и спросил: «А это что?» И вот уже появился новый человек, который узнал про фестиваль и Карелию. Без рекламы. Просто через любопытство.
+    </p>
+  </div>
+  <div class="plaque alt">Свитшот уже три раза спросили в метро. Мерч работает.</div>
 </div>
-<div class="plaque alt reveal delay-2" style="margin-top: 32px;">14 МБ — это легче, чем твоё последнее фото из леса.</div>
-</div>
+
+
 
 <div class="merch-hero reveal delay-2" style="margin-top: 80px; margin-bottom: 0;">
 <img src="assets/images/cases/kalevala/merch-hero.webp" alt="Мерч фестиваля">
@@ -675,18 +647,18 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 <div class="merch-inner has-rune" style="position: relative;">
 <div class="rune" data-rune="6" onclick="findRune(this)" style="top: 24px; right: 24px;">ᛗ</div>
 <div class="merch-grid reveal delay-3" style="margin-top: 48px;">
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-1.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">01 · Свитшот — тёплый, как костёр</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-2.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">02 · Кружка — для чая на рассвете</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-3.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">03 · Постер — стена помнит лес</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-4.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">04 · Браслет — билет на следующий год</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-5.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">05</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-6.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">06 · Шоппер — 3 кг грибов и одна былина</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-7.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">07</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-8.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">08</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-9.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">09</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-10.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">10</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-11.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">11</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-12.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">12</span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-1.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-2.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-3.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-4.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-5.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-6.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-7.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-8.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-9.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-10.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-11.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-12.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
 </div>
 </div>
 
@@ -703,22 +675,22 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 
 <div class="merch-inner">
 <div class="merch-grid reveal delay-2" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 80px;">
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-13.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">13</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-14.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">14</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-15.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">15</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-16.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">16</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-17.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">17</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-18.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">18</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-19.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">19</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-20.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">20</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-21.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">21</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-22.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">22</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-23.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">23</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-24.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">24</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-25.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">25</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-26.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">26</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-27.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">27</span></div></div>
-<div class="merch-item"><img src="assets/images/cases/kalevala/merch-28.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label">28</span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-13.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-14.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-15.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-16.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-17.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-18.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-19.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-20.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-21.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-22.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-23.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-24.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-25.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-26.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-27.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
+<div class="merch-item"><img src="assets/images/cases/kalevala/merch-28.webp" alt=""><div class="merch-overlay"><span class="merch-overlay-label"></span></div></div>
 </div>
 
 <div class="has-rune" style="margin-top: 120px; padding-bottom: 20px; position: relative;">
@@ -727,24 +699,22 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 <div class="takeaway-grid">
   <div class="takeaway-item reveal delay-1">
     <span class="takeaway-num">01</span>
-    <p class="takeaway-text"><strong>Орнамент — это не украшение.</strong> Если он помогает человеку понять мир вокруг — это интерфейс.</p>
+    <p class="takeaway-text"><strong>Не каждый проект заслуживает приложения.</strong> Иногда офлайн-руководство + физическая навигация работают сильнее, чем полноценный продукт с LTV, пушами и аналитикой.</p>
   </div>
   <div class="takeaway-item reveal delay-2">
     <span class="takeaway-num">02</span>
-    <p class="takeaway-text"><strong>Иногда лучший дизайн уже существует.</strong> Не всегда нужно изобретать новое. Иногда достаточно внимательно посмотреть на старое.</p>
+    <p class="takeaway-text"><strong>Умение НЕ делать продукт — маркер зрелости.</strong> Сознательный отказ от решения часто важнее, чем само решение. Особенно когда среда диктует ограничения.</p>
   </div>
   <div class="takeaway-item reveal delay-3">
     <span class="takeaway-num">03</span>
-    <p class="takeaway-text"><strong>Хороший дизайн не ограничивает свободу.</strong> Он убирает лишний хаос, чтобы человек мог спокойно искать своё приключение.</p>
+    <p class="takeaway-text"><strong>Физический канал может быть умнее цифрового.</strong> Орнамент на указателе работает без батареи, без сети и без онбординга. И не выдёргивает человека из момента.</p>
   </div>
-</div>
 </div>
 </div>
 </div>
 </div>
 
-<section class="norman-section">
-<div class="section-head norman-intro reveal">
+<section class="norman-section"><div class="section-head norman-intro reveal">
 <span class="tag"><strong>N°05</strong> · Эмоциональный дизайн</span>
 <span class="line" style="background: var(--line);"></span>
 </div>
@@ -808,16 +778,6 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
   <p>Ты не просто доскроллил кейс — ты прошёл его как сказание. Секретный постер «Вяйнямёйнен играет кантеле» — твой. Покажи этот экран на фестивале — получишь мерч со скидкой 20%.</p>
   <a href="#" class="magnetic secondary"><span class="mag-inner">Скачать постер →</span></a>
 </div>
-
-<div class="final-note">
-  <div class="final-note-inner">
-    <p>Дизайн-система не обязана наводить порядок за счёт свободы. Она может сделать так, чтобы свободы стало больше. Даже если вокруг лес. Даже если нет интернета. Особенно если нет интернета.</p>
-  </div>
-</div>
-
-<p class="ribbon-ps">
-  Лента на первом экране — это тот же орнамент, только живой. Она дышит, крутится и не повторяется. Как сам фестиваль.
-</p>
 
 <div class="divider"></div>
 <footer class="site-footer has-rune">
@@ -883,7 +843,7 @@ function raf() {
   if (isFine) {
     dx = lerp(dx, mx, 0.38); dy = lerp(dy, my, 0.38);
     dot.style.left = dx + 'px'; dot.style.top = dy + 'px';
-    rx = lerp(rx, mx, 0.14); ry = lerp(ry, my, 0.14);
+   rx = mx; ry = my;
     ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
     magnets.forEach(el => {
       const s = magnetState.get(el); if (!s.active) return;
@@ -908,7 +868,7 @@ const revealObs = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('is-visible'); revealObs.unobserve(e.target); }
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 document.querySelectorAll('.merch-item').forEach(item => { item.addEventListener('pointerenter', () => { if(isFine) ring.classList.add('is-hover'); }); item.addEventListener('pointerleave', () => ring.classList.remove('is-hover')); });
 document.querySelectorAll('.screen-card').forEach(sc => { sc.addEventListener('pointerenter', () => { if(isFine) ring.classList.add('is-view'); }); sc.addEventListener('pointerleave', () => ring.classList.remove('is-view')); });
