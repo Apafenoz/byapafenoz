@@ -190,18 +190,19 @@ body > section, body > div.divider, body > footer, body > .merch-section, body >
 .icon-item:hover { transform: scale(1.2) rotate(5deg); }
 .icon-item img { width: 100%; height: 100%; object-fit: contain; }
 
-.screens-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 48px; }
-@media (max-width: 900px) { .screens-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 500px) { .screens-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
-.screen-card { position: relative; overflow: hidden; background: var(--bg2); will-change: transform; transition: all .5s var(--ease); box-shadow: 0 8px 20px rgba(23,23,22,0.08); }
-.screen-card:hover { transform: scale(1.03) translateY(-6px); box-shadow: 0 28px 60px rgba(23,23,22,0.15); z-index: 2; }
+.screens-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin-top: 48px; }
+@media (max-width: 1100px) { .screens-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px) { .screens-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
+.screen-card { position: relative; overflow: hidden; background: var(--bg2); border-radius: 10px; will-change: transform; transition: transform .45s var(--ease), box-shadow .45s var(--ease); box-shadow: 0 8px 20px rgba(23,23,22,0.08); }
+.screen-card:hover { transform: scale(1.55); box-shadow: 0 32px 70px rgba(23,23,22,0.28); z-index: 6; border-radius: 6px; }
 .screen-card img { width: 100%; display: block; }
 .screen-card-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, rgba(23,23,22,0.8)); font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(250,250,248,0.9); opacity: 0; transition: opacity .3s ease; }
 .screen-card:hover .screen-card-label { opacity: 1; }
-.screens-captions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 24px; }
-@media (max-width: 900px) { .screens-captions { grid-template-columns: repeat(2, 1fr); } }
-.screen-caption { font-size: 12px; color: var(--muted); line-height: 1.5; padding: 0 4px; }
-.screen-caption strong { display: block; color: var(--ink); font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.screens-captions { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin-top: 24px; }
+@media (max-width: 1100px) { .screens-captions { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px) { .screens-captions { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
+.screen-caption { font-size: 11px; color: var(--muted); line-height: 1.45; padding: 0 2px; }
+.screen-caption strong { display: block; color: var(--ink); font-size: 11px; font-weight: 700; margin-bottom: 3px; }
 
 .rune { position: absolute; width: 44px; height: 44px; border-radius: 50%; background: var(--red); color: var(--bg); display: grid; place-items: center; font-size: 20px; font-weight: 700; cursor: none; opacity: 0.3; transition: all .3s var(--ease); z-index: 3; box-shadow: 0 4px 16px rgba(254, 34, 31, 0.3); }
 .rune:hover { transform: scale(1.25); opacity: 0.9; box-shadow: 0 0 28px rgba(254, 34, 31, 0.6); }
@@ -512,6 +513,7 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 </p>
 
 <div class="generator-wrap reveal delay-2">
+  <div class="rune" data-rune="4" onclick="findRune(this)" style="top: -16px; right: 20px;">ᚲ</div>
   <div id="genProgress" class="gen-progress"><div id="genProgressBar" class="gen-progress-bar"></div></div>
   <div class="gen-counter"><strong>ВОПРОС <span id="genNum">1</span> / 5</strong></div>
   <div id="genQuestion" class="gen-question"></div>
@@ -560,9 +562,8 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 </p>
 
 <div class="screens-grid" style="margin-top: 24px;">
-  <div class="screen-card has-rune reveal delay-1" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-01.webp" alt="Вход">
-    <div class="rune" data-rune="4" onclick="findRune(this)" style="top: 15%; right: 10%;">ᚲ</div>
+  <div class="screen-card reveal delay-1" style="position: relative;">
+    <img src="assets/images/cases/kalevala/screen-01-entry.webp" alt="Вход">
     <div class="screen-card-label">01 · Вход</div>
   </div>
   <div class="screen-card reveal delay-2" style="position: relative;">
@@ -577,9 +578,8 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
     <img src="assets/images/cases/kalevala/screen-04.webp" alt="Сейчас">
     <div class="screen-card-label">04 · Сейчас</div>
   </div>
-  <div class="screen-card has-rune reveal delay-1" style="position: relative;">
-    <img src="assets/images/cases/kalevala/screen-05.webp" alt="Событие">
-    <div class="rune" data-rune="5" onclick="findRune(this)" style="bottom: 30%; left: 10%;">ᚷ</div>
+  <div class="screen-card reveal delay-1" style="position: relative;">
+    <img src="assets/images/cases/kalevala/screen-05-event.webp" alt="Событие">
     <div class="screen-card-label">05 · Событие</div>
   </div>
   <div class="screen-card reveal delay-2" style="position: relative;">
@@ -640,8 +640,9 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 
 
 
-<div class="merch-hero reveal delay-2" style="margin-top: 80px; margin-bottom: 0;">
+<div class="merch-hero reveal delay-2" style="margin-top: 80px; margin-bottom: 0; position: relative;">
 <img src="assets/images/cases/kalevala/merch-hero.webp" alt="Мерч фестиваля">
+<div class="rune" data-rune="5" onclick="findRune(this)" style="top: 20px; right: 24px;">ᚷ</div>
 </div>
 
 <div class="merch-inner has-rune" style="position: relative;">
