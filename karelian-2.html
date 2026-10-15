@@ -268,8 +268,8 @@ body > section, body > div.divider, body > footer, body > .merch-section, body >
 .merch-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
 .merch-item:nth-child(4) { grid-column: span 2; grid-row: span 2; }
 .merch-item:nth-child(7), .merch-item:nth-child(8), .merch-item:nth-child(12) { grid-column: span 2; grid-row: span 1; }
-.merch-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease); transform: perspective(800px) rotateY(-3deg) rotateX(2deg); }
-.merch-item:hover img { transform: perspective(800px) rotateY(0deg) rotateX(0deg) scale(1.06); }
+.merch-item img { width: 100%; height: 100%; object-fit: contain; padding: 18px 14px; display: block; transition: transform .6s var(--ease); }
+.merch-item:hover img { transform: scale(1.06); }
 .merch-overlay { display: none; }
 .merch-overlay-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(250,250,248,0.95); font-weight: 500; }
 @media (max-width: 1200px) {
