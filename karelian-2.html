@@ -335,6 +335,12 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 .rune-reward-banner h3 { font-family: var(--mono); font-size: 22px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; color: var(--red); }
 .rune-reward-banner p { font-size: 15px; line-height: 1.6; color: rgba(250,250,248,0.7); max-width: 520px; margin: 0 auto 24px; }
 .rune-reward-banner .magnetic { display: inline-flex; pointer-events: all; }
+
+.lightbox { position: fixed; inset: 0; z-index: 9999; background: rgba(10, 10, 10, .92); backdrop-filter: blur(6px); display: grid; place-items: center; opacity: 0; pointer-events: none; transition: opacity .3s var(--ease); }
+.lightbox.open { opacity: 1; pointer-events: all; }
+.lightbox-img { max-width: min(88vw, 980px); max-height: 82vh; object-fit: contain; background: var(--bg); padding: clamp(16px, 3vw, 40px); border-radius: 8px; box-shadow: 0 40px 120px rgba(0, 0, 0, .6); transform: scale(.92); transition: transform .3s var(--ease); }
+.lightbox.open .lightbox-img { transform: scale(1); }
+.lightbox-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(250, 250, 248, .5); white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -757,6 +763,11 @@ body > .divider:last-of-type { width: 100vw; position: relative; left: 50%; righ
 <span class="footer-mark">APAFENOZ</span>
 <span>Safronov Denis · Графический / Веб / Продукт</span>
 </footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <div class="lightbox-hint">клик в любом месте — закрыть</div>
+</div>
 
 <script>
 (function () {
@@ -1301,6 +1312,27 @@ if (stage) {
   }
   animate();
 }
+</script>
+<script>
+(function () {
+  const box = document.getElementById('lightbox');
+  const img = document.getElementById('lightboxImg');
+  if (!box || !img) return;
+  document.querySelectorAll('.merch-item img').forEach(im => {
+    im.addEventListener('click', () => {
+      img.src = im.src;
+      img.alt = im.alt || '';
+      box.classList.add('open');
+      box.setAttribute('aria-hidden', 'false');
+    });
+  });
+  function close() {
+    box.classList.remove('open');
+    box.setAttribute('aria-hidden', 'true');
+  }
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
 </script>
 </body>
 </html>
