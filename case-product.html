@@ -377,11 +377,13 @@
     /* Контейнер-«телефон»: 400px шириной, высота до 956px,
        длинный экран скроллится внутри */
     .lb-frame {
-      width: min(400px, 92vw);
-      max-height: min(956px, 78vh);
+      aspect-ratio: 400 / 956;          
+      height: min(956px, 82vh);         
+      width: auto;                      
+      max-width: 92vw;                 
       overflow-y: auto;
       overflow-x: hidden;
-      overscroll-behavior: contain;   /* скролл не убегает за контейнер */
+      overscroll-behavior: contain;
       background: #fff;
       border-radius: 18px;
       box-shadow: 0 30px 90px rgba(0,0,0,.55);
