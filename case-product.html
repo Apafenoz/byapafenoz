@@ -373,14 +373,26 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s;
     }
-    .lightbox.open { opacity: 1; visibility: visible; }
-    .lb-img {
-      max-height: 76vh; max-width: min(92vw, 440px);
-      background: #fff; border-radius: 18px;
+    /* Контейнер-«телефон»: 400px шириной, высота до 956px,
+       длинный экран скроллится внутри */
+    .lb-frame {
+      width: min(400px, 92vw);
+      max-height: min(956px, 78vh);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;   /* скролл не убегает за контейнер */
+      background: #fff;
+      border-radius: 18px;
       box-shadow: 0 30px 90px rgba(0,0,0,.55);
       transform: scale(.94); transition: transform .25s ease;
+      scrollbar-width: thin;
+      scrollbar-color: var(--green) rgba(255,255,255,.2);
     }
-    .lightbox.open .lb-img { transform: scale(1); }
+    .lightbox.open .lb-frame { transform: scale(1); }
+    .lb-frame::-webkit-scrollbar { width: 6px; }
+    .lb-frame::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
+    .lb-frame::-webkit-scrollbar-track { background: rgba(0,0,0,.15); }
+    .lb-img { width: 100%; height: auto; display: block; }
     .lb-cap {
       margin-top: 18px; display: flex; align-items: center; justify-content: center; gap: 14px;
       color: #fff; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
@@ -1148,7 +1160,9 @@
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр экрана">
     <button class="lb-btn lb-close" type="button" aria-label="Закрыть">×</button>
     <button class="lb-btn lb-prev" type="button" aria-label="Предыдущий экран">←</button>
-    <img class="lb-img" src="" alt="">
+    <div class="lb-frame">
+      <img class="lb-img" src="" alt="">
+    </div>
     <div class="lb-cap">
       <span class="lb-n"></span>
       <span class="lb-t"></span>
@@ -1192,6 +1206,7 @@
     (function () {
       const lb = document.getElementById('lightbox');
       if (!lb) return;
+      const lbFrame = lb.querySelector('.lb-frame');
       const lbImg = lb.querySelector('.lb-img');
       const lbN = lb.querySelector('.lb-n');
       const lbT = lb.querySelector('.lb-t');
@@ -1217,6 +1232,7 @@
         lbN.textContent = step.querySelector('.flow-step-n').textContent.trim();
         lbT.textContent = step.querySelector('.flow-step-t').textContent.trim();
         lbC.textContent = (idx + 1) + ' / ' + steps.length;
+        lbFrame.scrollTop = 0;   /* новый экран всегда показываем с верха */
       }
       function open(i) {
         idx = i; render();
@@ -1241,12 +1257,16 @@
         else if (e.key === 'ArrowRight') shift(1);
       });
 
-      /* свайп на тач-устройствах */
-      let tx = 0;
-      lb.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; }, { passive: true });
+      /* свайп: листаем только горизонтальный жест,
+         вертикальный палец отдаём скроллу картинки */
+      let tx = 0, ty = 0;
+      lb.addEventListener('touchstart', (e) => {
+        tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+      }, { passive: true });
       lb.addEventListener('touchend', (e) => {
         const dx = e.changedTouches[0].clientX - tx;
-        if (Math.abs(dx) > 50) shift(dx < 0 ? 1 : -1);
+        const dy = e.changedTouches[0].clientY - ty;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) shift(dx < 0 ? 1 : -1);
       }, { passive: true });
     })();
   </script>
